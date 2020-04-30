@@ -1,0 +1,31 @@
+{
+  "name": "dbout/wp-orm",
+  "description": "Wordpress ORM with Eloquent",
+  "type": "package",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dimitri BOUTEILLE",
+      "email": "bonjour@dimitri-bouteille.fr",
+      "homepage": "https://github.com/dimitriBouteille",
+      "role": "Developer"
+    }
+  ],
+  "keywords": ["wordpress", "wp", "orm", "database", "eloquent", "db", "sql"],
+  "homepage": "https://github.com/dimitriBouteille/wp-orm/",
+  "support": {
+    "issues": "https://github.com/dimitriBouteille/wp-orm/issues"
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.2",
+    "illuminate/database": "^6.0",
+    "illuminate/events": "^6.0",
+    "illuminate/pagination": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dbout\\WpOrm\\": "src/"
+    }
+  }
+}
