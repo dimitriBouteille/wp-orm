@@ -2,14 +2,12 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Models\Observes\PostTypeObserves;
+use Dbout\WpOrm\Contracts\PostInterface;
 use Illuminate\Events\Dispatcher;
 
 /**
  * Class PostType
  * @package Dbout\WpOrm\Models
- *
- * @method static string|null postType();
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -19,9 +17,20 @@ abstract class PostType extends Post
 {
 
     /**
-     * @var string|null
+     * Post type slug
+     * @var string
      */
-    protected $postType = null;
+    protected $_postType;
+
+    /**
+     * PostType constructor.
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->setAttribute(self::POST_TYPE, $this->postType);
+    }
 
     /**
      * @return string|null
@@ -32,36 +41,28 @@ abstract class PostType extends Post
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder|void
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function newQuery()
     {
-        $query = parent::newQuery();
-
         // Set post type
-        $query->where(self::POST_TYPE, $this->postType);
+        $query = parent::newQuery();
+        $query->where(self::POST_TYPE, $this->_postType);
 
         return $query;
     }
 
     /**
-     * @return string|null
-     */
-    public function scopePostType(): ?string
-    {
-        return $this->postType;
-    }
-
-    /**
      * Add events
-     *
      * @return void
      */
     protected static function boot()
     {
         parent::boot();
         static::setEventDispatcher(new Dispatcher());
-        static::observe(new PostTypeObserves());
+        static::saving(function(PostInterface $model) {
+            $model->setPostType($this->_postType);
+        });
     }
 
 }
