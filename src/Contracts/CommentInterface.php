@@ -27,6 +27,6 @@ interface CommentInterface
     const COMMENT_AGENT = 'comment_agent';
     const COMMENT_TYPE = 'comment_type';
     const COMMENT_PARENT = 'comment_parent';
-    const USER_ID = 'comment_user_id';
+    const USER_ID = 'user_id';
 
 }

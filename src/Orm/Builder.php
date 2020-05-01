@@ -28,20 +28,4 @@ class Builder extends EloquentBuilder {
         return $this;
     }
 
-    public function update(array $values)
-    {
-        var_dump($values); die;
-    }
-
-    public function select($columns = ['*'])
-    {
-        var_dump($columns); die;
-    }
-
-
-    protected function runSelect()
-    {
-        var_dump("fefe"); die;
-    }
-
 }

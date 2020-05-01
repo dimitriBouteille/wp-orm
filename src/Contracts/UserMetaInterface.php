@@ -2,6 +2,8 @@
 
 namespace Dbout\WpOrm\Contracts;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 /**
  * Interface UserMetaInterface
  * @package Dbout\WpOrm\Contracts
@@ -17,9 +19,9 @@ interface UserMetaInterface extends MetaInterface
     const USER_ID = 'user_id';
 
     /**
-     * @return UserInterface|null
+     * @return HasOne|UserInterface
      */
-    public function getUser(): ?UserInterface;
+    public function getUser(): HasOne;
 
     /**
      * @param $user

@@ -23,8 +23,12 @@ interface UserInterface
     const USER_URL = 'user_url';
     const USER_REGISTERED = 'user_registered';
     const USER_ACTIVATION_KEY = 'user_activation_key';
-    const USER_STATUS = 'user_status';
     const DISPLAY_NAME = 'display_name';
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int;
 
     /**
      * @return string|null
@@ -91,6 +95,28 @@ interface UserInterface
      * @return UserInterface
      */
     public function setNiceName(?string $niceName): UserInterface;
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getRegistered(): ?\DateTimeInterface;
+
+    /**
+     * @param $registered
+     * @return UserInterface
+     */
+    public function setRegistered($registered): UserInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getActivationKey(): ?string;
+
+    /**
+     * @param string|null $activationKey
+     * @return UserInterface
+     */
+    public function setActivationKey(?string $activationKey): UserInterface;
 
     /**
      * @return HasMany

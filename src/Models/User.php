@@ -4,6 +4,7 @@ namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Contracts\CommentInterface;
 use Dbout\WpOrm\Contracts\UserInterface;
+use Dbout\WpOrm\Contracts\UserMetaInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -33,7 +34,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function getLogin(): ?string
     {
-        return $this->getAttribute(self::LOGIN);
+        return $this->getAttribute(self::USER_LOGIN);
     }
 
     /**
@@ -42,7 +43,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function setLogin(?string $login): UserInterface
     {
-        $this->setAttribute(self::LOGIN, $login);
+        $this->setAttribute(self::USER_LOGIN, $login);
         return $this;
     }
 
@@ -51,7 +52,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function getPassword(): ?string
     {
-        return $this->getAttribute(self::PASSWORD);
+        return $this->getAttribute(self::USER_PASS);
     }
 
     /**
@@ -60,7 +61,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function setPassword(?string $password): UserInterface
     {
-        $this->setAttribute(self::PASSWORD, $password);
+        $this->setAttribute(self::USER_PASS, $password);
         return $this;
     }
 
@@ -69,7 +70,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function getEmail(): ?string
     {
-        return $this->getAttribute(self::EMAIL);
+        return $this->getAttribute(self::USER_EMAIL);
     }
 
     /**
@@ -78,7 +79,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function setEmail(?string $email): UserInterface
     {
-        $this->setAttribute(self::EMAIL, $email);
+        $this->setAttribute(self::USER_EMAIL, $email);
         return $this;
     }
 
@@ -105,7 +106,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function getUrl(): ?string
     {
-        return $this->getAttribute(self::URL);
+        return $this->getAttribute(self::USER_URL);
     }
 
     /**
@@ -114,7 +115,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function setUrl(?string $url): UserInterface
     {
-        $this->setAttribute(self::URL, $url);
+        $this->setAttribute(self::USER_URL, $url);
         return $this;
     }
 
@@ -123,7 +124,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function getNiceName(): ?string
     {
-        return $this->getAttribute(self::NICE_NAME);
+        return $this->getAttribute(self::USER_NICENAME);
     }
 
     /**
@@ -132,7 +133,43 @@ class User extends AbstractModel implements UserInterface
      */
     public function setNiceName(?string $niceName): UserInterface
     {
-        $this->setAttribute(self::NICE_NAME, $niceName);
+        $this->setAttribute(self::USER_NICENAME, $niceName);
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getRegistered(): ?\DateTimeInterface
+    {
+        return $this->getAttribute(self::USER_REGISTERED);
+    }
+
+    /**
+     * @param $registered
+     * @return UserInterface
+     */
+    public function setRegistered($registered): UserInterface
+    {
+        $this->setAttribute(self::USER_REGISTERED, $registered);
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getActivationKey(): ?string
+    {
+        return $this->getAttribute(self::USER_ACTIVATION_KEY);
+    }
+
+    /**
+     * @param string|null $activationKey
+     * @return UserInterface
+     */
+    public function setActivationKey(?string $activationKey): UserInterface
+    {
+        $this->setAttribute(self::USER_ACTIVATION_KEY, $activationKey);
         return $this;
     }
 
@@ -149,7 +186,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function metas(): HasMany
     {
-        // TODO: Implement metas() method.
+        return $this->hasMany(UserMeta::class, UserMetaInterface::USER_ID);
     }
 
 }

@@ -2,18 +2,27 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Builders\UserMetaBuilder;
+use Dbout\WpOrm\Contracts\MetaInterface;
 use Dbout\WpOrm\Contracts\UserInterface;
 use Dbout\WpOrm\Contracts\UserMetaInterface;
+use Dbout\WpOrm\Orm\AbstractModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class UserMeta
  * @package Dbout\WpOrm\Models
  *
+ * @method static UserMetaInterface find($metaId);
+ * @method static HasMany user($userId);
+ *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
  * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-class UserMeta extends AbstractMeta implements UserMetaInterface
+class UserMeta extends AbstractModel implements UserMetaInterface
 {
 
     /**
@@ -33,9 +42,9 @@ class UserMeta extends AbstractMeta implements UserMetaInterface
     public $timestamps = false;
 
     /**
-     * @return UserInterface|null
+     * @return HasOne|UserInterface
      */
-    public function getUser(): ?UserInterface
+    public function getUser(): HasOne
     {
         return $this->hasOne(User::class, UserInterface::USER_ID, self::USER_ID);
     }
@@ -48,6 +57,61 @@ class UserMeta extends AbstractMeta implements UserMetaInterface
     {
         $this->setAttribute(self::USER_ID, $user);
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey(): string
+    {
+        return $this->getAttribute(self::META_KEY);
+    }
+
+    /**
+     * @param string $key
+     * @return MetaInterface
+     */
+    public function setKey(string $key): MetaInterface
+    {
+        $this->setAttribute(self::META_KEY, $key);
+        return $this;
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function getValue()
+    {
+        return $this->getAttribute(self::META_VALUE);
+    }
+
+    /**
+     * @param string $value
+     * @return MetaInterface
+     */
+    public function setValue(string $value): MetaInterface
+    {
+        $this->setAttribute(self::META_VALUE, $value);
+        return $this;
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @return UserMetaBuilder|AbstractModel|Builder
+     */
+    public function newEloquentBuilder($builder)
+    {
+        return new UserMetaBuilder($builder);
+    }
+
+    /**
+     * @param UserMetaBuilder $builder
+     * @param $user
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function scopeUser(UserMetaBuilder $builder, $user)
+    {
+        return $builder->whereUser($user);
     }
 
 }
