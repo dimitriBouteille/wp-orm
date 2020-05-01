@@ -2,12 +2,10 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Builders\UserMetaBuilder;
 use Dbout\WpOrm\Contracts\MetaInterface;
 use Dbout\WpOrm\Contracts\UserInterface;
 use Dbout\WpOrm\Contracts\UserMetaInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -16,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @package Dbout\WpOrm\Models
  *
  * @method static UserMetaInterface find($metaId);
- * @method static HasMany user($userId);
+ * @method static Builder user($userId);
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -96,22 +94,12 @@ class UserMeta extends AbstractModel implements UserMetaInterface
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $builder
-     * @return UserMetaBuilder|AbstractModel|Builder
-     */
-    public function newEloquentBuilder($builder)
-    {
-        return new UserMetaBuilder($builder);
-    }
-
-    /**
-     * @param UserMetaBuilder $builder
+     * @param Builder $builder
      * @param $user
-     * @return \Illuminate\Database\Query\Builder
      */
-    public function scopeUser(UserMetaBuilder $builder, $user)
+    public function scopeUser(Builder $builder, $user)
     {
-        return $builder->whereUser($user);
+        $builder->where(self::USER_ID, $user);
     }
 
 }

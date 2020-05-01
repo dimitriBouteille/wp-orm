@@ -4,12 +4,14 @@ namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Contracts\OptionInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Option
  * @package Dbout\WpOrm\Models
  *
  * @method static OptionInterface find(int $optionId);
+ * @method static Builder name(string $optionName);
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -86,6 +88,15 @@ class Option extends AbstractModel implements OptionInterface
     {
         $this->setAttribute(self::AUTOLOAD, $autoload);
         return $this;
+    }
+
+    /**
+     * @param Builder $builder
+     * @param string $name
+     */
+    public function scopeName(Builder $builder, string $name)
+    {
+        $builder->where(self::OPTION_NAME, $name);
     }
 
 }
