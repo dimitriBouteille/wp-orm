@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @package Dbout\WpOrm\Models
  *
  * @method static UserInterface find($userId);
+ * @property UserMetaInterface[] $metas
+ * @property CommentInterface[] $comments
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github

@@ -2,30 +2,30 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Contracts\CommentInterface;
+use Dbout\WpOrm\Contracts\CommentMetaInterface;
 use Dbout\WpOrm\Contracts\MetaInterface;
-use Dbout\WpOrm\Contracts\UserInterface;
-use Dbout\WpOrm\Contracts\UserMetaInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class UserMeta
+ * Class CommentMeta
  * @package Dbout\WpOrm\Models
  *
- * @method static UserMetaInterface find($metaId);
- * @property UserInterface|null $user
+ * @method static CommentMetaInterface find(int $metaId);
+ * @property CommentInterface|null $comment
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
  * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-class UserMeta extends AbstractModel implements UserMetaInterface
+class CommentMeta extends AbstractModel implements CommentMetaInterface
 {
 
     /**
      * @var string
      */
-    protected $table = 'usermeta';
+    protected $table = 'commentmeta';
 
     /**
      * @var string
@@ -41,9 +41,9 @@ class UserMeta extends AbstractModel implements UserMetaInterface
     /**
      * @return HasOne
      */
-    public function user(): HasOne
+    public function comment(): HasOne
     {
-        return $this->hasOne(User::class, UserInterface::USER_ID, self::USER_ID);
+        return $this->hasOne(Comment::class, Comment::USER_ID, self::COMMENT_ID);
     }
 
     /**

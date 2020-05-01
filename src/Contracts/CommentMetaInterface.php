@@ -5,22 +5,21 @@ namespace Dbout\WpOrm\Contracts;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Interface UserMetaInterface
+ * Interface CommentMetaInterface
  * @package Dbout\WpOrm\Contracts
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
  * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-interface UserMetaInterface extends MetaInterface
+interface CommentMetaInterface extends MetaInterface
 {
 
-    const META_ID = 'umeta_id';
-    const USER_ID = 'user_id';
+    const META_ID = 'meta_id';
+    const COMMENT_ID = 'comment_id';
 
     /**
      * @return HasOne
      */
-    public function user(): HasOne;
-
+    public function comment(): HasOne;
 }
