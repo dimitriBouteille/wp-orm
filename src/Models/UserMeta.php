@@ -2,10 +2,8 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Contracts\MetaInterface;
 use Dbout\WpOrm\Contracts\UserInterface;
 use Dbout\WpOrm\Contracts\UserMetaInterface;
-use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**

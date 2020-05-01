@@ -11,21 +11,16 @@ class Resolver implements ConnectionResolverInterface
 {
 
     /**
-     * Get a database connection instance.
-     *
-     * @param  string $name
-     *
-     * @return \Illuminate\Database\Connection
+     * @param null $name
+     * @return Database|\Illuminate\Database\ConnectionInterface|null
      */
-    public function connection( $name = null )
+    public function connection($name = null)
     {
         return Database::getInstance();
     }
 
     /**
-     * Get the default connection name.
-     *
-     * @return string
+     * @return string|void
      */
     public function getDefaultConnection()
     {
@@ -33,11 +28,7 @@ class Resolver implements ConnectionResolverInterface
     }
 
     /**
-     * Set the default connection name.
-     *
-     * @param  string $name
-     *
-     * @return void
+     * @param string $name
      */
     public function setDefaultConnection( $name )
     {

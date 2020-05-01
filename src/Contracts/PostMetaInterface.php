@@ -2,6 +2,8 @@
 
 namespace Dbout\WpOrm\Contracts;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 /**
  * Interface PostMetaInterface
  * @package Dbout\WpOrm\Contracts
@@ -17,14 +19,8 @@ interface PostMetaInterface extends MetaInterface
     const POST_ID = 'post_id';
 
     /**
-     * @param $post
-     * @return PostMetaInterface
+     * @return HasOne
      */
-    public function setPost($post): PostMetaInterface;
-
-    /**
-     * @return mixed
-     */
-    public function getPost();
+    public function post(): HasOne;
 
 }

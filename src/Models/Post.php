@@ -2,18 +2,23 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Contracts\CommentInterface;
 use Dbout\WpOrm\Contracts\PostInterface;
-use Illuminate\Database\Eloquent\Builder;
+use Dbout\WpOrm\Contracts\PostMetaInterface;
+use Dbout\WpOrm\Contracts\UserInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Post
  * @package Dbout\WpOrm\Models
  *
- * @method static Builder author(int $author);
- * @method static Builder type($types);
- * @method static Builder status($status);
  * @method static PostInterface find($postId);
+ * @property UserInterface|null $author
+ * @property CommentInterface[] $comments
+ * @property PostMetaInterface[] $metas
+ * @property PostInterface|null $parent
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -36,20 +41,38 @@ class Post extends AbstractModel implements PostInterface
     protected $table = 'posts';
 
     /**
-     * @return string|null
+     * @return mixed|void
      */
-    public function getTitle(): ?string
+    public function getDate()
     {
-        return $this->getAttribute(self::POST_TITLE);
+        return $this->getAttribute(self::POST_DATE);
     }
 
     /**
-     * @param string|null $title
+     * @param $date
      * @return PostInterface
      */
-    public function setTitle(?string $title): PostInterface
+    public function setDate($date): PostInterface
     {
-        $this->setAttribute(self::POST_TITLE, $title);
+        $this->setAttribute(self::POST_DATE, $date);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateGMT()
+    {
+        return $this->getAttribute(self::POST_DATE_GMT);
+    }
+
+    /**
+     * @param $date
+     * @return PostInterface
+     */
+    public function setDateGMT($date): PostInterface
+    {
+        $this->setAttribute(self::POST_DATE_GMT, $date);
         return $this;
     }
 
@@ -74,18 +97,18 @@ class Post extends AbstractModel implements PostInterface
     /**
      * @return string|null
      */
-    public function getStatus(): ?string
+    public function getTitle(): ?string
     {
-        return $this->getAttribute(self::POST_STATUS);
+        return $this->getAttribute(self::POST_TITLE);
     }
 
     /**
-     * @param string|null $status
+     * @param string|null $title
      * @return PostInterface
      */
-    public function setStatus(?string $status): PostInterface
+    public function setTitle(?string $title): PostInterface
     {
-        $this->setAttribute(self::POST_STATUS, $status);
+        $this->setAttribute(self::POST_TITLE, $title);
         return $this;
     }
 
@@ -108,50 +131,165 @@ class Post extends AbstractModel implements PostInterface
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getAuthor(): ?int
+    public function getStatus(): ?string
     {
-        return (int)$this->getAttribute(self::POST_EXCERPT);
+        return $this->getAttribute(self::POST_STATUS);
     }
 
     /**
-     * @param int|null $author
+     * @param string|null $status
      * @return PostInterface
      */
-    public function setAuthor(?int $author): PostInterface
+    public function setStatus(?string $status): PostInterface
     {
-        $this->setAttribute(self::POST_AUTHOR, $author);
+        $this->setAttribute(self::POST_STATUS, $status);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommentStatus(): string
+    {
+        return $this->getAttribute(self::COMMENT_STATUS);
+    }
+
+    /**
+     * @param string $status
+     * @return PostInterface
+     */
+    public function setCommentStatus(string $status): PostInterface
+    {
+        $this->setAttribute(self::COMMENT_STATUS, $status);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPingStatus(): string
+    {
+        return $this->getAttribute(self::PING_STATUS);
+    }
+
+    /**
+     * @param string $status
+     * @return PostInterface
+     */
+    public function setPingStatus(string $status): PostInterface
+    {
+        $this->setAttribute(self::PING_STATUS, $status);
         return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getCreatedAt(): ?string
+    public function getPassword(): ?string
     {
-        return $this->getAttribute(self::CREATED_AT);
+        return $this->getAttribute(self::POST_PASSWORD);
+    }
+
+    /**
+     * @param string|null $password
+     * @return PostInterface
+     */
+    public function setPassword(?string $password): PostInterface
+    {
+        $this->setAttribute(self::POST_PASSWORD, $password);
+        return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getUpdatedAt(): ?string
+    public function getName(): ?string
     {
-        return $this->getAttribute(self::UPDATED_AT);
+        return $this->getAttribute(self::POST_NAME);
     }
 
     /**
-     * @return Builder
+     * @param string|null $name
+     * @return PostInterface
      */
-    public function newQuery()
+    public function setName(?string $name): PostInterface
     {
-        $query = parent::newQuery();
+        $this->setAttribute(self::POST_NAME, $name);
+        return $this;
+    }
 
-        // Select by default only publish post
-//        $query->where(Post::POST_STATUS, 'publish');
+    /**
+     * @return string|null
+     */
+    public function getToPing(): ?string
+    {
+        return $this->getAttribute(self::TO_PING);
+    }
 
-        return $query;
+    /**
+     * @param string|null $toPing
+     * @return PostInterface
+     */
+    public function setToPing(?string $toPing): PostInterface
+    {
+        $this->setAttribute(self::TO_PING, $toPing);
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPinged(): ?string
+    {
+        return $this->getAttribute(self::PINGED);
+    }
+
+    /**
+     * @param string|null $pinged
+     * @return PostInterface
+     */
+    public function setPinged(?string $pinged): PostInterface
+    {
+        $this->setAttribute(self::PINGED, $pinged);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModified()
+    {
+        return $this->getAttribute(self::POST_MODIFIED);
+    }
+
+    /**
+     * @param $modified
+     * @return PostInterface
+     */
+    public function setModified($modified): PostInterface
+    {
+        $this->setAttribute(self::POST_MODIFIED, $modified);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPostModifiedGMT()
+    {
+        return $this->getAttribute(self::POST_MODIFIED_GMT);
+    }
+
+    /**
+     * @param $modified
+     * @return PostInterface
+     */
+    public function setPostModifiedGMT($modified): PostInterface
+    {
+        $this->setAttribute(self::POST_MODIFIED_GMT, $modified);
+        return $this;
     }
 
     /**
@@ -160,14 +298,6 @@ class Post extends AbstractModel implements PostInterface
     public function getPostType(): ?string
     {
         return $this->getAttribute(self::POST_TYPE);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function getMetas()
-    {
-        return $this->hasMany(PostMeta::class, PostMeta::POST_ID);
     }
 
     /**
@@ -181,47 +311,89 @@ class Post extends AbstractModel implements PostInterface
     }
 
     /**
-     * Filter by post author
-     *
-     * @param Builder $query
-     * @param null $author
-     * @return Builder
+     * @return string|null
      */
-    public function scopeAuthor(Builder $query, $author = null)
+    public function getGuid(): ?string
     {
-        return $query->where('post_author', '=', $author);
+        return $this->getAttribute(self::GUID);
     }
 
     /**
-     * Filter by post type
-     *
-     * @param Builder $query
-     * @param string|array $postType
-     * @return Builder
+     * @param string|null $guid
+     * @return PostInterface
      */
-    public function scopeType(Builder $query, $postType)
+    public function setGuid(?string $guid): PostInterface
     {
-        if(is_array($postType)) {
-            return $query->whereIn('post_type', $postType);
-        }
-
-        return $query->where('post_type', '=', $postType);
+        $this->setAttribute(self::GUID, $guid);
+        return $this;
     }
 
     /**
-     * Filter by post status
-     *
-     * @param Builder $query
-     * @param string|array $status
-     * @return Builder
+     * @return string|null
      */
-    public function scopeStatus(Builder $query, $status = 'publish')
+    public function getMimeType(): ?string
     {
-        if(is_array($status)) {
-            return $query->whereIn('post_status', $status);
-        }
+        return $this->getAttribute(self::POST_MIME_TYPE);
+    }
 
-        return $query->where('post_status', '=', $status);
+    /**
+     * @param string|null $mimeType
+     * @return PostInterface
+     */
+    public function setMimeType(?string $mimeType): PostInterface
+    {
+        $this->setAttribute(self::POST_MIME_TYPE, $mimeType);
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMenuOrder(): int
+    {
+        return $this->getAttribute(self::MENU_ORDER);
+    }
+
+    /**
+     * @param int $order
+     * @return PostInterface
+     */
+    public function setMenuOrder(int $order): PostInterface
+    {
+        $this->setAttribute(self::MENU_ORDER, $order);
+        return $this;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function metas(): HasMany
+    {
+        return $this->hasMany(PostMeta::class, PostMetaInterface::POST_ID);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function author(): HasOne
+    {
+        return $this->hasOne(User::class, UserInterface::USER_ID, self::POST_AUTHOR);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, CommentInterface::COMMENT_POST_ID);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function parent(): HasOne
+    {
+        return $this->hasOne(Post::class, PostInterface::POST_ID, self::POST_PARENT);
     }
 
 }

@@ -2,6 +2,9 @@
 
 namespace Dbout\WpOrm\Contracts;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 /**
  * Interface PostInterface
  * @package Dbout\WpOrm\Contracts
@@ -45,115 +48,221 @@ interface PostInterface
     public function getId(): ?int;
 
     /**
-     * Get post title
-     *
-     * @return string|null
+     * @return mixed
      */
-    public function getTitle(): ?string;
+    public function getDate();
 
     /**
-     * Set post title
-     *
-     * @param string|null $title
+     * @param $date
      * @return PostInterface
      */
-    public function setTitle(?string $title): PostInterface;
+    public function setDate($date): PostInterface;
 
     /**
-     * Get post content
-     *
+     * @return mixed
+     */
+    public function getDateGMT();
+
+    /**
+     * @param $date
+     * @return PostInterface
+     */
+    public function setDateGMT($date): PostInterface;
+
+    /**
      * @return string|null
      */
     public function getContent(): ?string;
 
     /**
-     * Set post content
-     *
      * @param string|null $content
      * @return PostInterface
      */
     public function setContent(?string $content): PostInterface;
 
     /**
-     * Get post status
-     * ie : draft, publish, ...
-     *
      * @return string|null
      */
-    public function getStatus(): ?string;
+    public function getTitle(): ?string;
 
     /**
-     * Set post status
-     *
-     * @param string|null $status
+     * @param string|null $title
      * @return PostInterface
      */
-    public function setStatus(?string $status): PostInterface;
+    public function setTitle(?string $title): PostInterface;
 
     /**
-     * Get post excerpt
-     *
      * @return string|null
      */
     public function getExcerpt(): ?string;
 
     /**
-     * Set post excerpt
-     *
      * @param string|null $excerpt
      * @return PostInterface
      */
     public function setExcerpt(?string $excerpt): PostInterface;
 
     /**
-     * Get post author id
-     *
-     * @return int|null
+     * @return string|null
      */
-    public function getAuthor(): ?int;
+    public function getStatus(): ?string;
 
     /**
-     * Set post author id
-     *
-     * @param int|null $author
+     * @param string|null $status
      * @return PostInterface
      */
-    public function setAuthor(?int $author): PostInterface;
+    public function setStatus(?string $status): PostInterface;
 
     /**
-     * Get post type
-     *
+     * @return string
+     */
+    public function getPingStatus(): string;
+
+    /**
+     * @param string $status
+     * @return PostInterface
+     */
+    public function setPingStatus(string $status): PostInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getPassword(): ?string;
+
+    /**
+     * @param string|null $password
+     * @return PostInterface
+     */
+    public function setPassword(?string $password): PostInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string;
+
+    /**
+     * @param string|null $name
+     * @return PostInterface
+     */
+    public function setName(?string $name): PostInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getToPing(): ?string;
+
+    /**
+     * @param string|null $toPing
+     * @return PostInterface
+     */
+    public function setToPing(?string $toPing): PostInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getPinged(): ?string;
+
+    /**
+     * @param string|null $pinged
+     * @return PostInterface
+     */
+    public function setPinged(?string $pinged): PostInterface;
+
+    /**
+     * @return mixed
+     */
+    public function getModified();
+
+    /**
+     * @param $modified
+     * @return PostInterface
+     */
+    public function setModified($modified): PostInterface;
+
+    /**
+     * @return mixed
+     */
+    public function getPostModifiedGMT();
+
+    /**
+     * @param $modified
+     * @return PostInterface
+     */
+    public function setPostModifiedGMT($modified): PostInterface;
+
+    /**
      * @return string|null
      */
     public function getPostType(): ?string;
 
     /**
-     * Set post type
-     *
      * @param string $postType
      * @return PostInterface
      */
     public function setPostType(string $postType): PostInterface;
 
     /**
-     * Get created at
-     *
      * @return string|null
      */
-    public function getCreatedAt(): ?string;
+    public function getGuid(): ?string;
 
     /**
-     * Get updated at
-     *
+     * @param string|null $guid
+     * @return PostInterface
+     */
+    public function setGuid(?string $guid): PostInterface;
+
+    /**
      * @return string|null
      */
-    public function getUpdatedAt(): ?string;
+    public function getMimeType(): ?string;
 
     /**
-     * Get metas
-     *
-     * @return mixed
+     * @param string|null $mimeType
+     * @return PostInterface
      */
-    public function getMetas();
+    public function setMimeType(?string $mimeType): PostInterface;
+
+    /**
+     * @return string
+     */
+    public function getCommentStatus(): string;
+
+    /**
+     * @param string $status
+     * @return PostInterface
+     */
+    public function setCommentStatus(string $status): PostInterface;
+
+    /**
+     * @return int
+     */
+    public function getMenuOrder(): int;
+
+    /**
+     * @param int $order
+     * @return PostInterface
+     */
+    public function setMenuOrder(int $order): PostInterface;
+
+    /**
+     * @return HasMany
+     */
+    public function metas(): HasMany;
+
+    /**
+     * @return HasOne
+     */
+    public function author(): HasOne;
+
+    /**
+     * @return HasMany
+     */
+    public function comments(): HasMany;
+
+    /**
+     * @return HasOne
+     */
+    public function parent(): HasOne;
 
 }

@@ -22,4 +22,5 @@ interface CommentMetaInterface extends MetaInterface
      * @return HasOne
      */
     public function comment(): HasOne;
+
 }

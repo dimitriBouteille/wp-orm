@@ -4,8 +4,6 @@ namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Contracts\CommentInterface;
 use Dbout\WpOrm\Contracts\CommentMetaInterface;
-use Dbout\WpOrm\Contracts\MetaInterface;
-use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
