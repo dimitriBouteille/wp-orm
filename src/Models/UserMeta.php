@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @link        https://github.com/dimitriBouteille Github
  * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-class UserMeta extends AbstractModel implements UserMetaInterface
+class UserMeta extends AbstractMeta implements UserMetaInterface
 {
 
     /**
@@ -33,53 +33,11 @@ class UserMeta extends AbstractModel implements UserMetaInterface
     protected $primaryKey = self::META_ID;
 
     /**
-     * Disable created_at and updated_at
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @return HasOne
      */
     public function user(): HasOne
     {
         return $this->hasOne(User::class, UserInterface::USER_ID, self::USER_ID);
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey(): string
-    {
-        return $this->getAttribute(self::META_KEY);
-    }
-
-    /**
-     * @param string $key
-     * @return MetaInterface
-     */
-    public function setKey(string $key): MetaInterface
-    {
-        $this->setAttribute(self::META_KEY, $key);
-        return $this;
-    }
-
-    /**
-     * @return mixed|void
-     */
-    public function getValue()
-    {
-        return $this->getAttribute(self::META_VALUE);
-    }
-
-    /**
-     * @param string $value
-     * @return MetaInterface
-     */
-    public function setValue(string $value): MetaInterface
-    {
-        $this->setAttribute(self::META_VALUE, $value);
-        return $this;
     }
 
 }

@@ -16,11 +16,6 @@ abstract class AbstractModel extends Model
 {
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'ID';
-
-    /**
      * AbstractModel constructor.
      * @param array $attributes
      */
@@ -31,9 +26,7 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * Get a new query builder instance for the connection.
-     *
-     * @return Builder
+     * @return Builder|\Illuminate\Database\Query\Builder
      */
     protected function newBaseQueryBuilder()
     {
@@ -52,7 +45,9 @@ abstract class AbstractModel extends Model
     }
 
     /**
+     * Get table name associated with the model
      * Add wordpress table prefix
+     *
      * @return string
      */
     public function getTable()
@@ -60,7 +55,7 @@ abstract class AbstractModel extends Model
         $prefix = $this->getConnection()->db->prefix;
         if (!empty($this->table)) {
 
-            // Ajoute plusieurs fois le suffix, va savoir pourquoi
+            // Ajoute plusieurs fois le suffix, va savoir pourquoi ...
             // @todo Corriger le bug ci dessus
             return substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
         }
@@ -78,6 +73,16 @@ abstract class AbstractModel extends Model
     public function getId(): ?int
     {
         return $this->{$this->primaryKey};
+    }
+
+    /**
+     * Returns model table name
+     *
+     * @return string
+     */
+    public static function table(): string
+    {
+        return (new static())->getTable();
     }
 
 }

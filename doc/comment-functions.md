@@ -1,0 +1,14 @@
+```php
+$comment->getId();
+$comment->getAuthor();
+$comment->getAuthorEmail();
+$comment->getAuthorIp();
+$comment->getAuthorUrl();
+$comment->getDate();
+$comment->getDateGMT();
+$comment->getContent();
+$comment->getKarma();
+$comment->getApproved();
+$comment->getAgent();
+$comment->getType();
+```

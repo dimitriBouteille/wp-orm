@@ -32,6 +32,11 @@ class User extends AbstractModel implements UserInterface
     protected $table = 'users';
 
     /**
+     * @var string
+     */
+    protected $primaryKey = self::USER_ID;
+
+    /**
      * @return string|null
      */
     public function getLogin(): ?string

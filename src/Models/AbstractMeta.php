@@ -8,9 +8,19 @@ use Dbout\WpOrm\Orm\AbstractModel;
 /**
  * Class AbstractMeta
  * @package Dbout\WpOrm\Models
+ *
+ * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ * @link        https://github.com/dimitriBouteille Github
+ * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
 abstract class AbstractMeta extends AbstractModel implements MetaInterface
 {
+
+    /**
+     * Disable created_at and updated_at
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * @return string
