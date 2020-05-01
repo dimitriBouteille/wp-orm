@@ -77,13 +77,11 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Begin a fluent query against a database table.
-     *
-     * @param  string $table
-     *
-     * @return \Illuminate\Database\Query\Builder
+     * @param \Closure|\Illuminate\Database\Query\Builder|string $table
+     * @param null $as
+     * @return Builder|\Illuminate\Database\Query\Builder
      */
-    public function table($table)
+    public function table($table, $as = null)
     {
         $processor = $this->getPostProcessor();
         $table = $this->db->prefix . $table;
