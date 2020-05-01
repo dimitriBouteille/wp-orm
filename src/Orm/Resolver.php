@@ -6,6 +6,10 @@ use Illuminate\Database\ConnectionResolverInterface;
 /**
  * Class Resolver
  * @package Dbout\WpOrm\Orm
+ *
+ * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ * @link        https://github.com/dimitriBouteille Github
+ * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
 class Resolver implements ConnectionResolverInterface
 {

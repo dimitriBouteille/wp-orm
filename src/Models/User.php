@@ -3,6 +3,7 @@
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Contracts\CommentInterface;
+use Dbout\WpOrm\Contracts\PostInterface;
 use Dbout\WpOrm\Contracts\UserInterface;
 use Dbout\WpOrm\Contracts\UserMetaInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static UserInterface find($userId);
  * @property UserMetaInterface[] $metas
  * @property CommentInterface[] $comments
+ * @property PostInterface[] $posts
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -194,6 +196,14 @@ class User extends AbstractModel implements UserInterface
     public function metas(): HasMany
     {
         return $this->hasMany(UserMeta::class, UserMetaInterface::USER_ID);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class, PostInterface::POST_AUTHOR);
     }
 
 }

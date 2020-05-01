@@ -128,4 +128,9 @@ interface UserInterface
      */
     public function metas(): HasMany;
 
+    /**
+     * @return HasMany
+     */
+    public function posts(): HasMany;
+
 }

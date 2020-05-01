@@ -8,6 +8,7 @@ $user->getUrl();
 $user->getRegistered();
 $user->getActivationKey();
 $user->getDisplayName();
-$user->comments();
-$user->metas();
+$user->comments;
+$user->metas;
+$user->posts;
 ```

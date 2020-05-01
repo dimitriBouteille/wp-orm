@@ -2,6 +2,7 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Contracts\CommentInterface;
 use Dbout\WpOrm\Contracts\PostInterface;
 use Dbout\WpOrm\Contracts\PostMetaInterface;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @package Dbout\WpOrm\Models
  *
  * @method static PostInterface find($postId);
+ * @method static PostBuilder query();
  * @property UserInterface|null $author
  * @property CommentInterface[] $comments
  * @property PostMetaInterface[] $metas
@@ -394,6 +396,15 @@ class Post extends AbstractModel implements PostInterface
     public function parent(): HasOne
     {
         return $this->hasOne(Post::class, PostInterface::POST_ID, self::POST_PARENT);
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return PostBuilder|AbstractModel|\Illuminate\Database\Eloquent\Builder
+     */
+    public function newEloquentBuilder($query)
+    {
+        return new PostBuilder($query);
     }
 
 }
