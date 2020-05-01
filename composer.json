@@ -17,6 +17,7 @@
     "issues": "https://github.com/dimitriBouteille/wp-orm/issues"
   },
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": ">=7.2",
     "illuminate/database": "^6.0",
