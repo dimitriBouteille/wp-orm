@@ -35,9 +35,9 @@ abstract class PostType extends Post
     /**
      * @return string|null
      */
-    public function getPostType(): ?string
+    public final function getPostType(): ?string
     {
-        return $this->postType;
+        return $this->_postType;
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class PostType extends Post
         parent::boot();
         static::setEventDispatcher(new Dispatcher());
         static::saving(function(PostInterface $model) {
-            $model->setPostType($this->_postType);
+            $model->setPostType($model->getPostType());
         });
     }
 

@@ -18,7 +18,7 @@ interface PostInterface
 
     const POST_ID = 'ID';
     const POST_AUTHOR = 'post_author';
-    const POST_DATE =' post_date';
+    const POST_DATE = 'post_date';
     const POST_DATE_GMT = 'post_date_gmt';
     const POST_CONTENT = 'post_content';
     const POST_TITLE = 'post_title';

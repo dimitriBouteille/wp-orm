@@ -25,6 +25,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Comment extends AbstractModel implements CommentInterface
 {
+    
+    const CREATED_AT = self::COMMENT_DATE;
+    const UPDATED_AT =  null;
 
     /**
      * @var string
