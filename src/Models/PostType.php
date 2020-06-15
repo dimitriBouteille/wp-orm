@@ -4,6 +4,7 @@ namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Builders\PostTypeBuilder;
 use Dbout\WpOrm\Contracts\PostInterface;
+use Dbout\WpOrm\Observers\PostTypeObserver;
 use Illuminate\Events\Dispatcher;
 use Udps\Session\Models\Builders\PlaceBuilder;
 
@@ -23,16 +24,6 @@ abstract class PostType extends Post
      * @var string
      */
     protected $_postType;
-
-    /**
-     * PostType constructor.
-     * @param array $attributes
-     */
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-        $this->setAttribute(self::POST_TYPE, $this->getPostType());
-    }
 
     /**
      * @return string|null
@@ -59,5 +50,14 @@ abstract class PostType extends Post
     public static function postType(): ?string
     {
         return (new static())->getPostType();
+    }
+
+    /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::observe(new PostTypeObserver());
     }
 }

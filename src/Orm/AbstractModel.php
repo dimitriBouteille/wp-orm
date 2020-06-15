@@ -84,4 +84,14 @@ abstract class AbstractModel extends Model
     {
         return (new static())->getTable();
     }
+
+    /**
+     * https://laracasts.com/discuss/channels/eloquent/how-to-use-events-with-standalone-eloquent?page=1
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::setEventDispatcher(new \Illuminate\Events\Dispatcher());
+    }
 }
