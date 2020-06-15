@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Builder;
  * Class Option
  * @package Dbout\WpOrm\Models
  *
- * @method static OptionInterface find(int $optionId);
- * @method static Builder name(string $optionName);
+ * @method static OptionInterface   find(int $optionId);
+ * @method static Builder           name(string $optionName);
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -98,5 +98,4 @@ class Option extends AbstractModel implements OptionInterface
     {
         $builder->where(self::OPTION_NAME, $name);
     }
-
 }

@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class PostMeta
  * @package Dbout\WpOrm\Models
  *
- * @method static PostMetaInterface find(int $metaId);
- * @property PostInterface|null $post
+ * @method static PostMetaInterface     find(int $metaId);
+ * @property PostInterface|null         $post
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -37,5 +37,4 @@ class PostMeta extends AbstractMeta implements PostMetaInterface
     {
         return $this->hasOne(Post::class, PostInterface::POST_ID, self::META_ID);
     }
-
 }

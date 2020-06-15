@@ -264,5 +264,4 @@ interface PostInterface
      * @return HasOne
      */
     public function parent(): HasOne;
-
 }

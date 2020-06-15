@@ -55,5 +55,4 @@ interface TermInterface
      * @return TermInterface
      */
     public function setTermGroup(?int $termGroup): TermInterface;
-
 }

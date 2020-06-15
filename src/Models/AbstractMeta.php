@@ -57,5 +57,4 @@ abstract class AbstractMeta extends AbstractModel implements MetaInterface
         $this->setAttribute(self::META_VALUE, $value);
         return $this;
     }
-
 }

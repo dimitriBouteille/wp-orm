@@ -22,5 +22,4 @@ interface PostMetaInterface extends MetaInterface
      * @return HasOne
      */
     public function post(): HasOne;
-
 }

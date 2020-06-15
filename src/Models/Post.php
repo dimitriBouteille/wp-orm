@@ -15,12 +15,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class Post
  * @package Dbout\WpOrm\Models
  *
- * @method static PostInterface find($postId);
- * @method static PostBuilder query();
- * @property UserInterface|null $author
- * @property CommentInterface[] $comments
- * @property PostMetaInterface[] $metas
- * @property PostInterface|null $parent
+ * @method static PostInterface     find($postId);
+ * @method static PostBuilder       query();
+ * @property UserInterface|null     $author
+ * @property CommentInterface[]     $comments
+ * @property PostMetaInterface[]    $metas
+ * @property PostInterface|null     $parent
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -406,5 +406,4 @@ class Post extends AbstractModel implements PostInterface
     {
         return new PostBuilder($query);
     }
-
 }

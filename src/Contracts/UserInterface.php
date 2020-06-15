@@ -132,5 +132,4 @@ interface UserInterface
      * @return HasMany
      */
     public function posts(): HasMany;
-
 }

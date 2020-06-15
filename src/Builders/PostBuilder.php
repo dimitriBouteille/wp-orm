@@ -62,5 +62,4 @@ class PostBuilder extends Builder
 
         return $this;
     }
-
 }

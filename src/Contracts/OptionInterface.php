@@ -55,5 +55,4 @@ interface OptionInterface
      * @return OptionInterface
      */
     public function setAutoload(string $autoload): OptionInterface;
-
 }

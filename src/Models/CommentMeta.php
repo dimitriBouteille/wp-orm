@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class CommentMeta
  * @package Dbout\WpOrm\Models
  *
- * @method static CommentMetaInterface find(int $metaId);
- * @property CommentInterface|null $comment
+ * @method static CommentMetaInterface  find(int $metaId);
+ * @property CommentInterface|null      $comment
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -37,5 +37,4 @@ class CommentMeta extends AbstractMeta implements CommentMetaInterface
     {
         return $this->hasOne(Comment::class, Comment::USER_ID, self::COMMENT_ID);
     }
-
 }

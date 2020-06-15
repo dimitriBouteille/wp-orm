@@ -172,5 +172,4 @@ interface CommentInterface
      * @return HasMany
      */
     public function metas(): HasMany;
-
 }

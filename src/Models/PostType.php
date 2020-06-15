@@ -2,8 +2,10 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Builders\PostTypeBuilder;
 use Dbout\WpOrm\Contracts\PostInterface;
 use Illuminate\Events\Dispatcher;
+use Udps\Session\Models\Builders\PlaceBuilder;
 
 /**
  * Class PostType
@@ -29,7 +31,7 @@ abstract class PostType extends Post
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->setAttribute(self::POST_TYPE, $this->postType);
+        $this->setAttribute(self::POST_TYPE, $this->getPostType());
     }
 
     /**
@@ -41,28 +43,21 @@ abstract class PostType extends Post
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \Dbout\WpOrm\Builders\PostBuilder|PostTypeBuilder|\Dbout\WpOrm\Orm\AbstractModel|\Illuminate\Database\Eloquent\Builder
      */
-    public function newQuery()
+    public function newEloquentBuilder($query)
     {
-        // Set post type
-        $query = parent::newQuery();
-        $query->where(self::POST_TYPE, $this->_postType);
-
-        return $query;
+        return new PostTypeBuilder($query);
     }
 
     /**
-     * Add events
-     * @return void
+     * Returns post type slug
+     *
+     * @return string|null
      */
-    protected static function boot()
+    public static function postType(): ?string
     {
-        parent::boot();
-        static::setEventDispatcher(new Dispatcher());
-        static::saving(function(PostInterface $model) {
-            $model->setPostType($model->getPostType());
-        });
+        return (new static())->getPostType();
     }
-
 }

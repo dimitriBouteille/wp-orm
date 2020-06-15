@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class UserMeta
  * @package Dbout\WpOrm\Models
  *
- * @method static UserMetaInterface find($metaId);
- * @property UserInterface|null $user
+ * @method static UserMetaInterface     find($metaId);
+ * @property UserInterface|null         $user
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -37,5 +37,4 @@ class UserMeta extends AbstractMeta implements UserMetaInterface
     {
         return $this->hasOne(User::class, UserInterface::USER_ID, self::USER_ID);
     }
-
 }

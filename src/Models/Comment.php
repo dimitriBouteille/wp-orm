@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class Comment
  * @package Dbout\WpOrm\Models
  *
- * @method static CommentInterface find(int $commentId);
- * @property UserInterface|null $user
- * @property PostInterface|null $post
- * @property CommentMetaInterface[] $metas
+ * @method static CommentInterface      find(int $commentId);
+ * @property UserInterface|null         $user
+ * @property PostInterface|null         $post
+ * @property CommentMetaInterface[]     $metas
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -260,5 +260,4 @@ class Comment extends AbstractModel implements CommentInterface
     {
         return $this->hasMany(CommentMeta::class, CommentMetaInterface::COMMENT_ID);
     }
-
 }

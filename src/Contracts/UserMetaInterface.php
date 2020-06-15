@@ -22,5 +22,4 @@ interface UserMetaInterface extends MetaInterface
      * @return HasOne
      */
     public function user(): HasOne;
-
 }

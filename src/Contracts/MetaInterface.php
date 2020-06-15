@@ -42,5 +42,4 @@ interface MetaInterface
      * @return MetaInterface
      */
     public function setValue(string $value): MetaInterface;
-
 }

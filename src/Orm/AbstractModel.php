@@ -84,5 +84,4 @@ abstract class AbstractModel extends Model
     {
         return (new static())->getTable();
     }
-
 }

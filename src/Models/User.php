@@ -13,10 +13,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class User
  * @package Dbout\WpOrm\Models
  *
- * @method static UserInterface find($userId);
- * @property UserMetaInterface[] $metas
- * @property CommentInterface[] $comments
- * @property PostInterface[] $posts
+ * @method static UserInterface|UserInterface[]     find($userId)
+ * @property UserMetaInterface[]                    $metas
+ * @property CommentInterface[]                     $comments
+ * @property PostInterface[]                        $posts
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
@@ -205,5 +205,4 @@ class User extends AbstractModel implements UserInterface
     {
         return $this->hasMany(Post::class, PostInterface::POST_AUTHOR);
     }
-
 }
