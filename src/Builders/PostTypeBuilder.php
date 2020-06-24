@@ -24,14 +24,13 @@ class PostTypeBuilder extends Builder
 
     /**
      * @param array $columns
-     * @return Builder[]|\Illuminate\Database\Eloquent\Model[]
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getModels($columns = ['*'])
+    public function get($columns = ['*'])
     {
         $postType = $this->model->getPostType();
+        $this->query->where(PostType::POST_TYPE, $postType);
 
-        return $this->model->hydrate(
-            $this->query->where(PostType::POST_TYPE, $postType)->get($columns)->all()
-        )->all();
+        return parent::get($columns);
     }
 }
