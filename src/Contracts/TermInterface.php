@@ -6,6 +6,9 @@ namespace Dbout\WpOrm\Contracts;
  * Interface TermInterface
  * @package Dbout\WpOrm\Contracts
  *
+ * @method static TermInterface|TermInterface[] find($termId)
+ * @property TermTaxonomyInterface|null $termTaxonomy
+ *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
  * @copyright   (c) 2020 Dimitri BOUTEILLE
@@ -44,15 +47,15 @@ interface TermInterface
      * @return TermInterface
      */
     public function setSlug(string $slug): TermInterface;
-
-    /**
-     * @return int|null
-     */
-    public function getTermGroup(): ?int;
-
-    /**
-     * @param int|null $termGroup
-     * @return TermInterface
-     */
-    public function setTermGroup(?int $termGroup): TermInterface;
+//
+//    /**
+//     * @return int|null
+//     */
+//    public function getTermGroup(): ?int;
+//
+//    /**
+//     * @param int|null $termGroup
+//     * @return TermInterface
+//     */
+//    public function setTermGroup(?int $termGroup): TermInterface;
 }
