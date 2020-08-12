@@ -2,23 +2,25 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Models\PostType;
+use Dbout\WpOrm\Contracts\TermInterface;
+use Dbout\WpOrm\Models\Term;
+use Dbout\WpOrm\Models\TermTaxonomy;
+use Dbout\WpOrm\Models\TermType;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * Class PostTypeBuilder
+ * Class TermTypeBuilder
  * @package Dbout\WpOrm\Builders
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
  * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-class PostTypeBuilder extends Builder
+class TermTypeBuilder extends Builder
 {
 
     /**
-     * @var PostType
+     * @var TermType
      */
     protected $model;
 
@@ -28,10 +30,13 @@ class PostTypeBuilder extends Builder
      */
     public function get($columns = ['*'])
     {
-        $postType = $this->model->getPostType();
-        $this->query
-            ->where(PostType::POST_TYPE, $postType)
-            ->where(PostType::POST_STATUS, 'publish');
+        $taxonomy = $this->model->getTaxonomy();
+
+        $t1 = Term::table();
+        $t2 = TermTaxonomy::table();
+
+        $this->query->join($t2, $t1.'.'.Term::TERM_ID, $t2.'.'. TermTaxonomy::TERM_ID)
+            ->where($t2.'.'. TermTaxonomy::TAXONOMY, $taxonomy);
 
         return parent::get($columns);
     }
