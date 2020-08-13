@@ -30,8 +30,7 @@ class PostTypeBuilder extends Builder
     {
         $postType = $this->model->getPostType();
         $this->query
-            ->where(PostType::POST_TYPE, $postType)
-            ->where(PostType::POST_STATUS, 'publish');
+            ->where(PostType::POST_TYPE, $postType);
 
         return parent::get($columns);
     }
