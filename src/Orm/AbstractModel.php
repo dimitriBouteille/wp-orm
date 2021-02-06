@@ -8,10 +8,6 @@ use Illuminate\Support\Str;
 /**
  * Class AbstractModel
  * @package Dbout\WpOrm\Orm
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2021 Dimitri BOUTEILLE
  */
 abstract class AbstractModel extends Model
 {
