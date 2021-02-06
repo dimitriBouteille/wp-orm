@@ -35,6 +35,5 @@ class Resolver implements ConnectionResolverInterface
      */
     public function setDefaultConnection($name)
     {
-
     }
 }

@@ -16,7 +16,7 @@ trait ModelWithMetas
      */
     public function metas(): HasMany
     {
-        return $this->hasMany($this->_getMetaClass(), $this->_getParentPk());
+        return $this->hasMany($this->_getMetaClass(), $this->_getMetaFk());
     }
 
     /**
@@ -53,7 +53,7 @@ trait ModelWithMetas
             ]);
 
         $instance->fill([
-            AbstractMeta::META_KEY => $value
+            AbstractMeta::META_VALUE => $value
         ])->save();
 
         return $instance;
@@ -78,5 +78,5 @@ trait ModelWithMetas
     /**
      * @return string
      */
-   // abstract protected function _getParentPk(): string;
+    abstract protected function _getMetaFk(): string;
 }

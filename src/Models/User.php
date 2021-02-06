@@ -13,15 +13,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class User
  * @package Dbout\WpOrm\Models
  *
- * @method static self|null find($userId)
+ * @method static User|null find($userId)
  * @method static UserBuilder query()
  * @property UserMeta[] $metas
- * @property CommentInterface[]                     $comments
+ * @property Comment $comments
  * @property Post[] $posts
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
 class User extends AbstractModel
 {
@@ -63,7 +59,7 @@ class User extends AbstractModel
      */
     protected $fillable = [
         self::LOGIN, self::PASSWORD, self::NICE_NAME, self::EMAIL, self::URL, self::REGISTERED, self::ACTIVATION_KEY,
-        self::DISPLAY_NAME,
+        self::DISPLAY_NAME, self::STATUS,
     ];
 
     /**
@@ -78,7 +74,7 @@ class User extends AbstractModel
      * @param string|null $login
      * @return $this
      */
-    public function setLogin(?string $login): User
+    public function setLogin(?string $login): self
     {
         $this->setAttribute(self::LOGIN, $login);
         return $this;
@@ -96,7 +92,7 @@ class User extends AbstractModel
      * @param string|null $password
      * @return $this
      */
-    public function setPassword(?string $password): User
+    public function setPassword(?string $password): self
     {
         $this->setAttribute(self::PASSWORD, $password);
         return $this;
@@ -168,9 +164,27 @@ class User extends AbstractModel
      * @param string|null $niceName
      * @return $this
      */
-    public function setNiceName(?string $niceName): User
+    public function setNiceName(?string $niceName): self
     {
         $this->setAttribute(self::NICE_NAME, $niceName);
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function getStatus(): self
+    {
+        return $this->getAttribute(self::STATUS);
+    }
+
+    /**
+     * @param $status
+     * @return $this
+     */
+    public function setStatus($status): self
+    {
+        $this->setAttribute(self::STATUS, $status);
         return $this;
     }
 
@@ -215,7 +229,7 @@ class User extends AbstractModel
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, CommentInterface::USER_ID);
+        return $this->hasMany(Comment::class, Comment::USER_ID);
     }
 
     /**
@@ -232,6 +246,14 @@ class User extends AbstractModel
     protected function _getMetaClass(): string
     {
         return UserMeta::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getMetaFk(): string
+    {
+        return UserMeta::USER_ID;
     }
 
     /**

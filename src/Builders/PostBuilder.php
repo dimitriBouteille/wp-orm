@@ -3,6 +3,7 @@
 namespace Dbout\WpOrm\Builders;
 
 use Dbout\WpOrm\Models\Post;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class PostBuilder
@@ -12,21 +13,32 @@ class PostBuilder extends AbstractBuilder
 {
 
     /**
+     * @param string $type
+     * @return Collection
+     */
+    public function findAllByType(string $type): Collection
+    {
+        return $this
+            ->whereTypes([$type])
+            ->get();
+    }
+
+    /**
      * @param mixed ...$types
      * @return $this
      */
-    public function types(...$types): self
+    public function whereTypes(...$types): self
     {
-        return $this->_whereOrIn(Post::POST_TYPE, $types);
+        return $this->_whereOrIn(Post::TYPE, $types);
     }
 
     /**
      * @param $author
      * @return $this
      */
-    public function author($author): self
+    public function whereAuthor($author): self
     {
-        $this->where(Post::POST_AUTHOR, $author);
+        $this->where(Post::AUTHOR, $author);
         return $this;
     }
 
@@ -34,8 +46,8 @@ class PostBuilder extends AbstractBuilder
      * @param mixed ...$status
      * @return $this
      */
-    public function status(...$status): self
+    public function whereStatus(...$status): self
     {
-        return $this->_whereOrIn(Post::POST_STATUS, $status);
+        return $this->_whereOrIn(Post::STATUS, $status);
     }
 }

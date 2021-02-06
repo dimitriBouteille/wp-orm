@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class Post
  * @package Dbout\WpOrm\Models
  *
- * @method static self find($postId);
+ * @method static Post find($postId);
  * @method static PostBuilder query();
  * @property User|null $author
  * @property PostMeta[] $metas
@@ -28,27 +28,27 @@ class Post extends AbstractModel
     const CREATED_AT = 'post_date';
     const UPDATED_AT = 'post_modified';
     const POST_ID = 'ID';
-    const POST_AUTHOR = 'post_author';
-    const POST_DATE = 'post_date';
-    const POST_DATE_GMT = 'post_date_gmt';
-    const POST_CONTENT = 'post_content';
-    const POST_TITLE = 'post_title';
-    const POST_EXCERPT = 'post_excerpt';
+    const AUTHOR = 'post_author';
+    const DATE = 'post_date';
+    const DATE_GMT = 'post_date_gmt';
+    const CONTENT = 'post_content';
+    const TITLE = 'post_title';
+    const EXCERPT = 'post_excerpt';
     const COMMENT_STATUS = 'comment_status';
-    const POST_STATUS = 'post_status';
+    const STATUS = 'post_status';
     const PING_STATUS = 'ping_status';
-    const POST_PASSWORD = 'post_password';
+    const PASSWORD = 'post_password';
     const POST_NAME = 'post_name';
     const TO_PING = 'to_ping';
     const PINGED = 'pinged';
-    const POST_MODIFIED = 'post_modified';
-    const POST_MODIFIED_GMT = 'post_modified_gmt';
-    const POST_CONTENT_FILTERED = 'post_content_filtered';
-    const POST_PARENT = 'post_parent';
+    const MODIFIED = 'post_modified';
+    const MODIFIED_GMT = 'post_modified_gmt';
+    const CONTENT_FILTERED = 'post_content_filtered';
+    const PARENT = 'post_parent';
     const GUID = 'guid';
     const MENU_ORDER = 'menu_order';
-    const POST_TYPE = 'post_type';
-    const POST_MIME_TYPE = 'post_mime_type';
+    const TYPE = 'post_type';
+    const MIME_TYPE = 'post_mime_type';
     const COMMENT_COUNT = 'comment_count';
 
     /**
@@ -60,17 +60,17 @@ class Post extends AbstractModel
      * @var string[]
      */
     protected $dates = [
-        self::POST_DATE
+        self::DATE, self::MODIFIED, self::DATE_GMT,  self::MODIFIED_GMT,
     ];
 
     /**
      * @var string[]
      */
     protected $fillable = [
-        self::POST_CONTENT, self::POST_TITLE, self::POST_EXCERPT, self::COMMENT_STATUS, self::POST_STATUS,
-        self::PING_STATUS, self::POST_PASSWORD, self::POST_NAME, self::TO_PING, self::PINGED,
-        self::POST_CONTENT_FILTERED, self::POST_PARENT, self::GUID, self::MENU_ORDER, self::POST_TYPE,
-        self::POST_MIME_TYPE, self::COMMENT_COUNT,
+        self::CONTENT, self::TITLE, self::EXCERPT, self::COMMENT_STATUS, self::STATUS,
+        self::PING_STATUS, self::PASSWORD, self::POST_NAME, self::TO_PING, self::PINGED,
+        self::CONTENT_FILTERED, self::PARENT, self::GUID, self::MENU_ORDER, self::TYPE,
+        self::MIME_TYPE, self::COMMENT_COUNT,
     ];
 
     /**
@@ -83,7 +83,7 @@ class Post extends AbstractModel
      */
     public function getDate(): ?Carbon
     {
-        return $this->getAttribute(self::POST_DATE);
+        return $this->getAttribute(self::DATE);
     }
 
     /**
@@ -92,7 +92,7 @@ class Post extends AbstractModel
      */
     public function setDate($date): self
     {
-        $this->setAttribute(self::POST_DATE, $date);
+        $this->setAttribute(self::DATE, $date);
         return $this;
     }
 
@@ -101,7 +101,7 @@ class Post extends AbstractModel
      */
     public function getDateGMT()
     {
-        return $this->getAttribute(self::POST_DATE_GMT);
+        return $this->getAttribute(self::DATE_GMT);
     }
 
     /**
@@ -110,7 +110,7 @@ class Post extends AbstractModel
      */
     public function setDateGMT($date): self
     {
-        $this->setAttribute(self::POST_DATE_GMT, $date);
+        $this->setAttribute(self::DATE_GMT, $date);
         return $this;
     }
 
@@ -119,7 +119,7 @@ class Post extends AbstractModel
      */
     public function getContent(): ?string
     {
-        return $this->getAttribute(self::POST_CONTENT);
+        return $this->getAttribute(self::CONTENT);
     }
 
     /**
@@ -128,7 +128,7 @@ class Post extends AbstractModel
      */
     public function setContent(?string $content): self
     {
-        $this->setAttribute(self::POST_CONTENT, $content);
+        $this->setAttribute(self::CONTENT, $content);
         return $this;
     }
 
@@ -137,7 +137,7 @@ class Post extends AbstractModel
      */
     public function getTitle(): ?string
     {
-        return $this->getAttribute(self::POST_TITLE);
+        return $this->getAttribute(self::TITLE);
     }
 
     /**
@@ -146,7 +146,7 @@ class Post extends AbstractModel
      */
     public function setTitle(?string $title): self
     {
-        $this->setAttribute(self::POST_TITLE, $title);
+        $this->setAttribute(self::TITLE, $title);
         return $this;
     }
 
@@ -155,7 +155,7 @@ class Post extends AbstractModel
      */
     public function getExcerpt(): ?string
     {
-        return $this->getAttribute(self::POST_EXCERPT);
+        return $this->getAttribute(self::EXCERPT);
     }
 
     /**
@@ -164,7 +164,7 @@ class Post extends AbstractModel
      */
     public function setExcerpt(?string $excerpt): self
     {
-        $this->setAttribute(self::POST_EXCERPT, $excerpt);
+        $this->setAttribute(self::EXCERPT, $excerpt);
         return $this;
     }
 
@@ -173,7 +173,7 @@ class Post extends AbstractModel
      */
     public function getStatus(): ?string
     {
-        return $this->getAttribute(self::POST_STATUS);
+        return $this->getAttribute(self::STATUS);
     }
 
     /**
@@ -182,7 +182,7 @@ class Post extends AbstractModel
      */
     public function setStatus(?string $status): self
     {
-        $this->setAttribute(self::POST_STATUS, $status);
+        $this->setAttribute(self::STATUS, $status);
         return $this;
     }
 
@@ -227,7 +227,7 @@ class Post extends AbstractModel
      */
     public function getPassword(): ?string
     {
-        return $this->getAttribute(self::POST_PASSWORD);
+        return $this->getAttribute(self::PASSWORD);
     }
 
     /**
@@ -236,7 +236,7 @@ class Post extends AbstractModel
      */
     public function setPassword(?string $password): self
     {
-        $this->setAttribute(self::POST_PASSWORD, $password);
+        $this->setAttribute(self::PASSWORD, $password);
         return $this;
     }
 
@@ -295,11 +295,11 @@ class Post extends AbstractModel
     }
 
     /**
-     * @return mixed
+     * @return Carbon|null
      */
-    public function getModified()
+    public function getModified(): ?Carbon
     {
-        return $this->getAttribute(self::POST_MODIFIED);
+        return $this->getAttribute(self::MODIFIED);
     }
 
     /**
@@ -308,16 +308,16 @@ class Post extends AbstractModel
      */
     public function setModified($modified): self
     {
-        $this->setAttribute(self::POST_MODIFIED, $modified);
+        $this->setAttribute(self::MODIFIED, $modified);
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return Carbon|null
      */
-    public function getPostModifiedGMT()
+    public function getPostModifiedGMT(): ?Carbon
     {
-        return $this->getAttribute(self::POST_MODIFIED_GMT);
+        return $this->getAttribute(self::MODIFIED_GMT);
     }
 
     /**
@@ -326,7 +326,7 @@ class Post extends AbstractModel
      */
     public function setPostModifiedGMT($modified): self
     {
-        $this->setAttribute(self::POST_MODIFIED_GMT, $modified);
+        $this->setAttribute(self::MODIFIED_GMT, $modified);
         return $this;
     }
 
@@ -335,7 +335,7 @@ class Post extends AbstractModel
      */
     public function getPostType(): ?string
     {
-        return $this->getAttribute(self::POST_TYPE);
+        return $this->getAttribute(self::TYPE);
     }
 
     /**
@@ -344,7 +344,7 @@ class Post extends AbstractModel
      */
     public function setPostType(string $postType): self
     {
-        $this->setAttribute(self::POST_TYPE, $postType);
+        $this->setAttribute(self::TYPE, $postType);
         return $this;
     }
 
@@ -371,7 +371,7 @@ class Post extends AbstractModel
      */
     public function getMimeType(): ?string
     {
-        return $this->getAttribute(self::POST_MIME_TYPE);
+        return $this->getAttribute(self::MIME_TYPE);
     }
 
     /**
@@ -380,7 +380,7 @@ class Post extends AbstractModel
      */
     public function setMimeType(?string $mimeType): self
     {
-        $this->setAttribute(self::POST_MIME_TYPE, $mimeType);
+        $this->setAttribute(self::MIME_TYPE, $mimeType);
         return $this;
     }
 
@@ -407,7 +407,7 @@ class Post extends AbstractModel
      */
     public function author(): HasOne
     {
-        return $this->hasOne(User::class, User::USER_ID, self::POST_AUTHOR);
+        return $this->hasOne(User::class, User::USER_ID, self::AUTHOR);
     }
 
     /**
@@ -423,7 +423,7 @@ class Post extends AbstractModel
      */
     public function parent(): HasOne
     {
-        return $this->hasOne(Post::class, Post::POST_ID, self::POST_PARENT);
+        return $this->hasOne(Post::class, Post::POST_ID, self::PARENT);
     }
 
     /**
@@ -441,5 +441,13 @@ class Post extends AbstractModel
     protected function _getMetaClass(): string
     {
         return \Dbout\WpOrm\Models\Meta\PostMeta::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getMetaFk(): string
+    {
+        return PostMeta::POST_ID;
     }
 }

@@ -3,6 +3,7 @@
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class AbstractModel
@@ -52,16 +53,16 @@ abstract class AbstractModel extends Model
      */
     public function getTable()
     {
-        $prefix = $this->getConnection()->db->prefix;
+        $prefix = $this->getConnection()->getTablePrefix();
+        
         if (!empty($this->table)) {
-
             // Ajoute plusieurs fois le suffix, va savoir pourquoi ...
             // @todo Corriger le bug ci dessus
-            return substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
+            return \substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
         }
 
-        $table = \substr(\strrchr(get_class($this), "\\"), 1);
-        $table = \snake_case(\str_plural($table));
+        $table = \substr(\strrchr(\get_class($this), "\\"), 1);
+        $table = Str::snake(Str::plural($table));
 
         // Add wordpress table prefix
         return $prefix . $table;

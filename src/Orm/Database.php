@@ -11,10 +11,6 @@ use Illuminate\Support\Arr;
 /**
  * Class Database
  * @package Dbout\WpOrm\Orm
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2021 Dimitri BOUTEILLE
  */
 class Database implements ConnectionInterface
 {
@@ -35,6 +31,11 @@ class Database implements ConnectionInterface
      * @var array
      */
     protected array $config = [];
+
+    /**
+     * @var string|null
+     */
+    protected ?string $tablePrefix;
 
     /**
      * @var null|Database
@@ -63,6 +64,7 @@ class Database implements ConnectionInterface
             'name' => 'wp-eloquent-mysql2',
         ];
 
+        $this->tablePrefix = $wpdb->prefix;
         $this->db = $wpdb;
     }
 
@@ -75,6 +77,22 @@ class Database implements ConnectionInterface
     }
 
     /**
+     * @return mixed|string
+     */
+    public function getName()
+    {
+        return $this->getDatabaseName();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTablePrefix(): ?string
+    {
+        return $this->tablePrefix;
+    }
+
+    /**
      * @param \Closure|\Illuminate\Database\Query\Builder|string $table
      * @param null $as
      * @return Builder|\Illuminate\Database\Query\Builder
@@ -82,7 +100,7 @@ class Database implements ConnectionInterface
     public function table($table, $as = null)
     {
         $processor = $this->getPostProcessor();
-        $table = $this->db->prefix . $table;
+        $table = $this->getTablePrefix() . $table;
         $query = new Builder($this, $this->getQueryGrammar(), $processor);
 
         return $query->from($table);
@@ -173,15 +191,15 @@ class Database implements ConnectionInterface
      */
     private function bind_params($query, $bindings, $update = false)
     {
-        $query = str_replace('"', '`', $query);
+        $query = \str_replace('"', '`', $query);
         $bindings = $this->prepareBindings($bindings);
 
         if (!$bindings) {
             return $query;
         }
 
-        $bindings = array_map(function ($replace) {
-            if (is_string($replace)) {
+        $bindings = \array_map(function ($replace) {
+            if (\is_string($replace)) {
                 $replace = "'" . esc_sql($replace) . "'";
             } elseif ($replace === null) {
                 $replace = "null";
@@ -190,8 +208,8 @@ class Database implements ConnectionInterface
             return $replace;
         }, $bindings);
 
-        $query = str_replace(array('%', '?'), array('%%', '%s'), $query);
-        $query = vsprintf($query, $bindings);
+        $query = \str_replace(array('%', '?'), array('%%', '%s'), $query);
+        $query = \vsprintf($query, $bindings);
 
         return $query;
     }
@@ -270,7 +288,7 @@ class Database implements ConnectionInterface
         if ($result === false || $this->db->last_error)
             throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
 
-        return intval($result);
+        return \intval($result);
     }
 
     /**
@@ -293,8 +311,8 @@ class Database implements ConnectionInterface
         foreach ($bindings as $key => $value) {
 
             // Micro-optimization: check for scalar values before instances
-            if (is_bool($value)) {
-                $bindings[$key] = intval($value);
+            if (\is_bool($value)) {
+                $bindings[$key] = \intval($value);
             } elseif (is_scalar($value)) {
                 continue;
             } elseif ($value instanceof \DateTime) {
@@ -428,6 +446,23 @@ class Database implements ConnectionInterface
 
     protected function exception($exception)
     {
+    }
 
+    /**
+     * @return $this
+     */
+    public function getPdo()
+    {
+        return $this;
+    }
+
+    /**
+     * Enable the query log on the connection.
+     *
+     * @return void
+     */
+    public function enableQueryLog()
+    {
+        $this->loggingQueries = true;
     }
 }

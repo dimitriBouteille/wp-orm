@@ -28,4 +28,11 @@ class Builder extends EloquentBuilder {
         return $this;
     }
 
+    /**
+     * @return Database|\Illuminate\Database\ConnectionInterface
+     */
+    public function getConnection()
+    {
+        return Database::getInstance();
+    }
 }
