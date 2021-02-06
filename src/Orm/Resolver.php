@@ -28,13 +28,12 @@ class Resolver implements ConnectionResolverInterface
      */
     public function getDefaultConnection()
     {
-
     }
 
     /**
      * @param string $name
      */
-    public function setDefaultConnection( $name )
+    public function setDefaultConnection($name)
     {
 
     }

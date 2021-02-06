@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
+ * @copyright   (c) 2021 Dimitri BOUTEILLE
  */
 abstract class AbstractModel extends Model
 {
@@ -60,8 +60,8 @@ abstract class AbstractModel extends Model
             return substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
         }
 
-        $table = substr(strrchr(get_class($this), "\\"), 1);
-        $table = snake_case(str_plural($table));
+        $table = \substr(\strrchr(get_class($this), "\\"), 1);
+        $table = \snake_case(\str_plural($table));
 
         // Add wordpress table prefix
         return $prefix . $table;
@@ -83,15 +83,5 @@ abstract class AbstractModel extends Model
     public static function table(): string
     {
         return (new static())->getTable();
-    }
-
-    /**
-     * https://laracasts.com/discuss/channels/eloquent/how-to-use-events-with-standalone-eloquent?page=1
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::setEventDispatcher(new \Illuminate\Events\Dispatcher());
     }
 }

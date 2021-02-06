@@ -2,11 +2,10 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Carbon\Carbon;
 use Dbout\WpOrm\Builders\PostBuilder;
-use Dbout\WpOrm\Contracts\CommentInterface;
-use Dbout\WpOrm\Contracts\PostInterface;
-use Dbout\WpOrm\Contracts\PostMetaInterface;
-use Dbout\WpOrm\Contracts\UserInterface;
+use Dbout\WpOrm\Models\Meta\ModelWithMetas;
+use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -15,27 +14,64 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class Post
  * @package Dbout\WpOrm\Models
  *
- * @method static PostInterface     find($postId);
- * @method static PostBuilder       query();
- * @property UserInterface|null     $author
- * @property CommentInterface[]     $comments
- * @property PostMetaInterface[]    $metas
- * @property PostInterface|null     $parent
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
+ * @method static self find($postId);
+ * @method static PostBuilder query();
+ * @property User|null $author
+ * @property PostMeta[] $metas
+ * @property Post|null $parent
  */
-class Post extends AbstractModel implements PostInterface
+class Post extends AbstractModel
 {
+
+    use ModelWithMetas;
 
     const CREATED_AT = 'post_date';
     const UPDATED_AT = 'post_modified';
+    const POST_ID = 'ID';
+    const POST_AUTHOR = 'post_author';
+    const POST_DATE = 'post_date';
+    const POST_DATE_GMT = 'post_date_gmt';
+    const POST_CONTENT = 'post_content';
+    const POST_TITLE = 'post_title';
+    const POST_EXCERPT = 'post_excerpt';
+    const COMMENT_STATUS = 'comment_status';
+    const POST_STATUS = 'post_status';
+    const PING_STATUS = 'ping_status';
+    const POST_PASSWORD = 'post_password';
+    const POST_NAME = 'post_name';
+    const TO_PING = 'to_ping';
+    const PINGED = 'pinged';
+    const POST_MODIFIED = 'post_modified';
+    const POST_MODIFIED_GMT = 'post_modified_gmt';
+    const POST_CONTENT_FILTERED = 'post_content_filtered';
+    const POST_PARENT = 'post_parent';
+    const GUID = 'guid';
+    const MENU_ORDER = 'menu_order';
+    const POST_TYPE = 'post_type';
+    const POST_MIME_TYPE = 'post_mime_type';
+    const COMMENT_COUNT = 'comment_count';
 
     /**
      * @var string
      */
     protected $primaryKey = self::POST_ID;
+
+    /**
+     * @var string[]
+     */
+    protected $dates = [
+        self::POST_DATE
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+        self::POST_CONTENT, self::POST_TITLE, self::POST_EXCERPT, self::COMMENT_STATUS, self::POST_STATUS,
+        self::PING_STATUS, self::POST_PASSWORD, self::POST_NAME, self::TO_PING, self::PINGED,
+        self::POST_CONTENT_FILTERED, self::POST_PARENT, self::GUID, self::MENU_ORDER, self::POST_TYPE,
+        self::POST_MIME_TYPE, self::COMMENT_COUNT,
+    ];
 
     /**
      * @var string
@@ -45,16 +81,16 @@ class Post extends AbstractModel implements PostInterface
     /**
      * @return mixed|void
      */
-    public function getDate()
+    public function getDate(): ?Carbon
     {
         return $this->getAttribute(self::POST_DATE);
     }
 
     /**
      * @param $date
-     * @return PostInterface
+     * @return $this
      */
-    public function setDate($date): PostInterface
+    public function setDate($date): self
     {
         $this->setAttribute(self::POST_DATE, $date);
         return $this;
@@ -70,9 +106,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param $date
-     * @return PostInterface
+     * @return $this
      */
-    public function setDateGMT($date): PostInterface
+    public function setDateGMT($date): self
     {
         $this->setAttribute(self::POST_DATE_GMT, $date);
         return $this;
@@ -88,9 +124,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $content
-     * @return PostInterface
+     * @return $this
      */
-    public function setContent(?string $content): PostInterface
+    public function setContent(?string $content): self
     {
         $this->setAttribute(self::POST_CONTENT, $content);
         return $this;
@@ -106,9 +142,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $title
-     * @return PostInterface
+     * @return $this
      */
-    public function setTitle(?string $title): PostInterface
+    public function setTitle(?string $title): self
     {
         $this->setAttribute(self::POST_TITLE, $title);
         return $this;
@@ -124,9 +160,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $excerpt
-     * @return PostInterface
+     * @return $this
      */
-    public function setExcerpt(?string $excerpt): PostInterface
+    public function setExcerpt(?string $excerpt): self
     {
         $this->setAttribute(self::POST_EXCERPT, $excerpt);
         return $this;
@@ -142,9 +178,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $status
-     * @return PostInterface
+     * @return $this
      */
-    public function setStatus(?string $status): PostInterface
+    public function setStatus(?string $status): self
     {
         $this->setAttribute(self::POST_STATUS, $status);
         return $this;
@@ -160,9 +196,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string $status
-     * @return PostInterface
+     * @return $this
      */
-    public function setCommentStatus(string $status): PostInterface
+    public function setCommentStatus(string $status): self
     {
         $this->setAttribute(self::COMMENT_STATUS, $status);
         return $this;
@@ -178,9 +214,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string $status
-     * @return PostInterface
+     * @return $this
      */
-    public function setPingStatus(string $status): PostInterface
+    public function setPingStatus(string $status): self
     {
         $this->setAttribute(self::PING_STATUS, $status);
         return $this;
@@ -196,9 +232,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $password
-     * @return PostInterface
+     * @return $this
      */
-    public function setPassword(?string $password): PostInterface
+    public function setPassword(?string $password): self
     {
         $this->setAttribute(self::POST_PASSWORD, $password);
         return $this;
@@ -214,9 +250,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $name
-     * @return PostInterface
+     * @return $this
      */
-    public function setName(?string $name): PostInterface
+    public function setName(?string $name): self
     {
         $this->setAttribute(self::POST_NAME, $name);
         return $this;
@@ -232,9 +268,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $toPing
-     * @return PostInterface
+     * @return $this
      */
-    public function setToPing(?string $toPing): PostInterface
+    public function setToPing(?string $toPing): self
     {
         $this->setAttribute(self::TO_PING, $toPing);
         return $this;
@@ -250,9 +286,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $pinged
-     * @return PostInterface
+     * @return $this
      */
-    public function setPinged(?string $pinged): PostInterface
+    public function setPinged(?string $pinged): self
     {
         $this->setAttribute(self::PINGED, $pinged);
         return $this;
@@ -268,9 +304,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param $modified
-     * @return PostInterface
+     * @return $this
      */
-    public function setModified($modified): PostInterface
+    public function setModified($modified): self
     {
         $this->setAttribute(self::POST_MODIFIED, $modified);
         return $this;
@@ -286,9 +322,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param $modified
-     * @return PostInterface
+     * @return $this
      */
-    public function setPostModifiedGMT($modified): PostInterface
+    public function setPostModifiedGMT($modified): self
     {
         $this->setAttribute(self::POST_MODIFIED_GMT, $modified);
         return $this;
@@ -304,9 +340,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string $postType
-     * @return PostInterface
+     * @return $this
      */
-    public function setPostType(string $postType): PostInterface
+    public function setPostType(string $postType): self
     {
         $this->setAttribute(self::POST_TYPE, $postType);
         return $this;
@@ -322,9 +358,9 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $guid
-     * @return PostInterface
+     * @return $this
      */
-    public function setGuid(?string $guid): PostInterface
+    public function setGuid(?string $guid): self
     {
         $this->setAttribute(self::GUID, $guid);
         return $this;
@@ -340,38 +376,30 @@ class Post extends AbstractModel implements PostInterface
 
     /**
      * @param string|null $mimeType
-     * @return PostInterface
+     * @return $this
      */
-    public function setMimeType(?string $mimeType): PostInterface
+    public function setMimeType(?string $mimeType): self
     {
         $this->setAttribute(self::POST_MIME_TYPE, $mimeType);
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getMenuOrder(): int
+    public function getMenuOrder(): ?int
     {
         return $this->getAttribute(self::MENU_ORDER);
     }
 
     /**
-     * @param int $order
-     * @return PostInterface
+     * @param int|null $order
+     * @return $this
      */
-    public function setMenuOrder(int $order): PostInterface
+    public function setMenuOrder(?int $order): self
     {
         $this->setAttribute(self::MENU_ORDER, $order);
         return $this;
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function metas(): HasMany
-    {
-        return $this->hasMany(PostMeta::class, PostMetaInterface::POST_ID);
     }
 
     /**
@@ -379,7 +407,7 @@ class Post extends AbstractModel implements PostInterface
      */
     public function author(): HasOne
     {
-        return $this->hasOne(User::class, UserInterface::USER_ID, self::POST_AUTHOR);
+        return $this->hasOne(User::class, User::USER_ID, self::POST_AUTHOR);
     }
 
     /**
@@ -387,7 +415,7 @@ class Post extends AbstractModel implements PostInterface
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, CommentInterface::COMMENT_POST_ID);
+        return $this->hasMany(Comment::class, Comment::POST_ID);
     }
 
     /**
@@ -395,15 +423,23 @@ class Post extends AbstractModel implements PostInterface
      */
     public function parent(): HasOne
     {
-        return $this->hasOne(Post::class, PostInterface::POST_ID, self::POST_PARENT);
+        return $this->hasOne(Post::class, Post::POST_ID, self::POST_PARENT);
     }
 
     /**
      * @param \Illuminate\Database\Query\Builder $query
-     * @return PostBuilder|AbstractModel|\Illuminate\Database\Eloquent\Builder
+     * @return PostBuilder
      */
-    public function newEloquentBuilder($query)
+    public function newEloquentBuilder($query): PostBuilder
     {
         return new PostBuilder($query);
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getMetaClass(): string
+    {
+        return \Dbout\WpOrm\Models\Meta\PostMeta::class;
     }
 }

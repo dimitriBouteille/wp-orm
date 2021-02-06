@@ -2,36 +2,31 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Contracts\PostInterface;
-use Illuminate\Database\Eloquent\Builder;
+use Dbout\WpOrm\Models\Post;
 
 /**
  * Class PostBuilder
  * @package Dbout\WpOrm\Builders
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-class PostBuilder extends Builder
+class PostBuilder extends AbstractBuilder
 {
 
     /**
      * @param mixed ...$types
      * @return $this
      */
-    public function types(...$types)
+    public function types(...$types): self
     {
-        return $this->_whereOrIn(PostInterface::POST_TYPE, $types);
+        return $this->_whereOrIn(Post::POST_TYPE, $types);
     }
 
     /**
      * @param $author
      * @return $this
      */
-    public function author($author)
+    public function author($author): self
     {
-        $this->where(PostInterface::POST_AUTHOR, $author);
+        $this->where(Post::POST_AUTHOR, $author);
         return $this;
     }
 
@@ -39,27 +34,8 @@ class PostBuilder extends Builder
      * @param mixed ...$status
      * @return $this
      */
-    public function status(...$status)
+    public function status(...$status): self
     {
-        return $this->_whereOrIn(PostInterface::POST_STATUS, $status);
-    }
-
-    /**
-     * @param string $columns
-     * @param $value
-     * @return $this
-     */
-    protected function _whereOrIn(string $columns, array $value)
-    {
-        $first = reset($value);
-        if(is_array($first)) {
-            $this->whereIn($columns, $first);
-        } else if(count($value) == 1) {
-            $this->where($columns, reset($value));
-        } else {
-            $this->whereIn($columns, $value);
-        }
-
-        return $this;
+        return $this->_whereOrIn(Post::POST_STATUS, $status);
     }
 }

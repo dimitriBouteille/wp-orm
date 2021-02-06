@@ -2,10 +2,10 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Contracts\CommentInterface;
-use Dbout\WpOrm\Contracts\PostInterface;
-use Dbout\WpOrm\Contracts\UserInterface;
-use Dbout\WpOrm\Contracts\UserMetaInterface;
+use Carbon\Carbon;
+use Dbout\WpOrm\Builders\UserBuilder;
+use Dbout\WpOrm\Models\Meta\ModelWithMetas;
+use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,18 +13,31 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class User
  * @package Dbout\WpOrm\Models
  *
- * @method static UserInterface|UserInterface[]     find($userId)
- * @property UserMetaInterface[]                    $metas
+ * @method static self|null find($userId)
+ * @method static UserBuilder query()
+ * @property UserMeta[] $metas
  * @property CommentInterface[]                     $comments
- * @property PostInterface[]                        $posts
+ * @property Post[] $posts
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
  * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-class User extends AbstractModel implements UserInterface
+class User extends AbstractModel
 {
 
+    use ModelWithMetas;
+
+    const USER_ID = 'ID';
+    const LOGIN = 'user_login';
+    const PASSWORD = 'user_pass';
+    const NICE_NAME = 'user_nicename';
+    const EMAIL = 'user_email';
+    const URL = 'user_url';
+    const REGISTERED = 'user_registered';
+    const ACTIVATION_KEY = 'user_activation_key';
+    const DISPLAY_NAME = 'display_name';
+    const STATUS = 'status';
     const CREATED_AT = 'user_registered';
     const UPDATED_AT = null;
 
@@ -34,25 +47,40 @@ class User extends AbstractModel implements UserInterface
     protected $table = 'users';
 
     /**
+     * @var string[]
+     */
+    protected $dates = [
+        self::REGISTERED,
+    ];
+
+    /**
      * @var string
      */
     protected $primaryKey = self::USER_ID;
+
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+        self::LOGIN, self::PASSWORD, self::NICE_NAME, self::EMAIL, self::URL, self::REGISTERED, self::ACTIVATION_KEY,
+        self::DISPLAY_NAME,
+    ];
 
     /**
      * @return string|null
      */
     public function getLogin(): ?string
     {
-        return $this->getAttribute(self::USER_LOGIN);
+        return $this->getAttribute(self::LOGIN);
     }
 
     /**
      * @param string|null $login
-     * @return UserInterface
+     * @return $this
      */
-    public function setLogin(?string $login): UserInterface
+    public function setLogin(?string $login): User
     {
-        $this->setAttribute(self::USER_LOGIN, $login);
+        $this->setAttribute(self::LOGIN, $login);
         return $this;
     }
 
@@ -61,16 +89,16 @@ class User extends AbstractModel implements UserInterface
      */
     public function getPassword(): ?string
     {
-        return $this->getAttribute(self::USER_PASS);
+        return $this->getAttribute(self::PASSWORD);
     }
 
     /**
      * @param string|null $password
-     * @return UserInterface
+     * @return $this
      */
-    public function setPassword(?string $password): UserInterface
+    public function setPassword(?string $password): User
     {
-        $this->setAttribute(self::USER_PASS, $password);
+        $this->setAttribute(self::PASSWORD, $password);
         return $this;
     }
 
@@ -79,16 +107,16 @@ class User extends AbstractModel implements UserInterface
      */
     public function getEmail(): ?string
     {
-        return $this->getAttribute(self::USER_EMAIL);
+        return $this->getAttribute(self::EMAIL);
     }
 
     /**
      * @param string|null $email
-     * @return UserInterface
+     * @return $this
      */
-    public function setEmail(?string $email): UserInterface
+    public function setEmail(?string $email): User
     {
-        $this->setAttribute(self::USER_EMAIL, $email);
+        $this->setAttribute(self::EMAIL, $email);
         return $this;
     }
 
@@ -102,9 +130,9 @@ class User extends AbstractModel implements UserInterface
 
     /**
      * @param string|null $displayName
-     * @return UserInterface
+     * @return $this
      */
-    public function setDisplayName(?string $displayName): UserInterface
+    public function setDisplayName(?string $displayName): User
     {
         $this->setAttribute(self::DISPLAY_NAME, $displayName);
         return $this;
@@ -115,16 +143,16 @@ class User extends AbstractModel implements UserInterface
      */
     public function getUrl(): ?string
     {
-        return $this->getAttribute(self::USER_URL);
+        return $this->getAttribute(self::URL);
     }
 
     /**
      * @param string|null $url
-     * @return UserInterface
+     * @return $this
      */
-    public function setUrl(?string $url): UserInterface
+    public function setUrl(?string $url): User
     {
-        $this->setAttribute(self::USER_URL, $url);
+        $this->setAttribute(self::URL, $url);
         return $this;
     }
 
@@ -133,34 +161,34 @@ class User extends AbstractModel implements UserInterface
      */
     public function getNiceName(): ?string
     {
-        return $this->getAttribute(self::USER_NICENAME);
+        return $this->getAttribute(self::NICE_NAME);
     }
 
     /**
      * @param string|null $niceName
-     * @return UserInterface
+     * @return $this
      */
-    public function setNiceName(?string $niceName): UserInterface
+    public function setNiceName(?string $niceName): User
     {
-        $this->setAttribute(self::USER_NICENAME, $niceName);
+        $this->setAttribute(self::NICE_NAME, $niceName);
         return $this;
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return Carbon|null
      */
-    public function getRegistered(): ?\DateTimeInterface
+    public function getRegistered(): ?Carbon
     {
-        return $this->getAttribute(self::USER_REGISTERED);
+        return $this->getAttribute(self::REGISTERED);
     }
 
     /**
      * @param $registered
-     * @return UserInterface
+     * @return $this
      */
-    public function setRegistered($registered): UserInterface
+    public function setRegistered($registered): self
     {
-        $this->setAttribute(self::USER_REGISTERED, $registered);
+        $this->setAttribute(self::REGISTERED, $registered);
         return $this;
     }
 
@@ -169,16 +197,16 @@ class User extends AbstractModel implements UserInterface
      */
     public function getActivationKey(): ?string
     {
-        return $this->getAttribute(self::USER_ACTIVATION_KEY);
+        return $this->getAttribute(self::ACTIVATION_KEY);
     }
 
     /**
      * @param string|null $activationKey
-     * @return UserInterface
+     * @return $this
      */
-    public function setActivationKey(?string $activationKey): UserInterface
+    public function setActivationKey(?string $activationKey): self
     {
-        $this->setAttribute(self::USER_ACTIVATION_KEY, $activationKey);
+        $this->setAttribute(self::ACTIVATION_KEY, $activationKey);
         return $this;
     }
 
@@ -193,16 +221,25 @@ class User extends AbstractModel implements UserInterface
     /**
      * @return HasMany
      */
-    public function metas(): HasMany
+    public function posts(): HasMany
     {
-        return $this->hasMany(UserMeta::class, UserMetaInterface::USER_ID);
+        return $this->hasMany(Post::class, Post::POST_AUTHOR);
     }
 
     /**
-     * @return HasMany
+     * @return string
      */
-    public function posts(): HasMany
+    protected function _getMetaClass(): string
     {
-        return $this->hasMany(Post::class, PostInterface::POST_AUTHOR);
+        return UserMeta::class;
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return UserBuilder
+     */
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
     }
 }

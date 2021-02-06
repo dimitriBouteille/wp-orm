@@ -2,31 +2,40 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Contracts\CommentInterface;
-use Dbout\WpOrm\Contracts\CommentMetaInterface;
-use Dbout\WpOrm\Contracts\PostInterface;
-use Dbout\WpOrm\Contracts\UserInterface;
+use Carbon\Carbon;
+use Dbout\WpOrm\Builders\CommentBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Comment
  * @package Dbout\WpOrm\Models
  *
- * @method static CommentInterface      find(int $commentId);
- * @property UserInterface|null         $user
- * @property PostInterface|null         $post
- * @property CommentMetaInterface[]     $metas
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
+ * @method static Comment|null find(int $commentId)
+ * @method static CommentBuilder query()
+ * @property User|null $user
+ * @property Post|null $post
+ * @property Comment|null $parent
  */
-class Comment extends AbstractModel implements CommentInterface
+class Comment extends AbstractModel
 {
-    
-    const CREATED_AT = self::COMMENT_DATE;
+
+    const COMMENT_ID = 'comment_ID';
+    const POST_ID = 'comment_post_ID';
+    const AUTHOR = 'comment_author';
+    const AUTHOR_EMAIL = 'comment_author_email';
+    const AUTHOR_URL = 'comment_author_url';
+    const AUTHOR_IP = 'comment_author_IP';
+    const DATE = 'comment_date';
+    const DATE_GMT = 'comment_date_gmt';
+    const CONTENT = 'comment_content';
+    const KARMA = 'comment_karma';
+    const APPROVED = 'comment_approved';
+    const AGENT = 'comment_agent';
+    const TYPE = 'comment_type';
+    const PARENT = 'comment_parent';
+    const USER_ID = 'user_id';
+    const CREATED_AT = self::DATE;
     const UPDATED_AT =  null;
 
     /**
@@ -41,11 +50,11 @@ class Comment extends AbstractModel implements CommentInterface
 
     /**
      * @param string $author
-     * @return CommentInterface
+     * @return $this
      */
-    public function setAuthor(string $author): CommentInterface
+    public function setAuthor(string $author): self
     {
-        $this->setAttribute(self::COMMENT_AUTHOR, $author);
+        $this->setAttribute(self::AUTHOR, $author);
         return $this;
     }
 
@@ -54,16 +63,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getAuthor(): string
     {
-        return $this->getAttribute(self::COMMENT_AUTHOR);
+        return $this->getAttribute(self::AUTHOR);
     }
 
     /**
      * @param string $email
-     * @return CommentInterface
+     * @return $this
      */
-    public function setAuthorEmail(string $email): CommentInterface
+    public function setAuthorEmail(string $email): self
     {
-        $this->setAttribute(self::COMMENT_AUTHOR_EMAIL, $email);
+        $this->setAttribute(self::AUTHOR_EMAIL, $email);
         return $this;
     }
 
@@ -72,16 +81,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getAuthorEmail(): string
     {
-        return $this->getAttribute(self::COMMENT_AUTHOR_EMAIL);
+        return $this->getAttribute(self::AUTHOR_EMAIL);
     }
 
     /**
      * @param string|null $url
-     * @return CommentInterface
+     * @return $this
      */
-    public function setAuthorUrl(?string $url): CommentInterface
+    public function setAuthorUrl(?string $url): self
     {
-        $this->setAttribute(self::COMMENT_AUTHOR_URL, $url);
+        $this->setAttribute(self::AUTHOR_URL, $url);
         return $this;
     }
 
@@ -90,16 +99,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getAuthorUrl(): ?string
     {
-        return $this->getAttribute(self::COMMENT_AUTHOR_URL);
+        return $this->getAttribute(self::AUTHOR_URL);
     }
 
     /**
      * @param string|null $ip
-     * @return CommentInterface
+     * @return $this
      */
-    public function setAuthorIp(?string $ip): CommentInterface
+    public function setAuthorIp(?string $ip): self
     {
-        $this->setAttribute(self::COMMENT_AUTHOR_IP, $ip);
+        $this->setAttribute(self::AUTHOR_IP, $ip);
         return $this;
     }
 
@@ -108,34 +117,34 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getAuthorIp(): ?string
     {
-        return $this->getAttribute(self::COMMENT_AUTHOR_IP);
+        return $this->getAttribute(self::AUTHOR_IP);
     }
 
     /**
      * @param $date
-     * @return CommentInterface
+     * @return $this
      */
-    public function setDate($date): CommentInterface
+    public function setDate($date): self
     {
-        $this->setAttribute(self::COMMENT_DATE, $date);
+        $this->setAttribute(self::DATE, $date);
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return Carbon|null
      */
-    public function getDate()
+    public function getDate(): ?Carbon
     {
-        return $this->getAttribute(self::COMMENT_DATE);
+        return $this->getAttribute(self::DATE);
     }
 
     /**
      * @param $date
-     * @return CommentInterface
+     * @return $this
      */
-    public function setDateGMT($date): CommentInterface
+    public function setDateGMT($date): self
     {
-        $this->setAttribute(self::COMMENT_DATE_GMT, $date);
+        $this->setAttribute(self::DATE_GMT, $date);
         return $this;
     }
 
@@ -144,16 +153,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getDateGMT()
     {
-        return $this->getAttribute(self::COMMENT_DATE_GMT);
+        return $this->getAttribute(self::DATE_GMT);
     }
 
     /**
      * @param string $content
-     * @return CommentInterface
+     * @return $this
      */
-    public function setContent(string $content): CommentInterface
+    public function setContent(string $content): self
     {
-        $this->setAttribute(self::COMMENT_CONTENT, $content);
+        $this->setAttribute(self::CONTENT, $content);
         return $this;
     }
 
@@ -162,16 +171,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getContent(): ?string
     {
-        return $this->getAttribute(self::COMMENT_CONTENT);
+        return $this->getAttribute(self::CONTENT);
     }
 
     /**
      * @param int $karma
-     * @return CommentInterface
+     * @return $this
      */
-    public function setKarma(int $karma): CommentInterface
+    public function setKarma(int $karma): self
     {
-        $this->setAttribute(self::COMMENT_KARMA, $karma);
+        $this->setAttribute(self::KARMA, $karma);
         return $this;
     }
 
@@ -180,16 +189,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getKarma(): int
     {
-        return $this->getAttribute(self::COMMENT_KARMA);
+        return $this->getAttribute(self::KARMA);
     }
 
     /**
      * @param string $approved
-     * @return CommentInterface
+     * @return $this
      */
-    public function setApproved(string $approved): CommentInterface
+    public function setApproved(string $approved): self
     {
-        $this->setAttribute(self::COMMENT_APPROVED, $approved);
+        $this->setAttribute(self::APPROVED, $approved);
         return $this;
     }
 
@@ -198,16 +207,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getApproved()
     {
-        return $this->getAttribute(self::COMMENT_APPROVED);
+        return $this->getAttribute(self::APPROVED);
     }
 
     /**
      * @param string $agent
-     * @return CommentInterface
+     * @return $this
      */
-    public function setAgent(string $agent): CommentInterface
+    public function setAgent(string $agent): self
     {
-        $this->setAttribute(self::COMMENT_AGENT, $agent);
+        $this->setAttribute(self::AGENT, $agent);
         return $this;
     }
 
@@ -216,16 +225,16 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getAgent(): ?string
     {
-        return $this->getAttribute(self::COMMENT_AGENT);
+        return $this->getAttribute(self::AGENT);
     }
 
     /**
      * @param string|null $type
-     * @return CommentInterface
+     * @return $this
      */
-    public function setType(?string $type): CommentInterface
+    public function setType(?string $type): self
     {
-        $this->setAttribute(self::COMMENT_TYPE, $type);
+        $this->setAttribute(self::TYPE, $type);
         return $this;
     }
 
@@ -234,15 +243,7 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function getType(): ?string
     {
-        return $this->getAttribute(self::COMMENT_TYPE);
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function post(): HasOne
-    {
-        return $this->hasOne(Post::class, Post::POST_ID, self::COMMENT_POST_ID);
+        return $this->getAttribute(self::TYPE);
     }
 
     /**
@@ -250,14 +251,31 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, UserInterface::USER_ID, self::USER_ID);
+        return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
     }
 
     /**
-     * @return HasMany
+     * @return HasOne
      */
-    public function metas(): HasMany
+    public function post(): HasOne
     {
-        return $this->hasMany(CommentMeta::class, CommentMetaInterface::COMMENT_ID);
+        return $this->hasOne(Post::class, Post::POST_ID, self::POST_ID);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function parent(): HasOne
+    {
+        return $this->hasOne(Comment::class, Comment::COMMENT_ID, self::PARENT);
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return CommentBuilder
+     */
+    public function newEloquentBuilder($query): CommentBuilder
+    {
+        return new CommentBuilder($query);
     }
 }

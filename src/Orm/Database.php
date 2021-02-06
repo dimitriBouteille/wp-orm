@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
  *
  * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
+ * @copyright   (c) 2021 Dimitri BOUTEILLE
  */
 class Database implements ConnectionInterface
 {
@@ -28,23 +28,23 @@ class Database implements ConnectionInterface
      * Count of active transactions
      * @var int
      */
-    public $transactionCount = 0;
+    public int $transactionCount = 0;
 
     /**
      * The database connection configuration options.
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @var null|Database
      */
-    protected static $instance = null;
+    protected static ?self $instance = null;
 
     /**
-     * @return Database|null
+     * @return Database
      */
-    public static function getInstance()
+    public static function getInstance(): Database
     {
         if (!self::$instance) {
             self::$instance = new self();
@@ -59,19 +59,17 @@ class Database implements ConnectionInterface
     public function __construct()
     {
         global $wpdb;
-
         $this->config = [
             'name' => 'wp-eloquent-mysql2',
         ];
+
         $this->db = $wpdb;
     }
 
     /**
-     * Get the database connection name.
-     *
-     * @return string|null
+     * @return mixed|string
      */
-    public function getName()
+    public function getDatabaseName()
     {
         return $this->getConfig('name');
     }
@@ -219,24 +217,18 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Run an insert statement
-     *
      * @param string $query
      * @param array $bindings
      * @return bool
      */
     public function insert($query, $bindings = [])
     {
-//        var_dump($query, $bindings); die;
         return $this->statement($query, $bindings);
     }
 
     /**
-     * Run an update statement against the database.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return int
      */
     public function update($query, $bindings = array())
@@ -245,11 +237,8 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Run a delete statement against the database.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return int
      */
     public function delete($query, $bindings = array())
@@ -258,32 +247,24 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Execute an SQL statement and return the boolean result.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return bool
      */
     public function statement($query, $bindings = array())
     {
-        $new_query = $this->bind_params($query, $bindings, true);
-
-        return $this->unprepared($new_query);
+        $newQuery = $this->bind_params($query, $bindings, true);
+        return $this->unprepared($newQuery);
     }
 
     /**
-     * Run an SQL statement and get the number of rows affected.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return int
      */
     public function affectingStatement($query, $bindings = array())
     {
         $new_query = $this->bind_params($query, $bindings, true);
-
         $result = $this->db->query($new_query);
 
         if ($result === false || $this->db->last_error)
@@ -293,30 +274,22 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Run a raw, unprepared query against the PDO connection.
-     *
-     * @param  string $query
-     *
+     * @param string $query
      * @return bool
      */
     public function unprepared($query)
     {
         $result = $this->db->query($query);
-
         return ($result === false || $this->db->last_error);
     }
 
     /**
-     * Prepare the query bindings for execution.
-     *
-     * @param  array $bindings
-     *
+     * @param array $bindings
      * @return array
      */
     public function prepareBindings(array $bindings)
     {
         $grammar = $this->getQueryGrammar();
-
         foreach ($bindings as $key => $value) {
 
             // Micro-optimization: check for scalar values before instances
@@ -336,13 +309,9 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Execute a Closure within a transaction.
-     *
-     * @param  \Closure $callback
-     * @param  int  $attempts
-     *
+     * @param \Closure $callback
+     * @param int $attempts
      * @return mixed
-     *
      * @throws \Exception
      */
     public function transaction(\Closure $callback, $attempts = 1)
@@ -433,14 +402,6 @@ class Database implements ConnectionInterface
     public function getQueryGrammar()
     {
         return new Grammar();
-    }
-
-    /**
-     * @return $this
-     */
-    public function getPdo()
-    {
-        return $this;
     }
 
     /**
