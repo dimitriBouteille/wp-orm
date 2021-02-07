@@ -10,32 +10,28 @@ class Config
 {
 
     /**
-     * @param string|null $migrationsPath
      * @return array
      */
-    public static function createPhinxConfig(?string $migrationsPath = null): array
+    public static function createPhinxConfig(array $userConfig = []): array
     {
         $config = [
-            'migration_base_class' => \Dbout\WpOrm\Migration\AbstractMigration::class,
+            'migration_base_class' => \Phinx\Migration\AbstractMigration::class,
+            'paths' => [
+                'migrations' => $userConfig['migrations_path'],
+            ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',
-                'default_database' => 'dev',
-                'dev' => [
+                'default_database' => 'default',
+                'default' => [
                     'adapter' => 'mysql',
-                    'host' => '',
-                    'name' => '',
-                    'user' => '',
-                    'pass' => '',
-                    'table_prefix' => '',
+                    'host' => $userConfig['db_host'] ?? '',
+                    'name' => $userConfig['db_name'] ?? '',
+                    'user' => $userConfig['db_user'] ?? '',
+                    'pass' => $userConfig['db_password'] ?? '',
+                    'table_prefix' => $userConfig['table_prefix'] ?? '',
                 ]
             ],
         ];
-
-        if ($migrationsPath) {
-            $config['paths'] = [
-                'migrations' => $migrationsPath,
-            ];
-        }
 
         return $config;
     }

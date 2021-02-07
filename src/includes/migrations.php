@@ -3,11 +3,11 @@
 if (!function_exists('wp_orm_get_phinx_config')) {
 
     /**
-     * @param string|null $migrationsPath
+     * @param array $config
      * @return array
      */
-    function wp_orm_get_phinx_config(?string $migrationsPath = null): array
+    function wp_orm_get_phinx_config(array $config = []): array
     {
-        return \Dbout\WpOrm\Migration\Config::createPhinxConfig($migrationsPath);
+        return \Dbout\WpOrm\Migration\Config::createPhinxConfig($config);
     }
 }

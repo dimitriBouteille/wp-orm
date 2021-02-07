@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class Post
  * @package Dbout\WpOrm\Models
  *
- * @method static Post find($postId);
- * @method static PostBuilder query();
+ * @method static Post find($postId)
+ * @method static PostBuilder query()
  * @property User|null $author
  * @property PostMeta[] $metas
  * @property Post|null $parent
@@ -315,7 +315,7 @@ class Post extends AbstractModel
     /**
      * @return Carbon|null
      */
-    public function getPostModifiedGMT(): ?Carbon
+    public function getMdifiedGMT(): ?Carbon
     {
         return $this->getAttribute(self::MODIFIED_GMT);
     }
@@ -324,7 +324,7 @@ class Post extends AbstractModel
      * @param $modified
      * @return $this
      */
-    public function setPostModifiedGMT($modified): self
+    public function setModifiedGMT($modified): self
     {
         $this->setAttribute(self::MODIFIED_GMT, $modified);
         return $this;
@@ -333,7 +333,7 @@ class Post extends AbstractModel
     /**
      * @return string|null
      */
-    public function getPostType(): ?string
+    public function getType(): ?string
     {
         return $this->getAttribute(self::TYPE);
     }
@@ -342,7 +342,7 @@ class Post extends AbstractModel
      * @param string $postType
      * @return $this
      */
-    public function setPostType(string $postType): self
+    public function setType(string $postType): self
     {
         $this->setAttribute(self::TYPE, $postType);
         return $this;
