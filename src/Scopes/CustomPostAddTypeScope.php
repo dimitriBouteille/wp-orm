@@ -2,7 +2,6 @@
 
 namespace Dbout\WpOrm\Scopes;
 
-use Dbout\WpOrm\Builders\CustomPostBuilder;
 use Dbout\WpOrm\Models\CustomPost;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +20,6 @@ class CustomPostAddTypeScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        /** @var CustomPostBuilder $builder */
         /** @var CustomPost $model */
         $type = $model->getType();
         $builder->whereTypes($type);
