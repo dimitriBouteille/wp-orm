@@ -10,11 +10,12 @@ class Config
 {
 
     /**
+     * @param array $userConfig
      * @return array
      */
     public static function createPhinxConfig(array $userConfig = []): array
     {
-        $config = [
+        return [
             'migration_base_class' => \Phinx\Migration\AbstractMigration::class,
             'paths' => [
                 'migrations' => $userConfig['migrations_path'],
@@ -32,7 +33,5 @@ class Config
                 ]
             ],
         ];
-
-        return $config;
     }
 }

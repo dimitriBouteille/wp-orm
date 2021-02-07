@@ -23,6 +23,9 @@
     "illuminate/database": "^8.0",
     "robmorgan/phinx": "^0.12.5"
   },
+  "suggest": {
+    "illuminate/events": "Add events to your models"
+  },
   "autoload": {
     "files": [
       "src/includes/migrations.php"
