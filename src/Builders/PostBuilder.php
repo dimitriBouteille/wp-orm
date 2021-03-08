@@ -13,6 +13,21 @@ class PostBuilder extends AbstractBuilder
 {
 
     /**
+     * @param string|null $name
+     * @return Post|null
+     */
+    public function findOneByName(?string $name): ?Post
+    {
+        if (!$name) {
+            return null;
+        }
+
+        return $this
+            ->where(Post::POST_NAME, $name)
+            ->first();
+    }
+
+    /**
      * @param string $type
      * @return Collection
      */
