@@ -31,6 +31,20 @@ trait ModelWithMetas
 
     /**
      * @param string $metaKey
+     * @return mixed|null
+     */
+    public function getMetaValue(string $metaKey)
+    {
+        $meta = $this->getMeta($metaKey);
+        if (!$meta) {
+            return null;
+        }
+
+        return $meta->getValue();
+    }
+
+    /**
+     * @param string $metaKey
      * @return bool
      */
     public function hasMeta(string $metaKey): bool
