@@ -32,12 +32,25 @@ Basic usage with core Wordpress models
 
 #### Queries
 
-|  | Query |
-| :---: | :---: |
-| Get all pages | `$pages = \Dbout\WpOrm\Models\Page::all();` |
-| Get one page by ID | `$page = \Dbout\WpOrm\Models\Page::find(15);` |
-| Get all pages by author | `$pages = \Dbout\WpOrm\Models\Page::query()->whereAuthor(1)->get();` |
-| Get all publish pages | `$pages = \Dbout\WpOrm\Models\Page::query()->whereAuthor(1)->get();` |
+- Get all pages
+```php
+$pages = \Dbout\WpOrm\Models\Page::all();
+```
+
+- Get one page by ID
+```php
+$page = \Dbout\WpOrm\Models\Page::find(15);
+```
+
+- Get all pages by author
+```php
+$pages = \Dbout\WpOrm\Models\Page::query()->whereAuthor(1)->get();
+```
+
+- Get all publish pages
+```php
+$pages = \Dbout\WpOrm\Models\Page::query()->whereStatus('publish')->get();
+```
 
 ### Migration
 
