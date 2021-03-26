@@ -64,7 +64,6 @@ class Database implements ConnectionInterface
             'name' => 'wp-eloquent-mysql2',
         ];
 
-
         if ($wpdb) {
             $this->tablePrefix = $wpdb->prefix;
         }
