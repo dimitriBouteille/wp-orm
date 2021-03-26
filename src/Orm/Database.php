@@ -35,7 +35,7 @@ class Database implements ConnectionInterface
     /**
      * @var string|null
      */
-    protected ?string $tablePrefix;
+    protected ?string $tablePrefix = '';
 
     /**
      * @var null|Database
@@ -64,7 +64,15 @@ class Database implements ConnectionInterface
             'name' => 'wp-eloquent-mysql2',
         ];
 
-        $this->tablePrefix = $wpdb->prefix;
+
+        if ($wpdb) {
+            $this->tablePrefix = $wpdb->prefix;
+        }
+
+        if (!$this->tablePrefix && defined('DB_PREFIX')) {
+            $this->tablePrefix = DB_PREFIX;
+        }
+
         $this->db = $wpdb;
     }
 
