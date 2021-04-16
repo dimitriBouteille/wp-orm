@@ -2,7 +2,7 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Exceptions\NotAllowedException;
+use Dbout\WpOrm\Orm\Traits\TypeModel;
 use Dbout\WpOrm\Scopes\CustomPostAddTypeScope;
 
 /**
@@ -12,10 +12,7 @@ use Dbout\WpOrm\Scopes\CustomPostAddTypeScope;
 abstract class CustomPost extends Post
 {
 
-    /**
-     * @var string
-     */
-    protected string $_type;
+    use TypeModel;
 
     /**
      * CustomPost constructor.
@@ -28,33 +25,6 @@ abstract class CustomPost extends Post
         ];
 
         parent::__construct($attributes);
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getType(): ?string
-    {
-        return $this->_type;
-    }
-
-    /**
-     * @param string $postType
-     * @return Post
-     * @throws NotAllowedException
-     */
-    public function setType(string $postType): Post
-    {
-        throw new NotAllowedException(sprintf("You cannot set a type for this object. Current type [%s]", $this->_type));
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public static function type(): ?string
-    {
-        return (new static())->getType();
     }
 
     /**

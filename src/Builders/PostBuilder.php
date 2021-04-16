@@ -2,6 +2,7 @@
 
 namespace Dbout\WpOrm\Builders;
 
+use Dbout\WpOrm\Builders\Traits\WithMeta;
 use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class PostBuilder extends AbstractBuilder
 {
+
+    use WithMeta;
 
     /**
      * @param string|null $name

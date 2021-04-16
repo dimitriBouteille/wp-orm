@@ -4,8 +4,9 @@ namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
 use Dbout\WpOrm\Builders\PostBuilder;
-use Dbout\WpOrm\Models\Meta\ModelWithMetas;
+use Dbout\WpOrm\Models\Meta\MetaMap;
 use Dbout\WpOrm\Models\Meta\PostMeta;
+use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -19,11 +20,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property User|null $author
  * @property PostMeta[] $metas
  * @property Post|null $parent
+ * @property Comment[] $comments
  */
 class Post extends AbstractModel
 {
 
-    use ModelWithMetas;
+    use WithMeta;
 
     const CREATED_AT = 'post_date';
     const UPDATED_AT = 'post_modified';
@@ -427,8 +429,7 @@ class Post extends AbstractModel
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return PostBuilder
+     * @inheritDoc
      */
     public function newEloquentBuilder($query): PostBuilder
     {
@@ -436,18 +437,10 @@ class Post extends AbstractModel
     }
 
     /**
-     * @return string
+     * @return MetaMap
      */
-    protected function _getMetaClass(): string
+    public function getMetaMap(): MetaMap
     {
-        return \Dbout\WpOrm\Models\Meta\PostMeta::class;
-    }
-
-    /**
-     * @return string
-     */
-    protected function _getMetaFk(): string
-    {
-        return PostMeta::POST_ID;
+        return new MetaMap(\Dbout\WpOrm\Models\Meta\PostMeta::class, PostMeta::POST_ID);
     }
 }

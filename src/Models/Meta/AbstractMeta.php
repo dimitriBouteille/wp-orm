@@ -62,4 +62,20 @@ abstract class AbstractMeta extends AbstractModel
         $this->setAttribute(self::META_VALUE, $value);
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getKeyColumn(): string
+    {
+        return self::META_KEY;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueColumn(): string
+    {
+        return self::META_VALUE;
+    }
 }

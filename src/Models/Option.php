@@ -91,8 +91,7 @@ class Option extends AbstractModel
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return OptionBuilder
+     * @inheritDoc
      */
     public function newEloquentBuilder($query): OptionBuilder
     {

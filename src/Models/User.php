@@ -257,8 +257,7 @@ class User extends AbstractModel
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return UserBuilder
+     * @inheritDoc
      */
     public function newEloquentBuilder($query): UserBuilder
     {
