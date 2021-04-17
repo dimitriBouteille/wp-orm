@@ -47,7 +47,7 @@ abstract class AbstractModel extends Model
      *
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         $prefix = $this->getConnection()->getTablePrefix();
         
@@ -80,5 +80,31 @@ abstract class AbstractModel extends Model
     public static function table(): string
     {
         return (new static())->getTable();
+    }
+
+    /**
+     * @param string $method
+     * @param array $parameters
+     * @return $this|mixed
+     */
+    public function __call($method, $parameters)
+    {
+        preg_match('#^(get|set)(.*)#', $method, $matchGetter);
+        if (!$matchGetter) {
+            return parent::__call($method, $parameters);
+        }
+
+        $type = $matchGetter[1];
+        $attribute = $matchGetter[2];
+
+        // to pascal case
+        $attribute = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $attribute));
+
+        if ($type === 'get') {
+            return $this->getAttribute($attribute);
+        }
+
+        $this->setAttribute($attribute, ...$parameters);
+        return $this;
     }
 }

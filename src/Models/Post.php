@@ -20,42 +20,44 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property PostMeta[] $metas
  * @property Post|null $parent
  *
- * @method self setDate($date)
- * @method Carbon|null getDate()
- * @method self setDateGMT($date)
- * @method Carbon|null getDateGMT()
- * @method self setContent(?string $content)
- * @method string|null getContent()
- * @method self setType(string $type)
- * @method string|null getType()
+ * @method self setPostDate($date)
+ * @method Carbon|null getPostDate()
+ * @method self setPostDateGMT($date)
+ * @method Carbon|null getPostDateGMT()
+ * @method self setPostContent(?string $content)
+ * @method string|null getPostContent()
+ * @method self setPostType(string $type)
+ * @method string|null getPostType()
  * @method self setGuid(?string $guid)
  * @method string|null getGuid()
- * @method self setTitle(?string $title)
- * @method string|null getTitle()
- * @method self setExcerpt(?string $excerpt)
- * @method string|null getExcerpt()
- * @method self setStatus(?string $status)
- * @method string|null getStatus()
+ * @method self setPostTitle(?string $title)
+ * @method string|null getPostTitle()
+ * @method self setPostExcerpt(?string $excerpt)
+ * @method string|null getPostExcerpt()
+ * @method self setPostStatus(?string $status)
+ * @method string|null getPostStatus()
  * @method self setCommentStatus(string $status)
  * @method string|null getCommentStatus()
  * @method self setPingStatus(string $status)
  * @method string|null getPingStatus()
- * @method self setPassword(?string $password)
- * @method string|null getPassword()
- * @method self setName(?string $name)
- * @method string|null getName()
+ * @method self setPostPassword(?string $password)
+ * @method string|null getPostPassword()
+ * @method self setPostName(?string $name)
+ * @method string|null getPostName()
  * @method self setToPing(?string $toPing)
  * @method string|null getToPing()
  * @method self setPinged(?string $pinged)
  * @method string|null getPinged()
- * @method self setModified($modified)
- * @method Carbon|null getModified()
- * @method self setModifiedGMT($modified)
- * @method Carbon|null getModifiedGMT()
- * @method setMimeType(?string $mimeType)
- * @method string|null getMimeType()
+ * @method self setPostModified($modified)
+ * @method Carbon|null getPostModified()
+ * @method self setPostModifiedGMT($modified)
+ * @method Carbon|null getPostModifiedGMT()
+ * @method setPostMimeType(?string $mimeType)
+ * @method string|null getPostMimeType()
  * @method self setMenuOrder(?int $order)
  * @method int|null getMenuOrder()
+ * @method self setPostContentFiltered($content)
+ * @method string|null getPostContentFiltered()
  */
 class Post extends AbstractModel
 {
@@ -108,6 +110,13 @@ class Post extends AbstractModel
         self::PING_STATUS, self::PASSWORD, self::POST_NAME, self::TO_PING, self::PINGED,
         self::CONTENT_FILTERED, self::PARENT, self::GUID, self::MENU_ORDER, self::TYPE,
         self::MIME_TYPE, self::COMMENT_COUNT,
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $casts = [
+        self::MENU_ORDER => 'integer',
     ];
 
     /**
