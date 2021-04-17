@@ -2,8 +2,8 @@
 
 namespace Dbout\WpOrm\Builders\Traits;
 
+use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
-use Dbout\WpOrm\Models\Meta\MetaMap;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,12 +26,7 @@ trait WithMeta
     /**
      * @var AbstractMeta|null
      */
-    protected ?AbstractMeta $modelMeta = null;
-
-    /**
-     * @var MetaMap|null
-     */
-    protected ?MetaMap $metaMap = null;
+    protected ?AbstractMeta $metaModel = null;
 
     /**
      * @param string $metaKey
@@ -47,7 +42,7 @@ trait WithMeta
             $alias = $metaKey;
         }
 
-        $column = sprintf('%s.%s AS %s', $metaKey, $this->modelMeta->getValueColumn(), $alias);
+        $column = sprintf('%s.%s AS %s', $metaKey, $this->metaModel->getValueColumn(), $alias);
         $this->addSelect($column);
         return $this;
     }
@@ -64,7 +59,7 @@ trait WithMeta
                 $alias = $key;
             }
 
-            $this->addMetaToSelect($metaName, $key);
+            $this->addMetaToSelect($metaName, $alias);
         }
         
         return $this;
@@ -79,8 +74,8 @@ trait WithMeta
     public function addMetaToFilter(string $metaKey, $value, string $operator = '='): self
     {
         $this
-            ->joinToMeta($metaKey,'inner')
-            ->where(sprintf('%s.%s', $metaKey, $this->modelMeta->getValueColumn()), $operator, $value);
+            ->joinToMeta($metaKey)
+            ->where(sprintf('%s.%s', $metaKey, $this->metaModel->getValueColumn()), $operator, $value);
 
         return $this;
     }
@@ -88,17 +83,27 @@ trait WithMeta
     /**
      * @param Model $model
      * @return $this
+     * @throws MetaNotSupportedException
      * @throws \ReflectionException
      */
     public function setModel(Model $model): self
     {
-        $this->metaMap = $model->getMetaMap();
-        $reflection = (new \ReflectionClass($this->metaMap->getClass()));
-        $this->modelMeta = $reflection->newInstanceWithoutConstructor();
+        $traits = class_uses_recursive(get_class($model));
+        if (!in_array(\Dbout\WpOrm\Models\Meta\WithMeta::class, $traits)) {
+            throw new MetaNotSupportedException(sprintf(
+                "Model %s must be use trait %s",
+                get_class($model),
+                \Dbout\WpOrm\Models\Meta\WithMeta::class
+            ));
+        }
+
+        $metaClass = $model->getMetaClass();
+        $object = (new \ReflectionClass($metaClass));
+        $this->metaModel = $object->newInstanceWithoutConstructor();
 
         return parent::setModel($model);
     }
-    
+
     /**
      * @param string $metaKey
      * @param string $joinType
@@ -108,7 +113,7 @@ trait WithMeta
     {
         /** @var AbstractModel $model */
         $model = $this->model;
-        $joinTable = sprintf('%s AS %s', $this->modelMeta->getTable(), $metaKey);
+        $joinTable = sprintf('%s AS %s', $this->metaModel->getTable(), $metaKey);
 
         if ($this->joined($this, $joinTable)) {
             return $this;
@@ -118,11 +123,11 @@ trait WithMeta
         $this->$join($joinTable, function ($join) use ($metaKey, $model) {
             /** @var \Illuminate\Database\Query\JoinClause $join */
             $join->on(
-                sprintf('%s.%s', $metaKey, $this->modelMeta->getKeyColumn()),
+                sprintf('%s.%s', $metaKey, $this->metaModel->getKeyColumn()),
             '=',
                 $join->raw(sprintf("'%s'", $metaKey))
             )->on(
-                $join->raw(sprintf("%s.%s", $metaKey, $this->metaMap->getFk())),
+                $join->raw(sprintf("%s.%s", $metaKey, $this->metaModel->getFkColumn())),
             '=',
                 sprintf('%s.%s', $model->getTable(), $model->getKeyName()),
             );

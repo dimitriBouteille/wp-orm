@@ -35,4 +35,12 @@ class UserMeta extends AbstractMeta
     {
         return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
     }
+
+    /**
+     * @return string
+     */
+    public function getFkColumn(): string
+    {
+        return self::USER_ID;
+    }
 }

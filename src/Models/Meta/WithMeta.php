@@ -2,6 +2,7 @@
 
 namespace Dbout\WpOrm\Models\Meta;
 
+use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -12,11 +13,35 @@ trait WithMeta
 {
 
     /**
+     * @var AbstractMeta|null
+     */
+    protected ?AbstractMeta $metaModel = null;
+
+    /**
+     * @throws MetaNotSupportedException
+     * @throws \ReflectionException
+     */
+    public function initializeWithMeta(): void
+    {
+        $metaClass = $this->getMetaClass();
+        $object = (new \ReflectionClass($metaClass));
+        if (!$object->isSubclassOf(AbstractMeta::class)) {
+            throw new MetaNotSupportedException(sprintf(
+                "Model %s must be implement %s",
+                $metaClass,
+                MetaInterface::class
+            ));
+        }
+
+        $this->metaModel = $object->newInstanceWithoutConstructor();
+    }
+
+    /**
      * @return HasMany
      */
     public function metas(): HasMany
     {
-        return $this->hasMany($this->_getMetaClass(), $this->_getMetaFk());
+        return $this->hasMany(get_class($this->metaModel), $this->metaModel->getFkColumn());
     }
 
     /**
@@ -26,7 +51,7 @@ trait WithMeta
     public function getMeta(string $metaKey): ?AbstractMeta
     {
         return $this->metas()
-            ->firstWhere(AbstractMeta::META_KEY, $metaKey);
+            ->firstWhere($this->metaModel->getKeyColumn(), $metaKey);
     }
 
     /**
@@ -50,7 +75,7 @@ trait WithMeta
     public function hasMeta(string $metaKey): bool
     {
         return $this->metas()
-            ->where(AbstractMeta::META_KEY, $metaKey)
+            ->where($this->metaModel->getKeyColumn(), $metaKey)
             ->exists();
     }
 
@@ -63,11 +88,11 @@ trait WithMeta
     {
         $instance = $this->metas()
             ->firstOrNew([
-                $this->getMetaMap()->getKeyColumn() => $metaKey
+                $this->metaModel->getKeyColumn() => $metaKey
             ]);
 
         $instance->fill([
-            $this->getMetaMap()->getValueColumn() => $value
+            $this->metaModel->getValueColumn() => $value
         ])->save();
 
         return $instance;
@@ -80,12 +105,12 @@ trait WithMeta
     public function deleteMeta(string $metaKey): bool
     {
         return $this->metas()
-            ->where(AbstractMeta::META_KEY, $metaKey)
+            ->where($this->metaModel->getKeyColumn(), $metaKey)
             ->forceDelete();
     }
 
     /**
-     * @return MetaMap
+     * @return string
      */
-    abstract public function getMetaMap(): MetaMap;
+    abstract public function getMetaClass(): string;
 }

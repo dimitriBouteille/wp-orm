@@ -2,6 +2,7 @@
 
 namespace Dbout\WpOrm\Builders;
 
+use Dbout\WpOrm\Builders\Traits\WithMeta;
 use Dbout\WpOrm\Models\User;
 
 /**
@@ -10,6 +11,8 @@ use Dbout\WpOrm\Models\User;
  */
 class UserBuilder extends AbstractBuilder
 {
+
+    use WithMeta;
 
     /**
      * @param string $email
@@ -42,7 +45,7 @@ class UserBuilder extends AbstractBuilder
      * @param string $login
      * @return $this
      */
-    public function wherelogin(string $login): self
+    public function whereLogin(string $login): self
     {
         return $this->where(User::LOGIN, $login);
     }

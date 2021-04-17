@@ -8,7 +8,7 @@ use Dbout\WpOrm\Orm\AbstractModel;
  * Class AbstractMeta
  * @package Dbout\WpOrm\Models\Meta
  */
-abstract class AbstractMeta extends AbstractModel
+abstract class AbstractMeta extends AbstractModel implements MetaInterface
 {
 
     const META_KEY = 'meta_key';

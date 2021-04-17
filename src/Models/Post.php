@@ -4,7 +4,6 @@ namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
 use Dbout\WpOrm\Builders\PostBuilder;
-use Dbout\WpOrm\Models\Meta\MetaMap;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -317,7 +316,7 @@ class Post extends AbstractModel
     /**
      * @return Carbon|null
      */
-    public function getMdifiedGMT(): ?Carbon
+    public function getModifiedGMT(): ?Carbon
     {
         return $this->getAttribute(self::MODIFIED_GMT);
     }
@@ -437,10 +436,10 @@ class Post extends AbstractModel
     }
 
     /**
-     * @return MetaMap
+     * @inerhitDoc
      */
-    public function getMetaMap(): MetaMap
+    public function getMetaClass(): string
     {
-        return new MetaMap(\Dbout\WpOrm\Models\Meta\PostMeta::class, PostMeta::POST_ID);
+        return \Dbout\WpOrm\Models\Meta\PostMeta::class;
     }
 }

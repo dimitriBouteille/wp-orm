@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Dbout\WpOrm\Builders\UserBuilder;
 use Dbout\WpOrm\Models\Meta\ModelWithMetas;
 use Dbout\WpOrm\Models\Meta\UserMeta;
+use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class User extends AbstractModel
 {
 
-    use ModelWithMetas;
+    use WithMeta;
 
     const USER_ID = 'ID';
     const LOGIN = 'user_login';
@@ -241,26 +242,18 @@ class User extends AbstractModel
     }
 
     /**
-     * @return string
-     */
-    protected function _getMetaClass(): string
-    {
-        return UserMeta::class;
-    }
-
-    /**
-     * @return string
-     */
-    protected function _getMetaFk(): string
-    {
-        return UserMeta::USER_ID;
-    }
-
-    /**
      * @inheritDoc
      */
     public function newEloquentBuilder($query): UserBuilder
     {
         return new UserBuilder($query);
+    }
+
+    /**
+     * @inerhitDoc
+     */
+    public function getMetaClass(): string
+    {
+        return \Dbout\WpOrm\Models\Meta\UserMeta::class;
     }
 }

@@ -35,4 +35,12 @@ class PostMeta extends AbstractMeta
     {
         return $this->hasOne(Post::class, Post::POST_ID, self::POST_ID);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFkColumn(): string
+    {
+        return self::POST_ID;
+    }
 }
