@@ -41,6 +41,6 @@ trait HasCustomType
      */
     public static function type(): ?string
     {
-        return (new static())->getType();
+        return (new static())->getPostType();
     }
 }

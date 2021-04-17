@@ -21,7 +21,7 @@ class CustomPostAddTypeScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
         /** @var CustomPost $model */
-        $type = $model->getType();
+        $type = $model->getPostType();
         $builder->whereTypes($type);
     }
 }
