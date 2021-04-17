@@ -13,10 +13,9 @@ abstract class AbstractBuilder extends Builder
 {
 
     /**
-     * @param Model $model
-     * @return $this
+     * @inheritDoc
      */
-    public function setModel(Model $model): self
+    public function setModel(Model $model)
     {
         parent::setModel($model);
         $this->select(sprintf('%s.*', $this->model->getTable()));

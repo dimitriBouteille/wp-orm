@@ -81,12 +81,11 @@ trait WithMeta
     }
 
     /**
-     * @param Model $model
-     * @return $this
+     * @inheritDoc
      * @throws MetaNotSupportedException
      * @throws \ReflectionException
      */
-    public function setModel(Model $model): self
+    public function setModel(Model $model)
     {
         $traits = class_uses_recursive(get_class($model));
         if (!in_array(\Dbout\WpOrm\Models\Meta\WithMeta::class, $traits)) {
