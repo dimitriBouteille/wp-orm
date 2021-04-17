@@ -14,12 +14,48 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Class Post
  * @package Dbout\WpOrm\Models
  *
- * @method static Post find($postId)
+ * @method static Post find(int $postId)
  * @method static PostBuilder query()
  * @property User|null $author
  * @property PostMeta[] $metas
  * @property Post|null $parent
- * @property Comment[] $comments
+ *
+ * @method self setDate($date)
+ * @method Carbon|null getDate()
+ * @method self setDateGMT($date)
+ * @method Carbon|null getDateGMT()
+ * @method self setContent(?string $content)
+ * @method string|null getContent()
+ * @method self setType(string $type)
+ * @method string|null getType()
+ * @method self setGuid(?string $guid)
+ * @method string|null getGuid()
+ * @method self setTitle(?string $title)
+ * @method string|null getTitle()
+ * @method self setExcerpt(?string $excerpt)
+ * @method string|null getExcerpt()
+ * @method self setStatus(?string $status)
+ * @method string|null getStatus()
+ * @method self setCommentStatus(string $status)
+ * @method string|null getCommentStatus()
+ * @method self setPingStatus(string $status)
+ * @method string|null getPingStatus()
+ * @method self setPassword(?string $password)
+ * @method string|null getPassword()
+ * @method self setName(?string $name)
+ * @method string|null getName()
+ * @method self setToPing(?string $toPing)
+ * @method string|null getToPing()
+ * @method self setPinged(?string $pinged)
+ * @method string|null getPinged()
+ * @method self setModified($modified)
+ * @method Carbon|null getModified()
+ * @method self setModifiedGMT($modified)
+ * @method Carbon|null getModifiedGMT()
+ * @method setMimeType(?string $mimeType)
+ * @method string|null getMimeType()
+ * @method self setMenuOrder(?int $order)
+ * @method int|null getMenuOrder()
  */
 class Post extends AbstractModel
 {
@@ -78,330 +114,6 @@ class Post extends AbstractModel
      * @var string
      */
     protected $table = 'posts';
-
-    /**
-     * @return mixed|void
-     */
-    public function getDate(): ?Carbon
-    {
-        return $this->getAttribute(self::DATE);
-    }
-
-    /**
-     * @param $date
-     * @return $this
-     */
-    public function setDate($date): self
-    {
-        $this->setAttribute(self::DATE, $date);
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDateGMT()
-    {
-        return $this->getAttribute(self::DATE_GMT);
-    }
-
-    /**
-     * @param $date
-     * @return $this
-     */
-    public function setDateGMT($date): self
-    {
-        $this->setAttribute(self::DATE_GMT, $date);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getContent(): ?string
-    {
-        return $this->getAttribute(self::CONTENT);
-    }
-
-    /**
-     * @param string|null $content
-     * @return $this
-     */
-    public function setContent(?string $content): self
-    {
-        $this->setAttribute(self::CONTENT, $content);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTitle(): ?string
-    {
-        return $this->getAttribute(self::TITLE);
-    }
-
-    /**
-     * @param string|null $title
-     * @return $this
-     */
-    public function setTitle(?string $title): self
-    {
-        $this->setAttribute(self::TITLE, $title);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getExcerpt(): ?string
-    {
-        return $this->getAttribute(self::EXCERPT);
-    }
-
-    /**
-     * @param string|null $excerpt
-     * @return $this
-     */
-    public function setExcerpt(?string $excerpt): self
-    {
-        $this->setAttribute(self::EXCERPT, $excerpt);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getStatus(): ?string
-    {
-        return $this->getAttribute(self::STATUS);
-    }
-
-    /**
-     * @param string|null $status
-     * @return $this
-     */
-    public function setStatus(?string $status): self
-    {
-        $this->setAttribute(self::STATUS, $status);
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCommentStatus(): string
-    {
-        return $this->getAttribute(self::COMMENT_STATUS);
-    }
-
-    /**
-     * @param string $status
-     * @return $this
-     */
-    public function setCommentStatus(string $status): self
-    {
-        $this->setAttribute(self::COMMENT_STATUS, $status);
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPingStatus(): string
-    {
-        return $this->getAttribute(self::PING_STATUS);
-    }
-
-    /**
-     * @param string $status
-     * @return $this
-     */
-    public function setPingStatus(string $status): self
-    {
-        $this->setAttribute(self::PING_STATUS, $status);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPassword(): ?string
-    {
-        return $this->getAttribute(self::PASSWORD);
-    }
-
-    /**
-     * @param string|null $password
-     * @return $this
-     */
-    public function setPassword(?string $password): self
-    {
-        $this->setAttribute(self::PASSWORD, $password);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getName(): ?string
-    {
-        return $this->getAttribute(self::POST_NAME);
-    }
-
-    /**
-     * @param string|null $name
-     * @return $this
-     */
-    public function setName(?string $name): self
-    {
-        $this->setAttribute(self::POST_NAME, $name);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getToPing(): ?string
-    {
-        return $this->getAttribute(self::TO_PING);
-    }
-
-    /**
-     * @param string|null $toPing
-     * @return $this
-     */
-    public function setToPing(?string $toPing): self
-    {
-        $this->setAttribute(self::TO_PING, $toPing);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPinged(): ?string
-    {
-        return $this->getAttribute(self::PINGED);
-    }
-
-    /**
-     * @param string|null $pinged
-     * @return $this
-     */
-    public function setPinged(?string $pinged): self
-    {
-        $this->setAttribute(self::PINGED, $pinged);
-        return $this;
-    }
-
-    /**
-     * @return Carbon|null
-     */
-    public function getModified(): ?Carbon
-    {
-        return $this->getAttribute(self::MODIFIED);
-    }
-
-    /**
-     * @param $modified
-     * @return $this
-     */
-    public function setModified($modified): self
-    {
-        $this->setAttribute(self::MODIFIED, $modified);
-        return $this;
-    }
-
-    /**
-     * @return Carbon|null
-     */
-    public function getModifiedGMT(): ?Carbon
-    {
-        return $this->getAttribute(self::MODIFIED_GMT);
-    }
-
-    /**
-     * @param $modified
-     * @return $this
-     */
-    public function setModifiedGMT($modified): self
-    {
-        $this->setAttribute(self::MODIFIED_GMT, $modified);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getType(): ?string
-    {
-        return $this->getAttribute(self::TYPE);
-    }
-
-    /**
-     * @param string $postType
-     * @return $this
-     */
-    public function setType(string $postType): self
-    {
-        $this->setAttribute(self::TYPE, $postType);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getGuid(): ?string
-    {
-        return $this->getAttribute(self::GUID);
-    }
-
-    /**
-     * @param string|null $guid
-     * @return $this
-     */
-    public function setGuid(?string $guid): self
-    {
-        $this->setAttribute(self::GUID, $guid);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getMimeType(): ?string
-    {
-        return $this->getAttribute(self::MIME_TYPE);
-    }
-
-    /**
-     * @param string|null $mimeType
-     * @return $this
-     */
-    public function setMimeType(?string $mimeType): self
-    {
-        $this->setAttribute(self::MIME_TYPE, $mimeType);
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getMenuOrder(): ?int
-    {
-        return $this->getAttribute(self::MENU_ORDER);
-    }
-
-    /**
-     * @param int|null $order
-     * @return $this
-     */
-    public function setMenuOrder(?int $order): self
-    {
-        $this->setAttribute(self::MENU_ORDER, $order);
-        return $this;
-    }
 
     /**
      * @return HasOne

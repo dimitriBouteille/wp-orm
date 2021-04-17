@@ -2,7 +2,7 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Orm\Traits\TypeModel;
+use Dbout\WpOrm\Models\Traits\HasCustomType;
 use Dbout\WpOrm\Scopes\CustomPostAddTypeScope;
 
 /**
@@ -12,7 +12,7 @@ use Dbout\WpOrm\Scopes\CustomPostAddTypeScope;
 abstract class CustomPost extends Post
 {
 
-    use TypeModel;
+    use HasCustomType;
 
     /**
      * CustomPost constructor.

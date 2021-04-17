@@ -1,14 +1,14 @@
 <?php
 
-namespace Dbout\WpOrm\Orm\Traits;
+namespace Dbout\WpOrm\Models\Traits;
 
 use Dbout\WpOrm\Exceptions\NotAllowedException;
 
 /**
- * Trait TypeModel
- * @package Dbout\WpOrm\Orm\Traits
+ * Trait HasCustomType
+ * @package Dbout\WpOrm\Models\Traits
  */
-trait TypeModel
+trait HasCustomType
 {
 
     /**

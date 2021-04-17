@@ -25,7 +25,7 @@ trait WithMeta
     {
         $metaClass = $this->getMetaClass();
         $object = (new \ReflectionClass($metaClass));
-        if (!$object->isSubclassOf(AbstractMeta::class)) {
+        if (!$object->implementsInterface(MetaInterface::class)) {
             throw new MetaNotSupportedException(sprintf(
                 "Model %s must be implement %s",
                 $metaClass,
