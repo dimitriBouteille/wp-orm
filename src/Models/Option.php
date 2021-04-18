@@ -11,6 +11,13 @@ use Dbout\WpOrm\Orm\AbstractModel;
  *
  * @method static Option|null find($optionId)
  * @method static OptionBuilder query()
+ *
+ * @method self setOptionName(string $name)
+ * @method string getOptionName()
+ * @method self setOptionValue($value)
+ * @method mixed getOptionValue()
+ * @method self setAutoload(string $autoload)
+ * @method string getAutoload()
  */
 class Option extends AbstractModel
 {
@@ -31,64 +38,16 @@ class Option extends AbstractModel
     protected $table = 'options';
 
     /**
-     * Disable created_at and updated_at
      * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @return string
+     * @var string[]
      */
-    public function getName(): string
-    {
-        return $this->getAttribute(self::NAME);
-    }
-
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function setName(string $name): self
-    {
-        $this->setAttribute(self::NAME, $name);
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->getAttribute(self::VALUE);
-    }
-
-    /**
-     * @param $value
-     * @return $this
-     */
-    public function setValue($value): self
-    {
-        $this->setAttribute(self::VALUE, $value);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAutoload(): ?string
-    {
-        return $this->getAttribute(self::AUTOLOAD);
-    }
-
-    /**
-     * @param string $autoload
-     * @return $this
-     */
-    public function setAutoload(string $autoload): self
-    {
-        $this->setAttribute(self::AUTOLOAD, $autoload);
-        return $this;
-    }
+    protected $fillable = [
+        self::OPTION_ID, self::NAME, self::VALUE, self::AUTOLOAD,
+    ];
 
     /**
      * @inheritDoc
