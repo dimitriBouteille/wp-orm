@@ -4,7 +4,6 @@ namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
 use Dbout\WpOrm\Builders\UserBuilder;
-use Dbout\WpOrm\Models\Meta\ModelWithMetas;
 use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -19,6 +18,26 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property UserMeta[] $metas
  * @property Comment $comments
  * @property Post[] $posts
+ *
+ * @method string|null getUserLogin()
+ * @method self setUserLogin(string $login)
+ * @method string|null getUserPass()
+ * @method self setUserPass(string $password)
+ * @method string|null getUserNicename()
+ * @method self setUserNicename(string $nicename)
+ * @method string|null getUserEmail()
+ * @method self setUserEmail(string $email)
+ * @method string|null getUserUrl()
+ * @method self setUserUrl(?string $url)
+ * @method Carbon|null getUserRegistered()
+ * @method self setUserRegistered($date)
+ * @method string|null getUserActivationKey()
+ * @method self setUserActivationKey(?string $key)
+ * @method int getUserStatus()
+ * @method self setUserStatus(int $status)
+ * @method string|null getDisplayName()
+ * @method self setDisplayName(?string $name)
+ *
  */
 class User extends AbstractModel
 {
@@ -34,7 +53,7 @@ class User extends AbstractModel
     const REGISTERED = 'user_registered';
     const ACTIVATION_KEY = 'user_activation_key';
     const DISPLAY_NAME = 'display_name';
-    const STATUS = 'status';
+    const STATUS = 'user_status';
     const CREATED_AT = 'user_registered';
     const UPDATED_AT = null;
 
@@ -51,6 +70,13 @@ class User extends AbstractModel
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        self::STATUS => 'integer',
+    ];
+
+    /**
      * @var string
      */
     protected $primaryKey = self::USER_ID;
@@ -62,168 +88,6 @@ class User extends AbstractModel
         self::LOGIN, self::PASSWORD, self::NICE_NAME, self::EMAIL, self::URL, self::REGISTERED, self::ACTIVATION_KEY,
         self::DISPLAY_NAME, self::STATUS,
     ];
-
-    /**
-     * @return string|null
-     */
-    public function getLogin(): ?string
-    {
-        return $this->getAttribute(self::LOGIN);
-    }
-
-    /**
-     * @param string|null $login
-     * @return $this
-     */
-    public function setLogin(?string $login): self
-    {
-        $this->setAttribute(self::LOGIN, $login);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPassword(): ?string
-    {
-        return $this->getAttribute(self::PASSWORD);
-    }
-
-    /**
-     * @param string|null $password
-     * @return $this
-     */
-    public function setPassword(?string $password): self
-    {
-        $this->setAttribute(self::PASSWORD, $password);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getEmail(): ?string
-    {
-        return $this->getAttribute(self::EMAIL);
-    }
-
-    /**
-     * @param string|null $email
-     * @return $this
-     */
-    public function setEmail(?string $email): User
-    {
-        $this->setAttribute(self::EMAIL, $email);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDisplayName(): ?string
-    {
-        return $this->getAttribute(self::DISPLAY_NAME);
-    }
-
-    /**
-     * @param string|null $displayName
-     * @return $this
-     */
-    public function setDisplayName(?string $displayName): User
-    {
-        $this->setAttribute(self::DISPLAY_NAME, $displayName);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getUrl(): ?string
-    {
-        return $this->getAttribute(self::URL);
-    }
-
-    /**
-     * @param string|null $url
-     * @return $this
-     */
-    public function setUrl(?string $url): User
-    {
-        $this->setAttribute(self::URL, $url);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getNiceName(): ?string
-    {
-        return $this->getAttribute(self::NICE_NAME);
-    }
-
-    /**
-     * @param string|null $niceName
-     * @return $this
-     */
-    public function setNiceName(?string $niceName): self
-    {
-        $this->setAttribute(self::NICE_NAME, $niceName);
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function getStatus(): self
-    {
-        return $this->getAttribute(self::STATUS);
-    }
-
-    /**
-     * @param $status
-     * @return $this
-     */
-    public function setStatus($status): self
-    {
-        $this->setAttribute(self::STATUS, $status);
-        return $this;
-    }
-
-    /**
-     * @return Carbon|null
-     */
-    public function getRegistered(): ?Carbon
-    {
-        return $this->getAttribute(self::REGISTERED);
-    }
-
-    /**
-     * @param $registered
-     * @return $this
-     */
-    public function setRegistered($registered): self
-    {
-        $this->setAttribute(self::REGISTERED, $registered);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getActivationKey(): ?string
-    {
-        return $this->getAttribute(self::ACTIVATION_KEY);
-    }
-
-    /**
-     * @param string|null $activationKey
-     * @return $this
-     */
-    public function setActivationKey(?string $activationKey): self
-    {
-        $this->setAttribute(self::ACTIVATION_KEY, $activationKey);
-        return $this;
-    }
 
     /**
      * @return HasMany
@@ -238,7 +102,7 @@ class User extends AbstractModel
      */
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, Post::POST_AUTHOR);
+        return $this->hasMany(Post::class, Post::AUTHOR);
     }
 
     /**

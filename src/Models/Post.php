@@ -117,6 +117,7 @@ class Post extends AbstractModel
      */
     protected $casts = [
         self::MENU_ORDER => 'integer',
+        self::COMMENT_COUNT => 'integer',
     ];
 
     /**
