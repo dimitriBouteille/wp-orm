@@ -53,6 +53,12 @@ $pages = \Dbout\WpOrm\Models\Page::query()
 
 ### Migration
 
+To use phinx, you must create a configuration file named `config-phinx.php` at the root of your project. To create this file, please see one of the following documentation:
+
+- [Create config-phinx.php file for Bedrock Framework](doc/migration-with-bedrock.md)
+
+If you would like to learn more about the configuration file, please visit  [Phinx - Configuration](https://phinx.readthedocs.io/en/latest/configuration.html).
+
 #### Create new migration : 
 
 ```bash
