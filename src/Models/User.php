@@ -2,10 +2,10 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Contracts\CommentInterface;
-use Dbout\WpOrm\Contracts\PostInterface;
-use Dbout\WpOrm\Contracts\UserInterface;
-use Dbout\WpOrm\Contracts\UserMetaInterface;
+use Carbon\Carbon;
+use Dbout\WpOrm\Builders\UserBuilder;
+use Dbout\WpOrm\Models\Meta\UserMeta;
+use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,18 +13,47 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class User
  * @package Dbout\WpOrm\Models
  *
- * @method static UserInterface|UserInterface[]     find($userId)
- * @property UserMetaInterface[]                    $metas
- * @property CommentInterface[]                     $comments
- * @property PostInterface[]                        $posts
+ * @method static User|null find($userId)
+ * @method static UserBuilder query()
+ * @property UserMeta[] $metas
+ * @property Comment $comments
+ * @property Post[] $posts
  *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
+ * @method string|null getUserLogin()
+ * @method self setUserLogin(string $login)
+ * @method string|null getUserPass()
+ * @method self setUserPass(string $password)
+ * @method string|null getUserNicename()
+ * @method self setUserNicename(string $nicename)
+ * @method string|null getUserEmail()
+ * @method self setUserEmail(string $email)
+ * @method string|null getUserUrl()
+ * @method self setUserUrl(?string $url)
+ * @method Carbon|null getUserRegistered()
+ * @method self setUserRegistered($date)
+ * @method string|null getUserActivationKey()
+ * @method self setUserActivationKey(?string $key)
+ * @method int getUserStatus()
+ * @method self setUserStatus(int $status)
+ * @method string|null getDisplayName()
+ * @method self setDisplayName(?string $name)
+ *
  */
-class User extends AbstractModel implements UserInterface
+class User extends AbstractModel
 {
 
+    use WithMeta;
+
+    const USER_ID = 'ID';
+    const LOGIN = 'user_login';
+    const PASSWORD = 'user_pass';
+    const NICE_NAME = 'user_nicename';
+    const EMAIL = 'user_email';
+    const URL = 'user_url';
+    const REGISTERED = 'user_registered';
+    const ACTIVATION_KEY = 'user_activation_key';
+    const DISPLAY_NAME = 'display_name';
+    const STATUS = 'user_status';
     const CREATED_AT = 'user_registered';
     const UPDATED_AT = null;
 
@@ -34,168 +63,38 @@ class User extends AbstractModel implements UserInterface
     protected $table = 'users';
 
     /**
+     * @var string[]
+     */
+    protected $dates = [
+        self::REGISTERED,
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        self::STATUS => 'integer',
+    ];
+
+    /**
      * @var string
      */
     protected $primaryKey = self::USER_ID;
 
     /**
-     * @return string|null
+     * @var string[]
      */
-    public function getLogin(): ?string
-    {
-        return $this->getAttribute(self::USER_LOGIN);
-    }
-
-    /**
-     * @param string|null $login
-     * @return UserInterface
-     */
-    public function setLogin(?string $login): UserInterface
-    {
-        $this->setAttribute(self::USER_LOGIN, $login);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPassword(): ?string
-    {
-        return $this->getAttribute(self::USER_PASS);
-    }
-
-    /**
-     * @param string|null $password
-     * @return UserInterface
-     */
-    public function setPassword(?string $password): UserInterface
-    {
-        $this->setAttribute(self::USER_PASS, $password);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getEmail(): ?string
-    {
-        return $this->getAttribute(self::USER_EMAIL);
-    }
-
-    /**
-     * @param string|null $email
-     * @return UserInterface
-     */
-    public function setEmail(?string $email): UserInterface
-    {
-        $this->setAttribute(self::USER_EMAIL, $email);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDisplayName(): ?string
-    {
-        return $this->getAttribute(self::DISPLAY_NAME);
-    }
-
-    /**
-     * @param string|null $displayName
-     * @return UserInterface
-     */
-    public function setDisplayName(?string $displayName): UserInterface
-    {
-        $this->setAttribute(self::DISPLAY_NAME, $displayName);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getUrl(): ?string
-    {
-        return $this->getAttribute(self::USER_URL);
-    }
-
-    /**
-     * @param string|null $url
-     * @return UserInterface
-     */
-    public function setUrl(?string $url): UserInterface
-    {
-        $this->setAttribute(self::USER_URL, $url);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getNiceName(): ?string
-    {
-        return $this->getAttribute(self::USER_NICENAME);
-    }
-
-    /**
-     * @param string|null $niceName
-     * @return UserInterface
-     */
-    public function setNiceName(?string $niceName): UserInterface
-    {
-        $this->setAttribute(self::USER_NICENAME, $niceName);
-        return $this;
-    }
-
-    /**
-     * @return \DateTimeInterface|null
-     */
-    public function getRegistered(): ?\DateTimeInterface
-    {
-        return $this->getAttribute(self::USER_REGISTERED);
-    }
-
-    /**
-     * @param $registered
-     * @return UserInterface
-     */
-    public function setRegistered($registered): UserInterface
-    {
-        $this->setAttribute(self::USER_REGISTERED, $registered);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getActivationKey(): ?string
-    {
-        return $this->getAttribute(self::USER_ACTIVATION_KEY);
-    }
-
-    /**
-     * @param string|null $activationKey
-     * @return UserInterface
-     */
-    public function setActivationKey(?string $activationKey): UserInterface
-    {
-        $this->setAttribute(self::USER_ACTIVATION_KEY, $activationKey);
-        return $this;
-    }
+    protected $fillable = [
+        self::LOGIN, self::PASSWORD, self::NICE_NAME, self::EMAIL, self::URL, self::REGISTERED, self::ACTIVATION_KEY,
+        self::DISPLAY_NAME, self::STATUS,
+    ];
 
     /**
      * @return HasMany
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, CommentInterface::USER_ID);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function metas(): HasMany
-    {
-        return $this->hasMany(UserMeta::class, UserMetaInterface::USER_ID);
+        return $this->hasMany(Comment::class, Comment::USER_ID);
     }
 
     /**
@@ -203,6 +102,22 @@ class User extends AbstractModel implements UserInterface
      */
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, PostInterface::POST_AUTHOR);
+        return $this->hasMany(Post::class, Post::AUTHOR);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
+
+    /**
+     * @inerhitDoc
+     */
+    public function getMetaClass(): string
+    {
+        return \Dbout\WpOrm\Models\Meta\UserMeta::class;
     }
 }

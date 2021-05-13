@@ -3,14 +3,11 @@
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class AbstractModel
  * @package Dbout\WpOrm\Orm
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
 abstract class AbstractModel extends Model
 {
@@ -50,18 +47,18 @@ abstract class AbstractModel extends Model
      *
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
-        $prefix = $this->getConnection()->db->prefix;
+        $prefix = $this->getConnection()->getTablePrefix();
+        
         if (!empty($this->table)) {
-
             // Ajoute plusieurs fois le suffix, va savoir pourquoi ...
             // @todo Corriger le bug ci dessus
-            return substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
+            return \substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
         }
 
-        $table = substr(strrchr(get_class($this), "\\"), 1);
-        $table = snake_case(str_plural($table));
+        $table = \substr(\strrchr(\get_class($this), "\\"), 1);
+        $table = Str::snake(Str::plural($table));
 
         // Add wordpress table prefix
         return $prefix . $table;
@@ -86,12 +83,28 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * https://laracasts.com/discuss/channels/eloquent/how-to-use-events-with-standalone-eloquent?page=1
-     * @return void
+     * @param string $method
+     * @param array $parameters
+     * @return $this|mixed
      */
-    protected static function boot()
+    public function __call($method, $parameters)
     {
-        parent::boot();
-        static::setEventDispatcher(new \Illuminate\Events\Dispatcher());
+        preg_match('#^(get|set)(.*)#', $method, $matchGetter);
+        if (!$matchGetter) {
+            return parent::__call($method, $parameters);
+        }
+
+        $type = $matchGetter[1];
+        $attribute = $matchGetter[2];
+
+        // to pascal case
+        $attribute = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $attribute));
+
+        if ($type === 'get') {
+            return $this->getAttribute($attribute);
+        }
+
+        $this->setAttribute($attribute, ...$parameters);
+        return $this;
     }
 }

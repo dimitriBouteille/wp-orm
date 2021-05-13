@@ -2,36 +2,61 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Contracts\PostInterface;
-use Illuminate\Database\Eloquent\Builder;
+use Dbout\WpOrm\Builders\Traits\WithMeta;
+use Dbout\WpOrm\Models\Post;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class PostBuilder
  * @package Dbout\WpOrm\Builders
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
-class PostBuilder extends Builder
+class PostBuilder extends AbstractBuilder
 {
+
+    use WithMeta;
+
+    /**
+     * @param string|null $name
+     * @return Post|null
+     */
+    public function findOneByName(?string $name): ?Post
+    {
+        if (!$name) {
+            return null;
+        }
+
+        return $this
+            ->where(Post::POST_NAME, $name)
+            ->first();
+    }
+
+    /**
+     * @param string $type
+     * @return Collection
+     */
+    public function findAllByType(string $type): Collection
+    {
+        return $this
+            ->whereTypes([$type])
+            ->get();
+    }
 
     /**
      * @param mixed ...$types
      * @return $this
      */
-    public function types(...$types)
+    public function whereTypes(...$types): self
     {
-        return $this->_whereOrIn(PostInterface::POST_TYPE, $types);
+        return $this->_whereOrIn(Post::TYPE, $types);
     }
 
     /**
      * @param $author
      * @return $this
      */
-    public function author($author)
+    public function whereAuthor($author): self
     {
-        $this->where(PostInterface::POST_AUTHOR, $author);
+        $this->where(Post::AUTHOR, $author);
         return $this;
     }
 
@@ -39,27 +64,8 @@ class PostBuilder extends Builder
      * @param mixed ...$status
      * @return $this
      */
-    public function status(...$status)
+    public function whereStatus(...$status): self
     {
-        return $this->_whereOrIn(PostInterface::POST_STATUS, $status);
-    }
-
-    /**
-     * @param string $columns
-     * @param $value
-     * @return $this
-     */
-    protected function _whereOrIn(string $columns, array $value)
-    {
-        $first = reset($value);
-        if(is_array($first)) {
-            $this->whereIn($columns, $first);
-        } else if(count($value) == 1) {
-            $this->where($columns, reset($value));
-        } else {
-            $this->whereIn($columns, $value);
-        }
-
-        return $this;
+        return $this->_whereOrIn(Post::STATUS, $status);
     }
 }

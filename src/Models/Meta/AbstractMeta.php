@@ -1,26 +1,31 @@
 <?php
 
-namespace Dbout\WpOrm\Models;
+namespace Dbout\WpOrm\Models\Meta;
 
-use Dbout\WpOrm\Contracts\MetaInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
  * Class AbstractMeta
- * @package Dbout\WpOrm\Models
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
+ * @package Dbout\WpOrm\Models\Meta
  */
 abstract class AbstractMeta extends AbstractModel implements MetaInterface
 {
+
+    const META_KEY = 'meta_key';
+    const META_VALUE = 'meta_value';
 
     /**
      * Disable created_at and updated_at
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        self::META_VALUE, self::META_KEY
+    ];
 
     /**
      * @return string
@@ -32,16 +37,16 @@ abstract class AbstractMeta extends AbstractModel implements MetaInterface
 
     /**
      * @param string $key
-     * @return MetaInterface
+     * @return $this
      */
-    public function setKey(string $key): MetaInterface
+    public function setKey(string $key): self
     {
         $this->setAttribute(self::META_KEY, $key);
         return $this;
     }
 
     /**
-     * @return mixed|void
+     * @return mixed
      */
     public function getValue()
     {
@@ -50,11 +55,27 @@ abstract class AbstractMeta extends AbstractModel implements MetaInterface
 
     /**
      * @param string $value
-     * @return MetaInterface
+     * @return $this
      */
-    public function setValue(string $value): MetaInterface
+    public function setValue(string $value): self
     {
         $this->setAttribute(self::META_VALUE, $value);
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyColumn(): string
+    {
+        return self::META_KEY;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueColumn(): string
+    {
+        return self::META_VALUE;
     }
 }

@@ -11,10 +11,6 @@ use Illuminate\Support\Arr;
 /**
  * Class Database
  * @package Dbout\WpOrm\Orm
- *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
  */
 class Database implements ConnectionInterface
 {
@@ -28,23 +24,28 @@ class Database implements ConnectionInterface
      * Count of active transactions
      * @var int
      */
-    public $transactionCount = 0;
+    public int $transactionCount = 0;
 
     /**
      * The database connection configuration options.
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
+
+    /**
+     * @var string|null
+     */
+    protected ?string $tablePrefix = '';
 
     /**
      * @var null|Database
      */
-    protected static $instance = null;
+    protected static ?self $instance = null;
 
     /**
-     * @return Database|null
+     * @return Database
      */
-    public static function getInstance()
+    public static function getInstance(): Database
     {
         if (!self::$instance) {
             self::$instance = new self();
@@ -59,21 +60,43 @@ class Database implements ConnectionInterface
     public function __construct()
     {
         global $wpdb;
-
         $this->config = [
             'name' => 'wp-eloquent-mysql2',
         ];
+
+        if ($wpdb) {
+            $this->tablePrefix = $wpdb->prefix;
+        }
+
+        if (!$this->tablePrefix && defined('DB_PREFIX')) {
+            $this->tablePrefix = DB_PREFIX;
+        }
+
         $this->db = $wpdb;
     }
 
     /**
-     * Get the database connection name.
-     *
-     * @return string|null
+     * @return mixed|string
+     */
+    public function getDatabaseName()
+    {
+        return $this->getConfig('name');
+    }
+
+    /**
+     * @return mixed|string
      */
     public function getName()
     {
-        return $this->getConfig('name');
+        return $this->getDatabaseName();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTablePrefix(): ?string
+    {
+        return $this->tablePrefix;
     }
 
     /**
@@ -84,7 +107,7 @@ class Database implements ConnectionInterface
     public function table($table, $as = null)
     {
         $processor = $this->getPostProcessor();
-        $table = $this->db->prefix . $table;
+        $table = $this->getTablePrefix() . $table;
         $query = new Builder($this, $this->getQueryGrammar(), $processor);
 
         return $query->from($table);
@@ -175,15 +198,15 @@ class Database implements ConnectionInterface
      */
     private function bind_params($query, $bindings, $update = false)
     {
-        $query = str_replace('"', '`', $query);
+        $query = \str_replace('"', '`', $query);
         $bindings = $this->prepareBindings($bindings);
 
         if (!$bindings) {
             return $query;
         }
 
-        $bindings = array_map(function ($replace) {
-            if (is_string($replace)) {
+        $bindings = \array_map(function ($replace) {
+            if (\is_string($replace)) {
                 $replace = "'" . esc_sql($replace) . "'";
             } elseif ($replace === null) {
                 $replace = "null";
@@ -192,8 +215,8 @@ class Database implements ConnectionInterface
             return $replace;
         }, $bindings);
 
-        $query = str_replace(array('%', '?'), array('%%', '%s'), $query);
-        $query = vsprintf($query, $bindings);
+        $query = \str_replace(array('%', '?'), array('%%', '%s'), $query);
+        $query = \vsprintf($query, $bindings);
 
         return $query;
     }
@@ -219,24 +242,18 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Run an insert statement
-     *
      * @param string $query
      * @param array $bindings
      * @return bool
      */
     public function insert($query, $bindings = [])
     {
-//        var_dump($query, $bindings); die;
         return $this->statement($query, $bindings);
     }
 
     /**
-     * Run an update statement against the database.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return int
      */
     public function update($query, $bindings = array())
@@ -245,11 +262,8 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Run a delete statement against the database.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return int
      */
     public function delete($query, $bindings = array())
@@ -258,70 +272,54 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Execute an SQL statement and return the boolean result.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return bool
      */
     public function statement($query, $bindings = array())
     {
-        $new_query = $this->bind_params($query, $bindings, true);
-
-        return $this->unprepared($new_query);
+        $newQuery = $this->bind_params($query, $bindings, true);
+        return $this->unprepared($newQuery);
     }
 
     /**
-     * Run an SQL statement and get the number of rows affected.
-     *
-     * @param  string $query
-     * @param  array $bindings
-     *
+     * @param string $query
+     * @param array $bindings
      * @return int
      */
     public function affectingStatement($query, $bindings = array())
     {
         $new_query = $this->bind_params($query, $bindings, true);
-
         $result = $this->db->query($new_query);
 
         if ($result === false || $this->db->last_error)
             throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
 
-        return intval($result);
+        return \intval($result);
     }
 
     /**
-     * Run a raw, unprepared query against the PDO connection.
-     *
-     * @param  string $query
-     *
+     * @param string $query
      * @return bool
      */
     public function unprepared($query)
     {
         $result = $this->db->query($query);
-
         return ($result === false || $this->db->last_error);
     }
 
     /**
-     * Prepare the query bindings for execution.
-     *
-     * @param  array $bindings
-     *
+     * @param array $bindings
      * @return array
      */
     public function prepareBindings(array $bindings)
     {
         $grammar = $this->getQueryGrammar();
-
         foreach ($bindings as $key => $value) {
 
             // Micro-optimization: check for scalar values before instances
-            if (is_bool($value)) {
-                $bindings[$key] = intval($value);
+            if (\is_bool($value)) {
+                $bindings[$key] = \intval($value);
             } elseif (is_scalar($value)) {
                 continue;
             } elseif ($value instanceof \DateTime) {
@@ -336,13 +334,9 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Execute a Closure within a transaction.
-     *
-     * @param  \Closure $callback
-     * @param  int  $attempts
-     *
+     * @param \Closure $callback
+     * @param int $attempts
      * @return mixed
-     *
      * @throws \Exception
      */
     public function transaction(\Closure $callback, $attempts = 1)
@@ -436,14 +430,6 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * @return $this
-     */
-    public function getPdo()
-    {
-        return $this;
-    }
-
-    /**
      * Return the last insert id
      *
      * @param $args
@@ -467,6 +453,23 @@ class Database implements ConnectionInterface
 
     protected function exception($exception)
     {
+    }
 
+    /**
+     * @return $this
+     */
+    public function getPdo()
+    {
+        return $this;
+    }
+
+    /**
+     * Enable the query log on the connection.
+     *
+     * @return void
+     */
+    public function enableQueryLog()
+    {
+        $this->loggingQueries = true;
     }
 }

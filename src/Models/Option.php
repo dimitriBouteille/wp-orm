@@ -2,23 +2,30 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Contracts\OptionInterface;
+use Dbout\WpOrm\Builders\OptionBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Option
  * @package Dbout\WpOrm\Models
  *
- * @method static OptionInterface   find(int $optionId);
- * @method static Builder           name(string $optionName);
+ * @method static Option|null find($optionId)
+ * @method static OptionBuilder query()
  *
- * @author      Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @link        https://github.com/dimitriBouteille Github
- * @copyright   (c) 2020 Dimitri BOUTEILLE
+ * @method self setOptionName(string $name)
+ * @method string getOptionName()
+ * @method self setOptionValue($value)
+ * @method mixed getOptionValue()
+ * @method self setAutoload(string $autoload)
+ * @method string getAutoload()
  */
-class Option extends AbstractModel implements OptionInterface
+class Option extends AbstractModel
 {
+
+    const OPTION_ID = 'option_id';
+    const NAME = 'option_name';
+    const VALUE = 'option_value';
+    const AUTOLOAD = 'autoload';
 
     /**
      * @var string
@@ -31,71 +38,22 @@ class Option extends AbstractModel implements OptionInterface
     protected $table = 'options';
 
     /**
-     * Disable created_at and updated_at
      * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @return string
+     * @var string[]
      */
-    public function getName(): string
-    {
-        return $this->getAttribute(self::OPTION_NAME);
-    }
+    protected $fillable = [
+        self::OPTION_ID, self::NAME, self::VALUE, self::AUTOLOAD,
+    ];
 
     /**
-     * @param string $name
-     * @return OptionInterface
+     * @inheritDoc
      */
-    public function setName(string $name): OptionInterface
+    public function newEloquentBuilder($query): OptionBuilder
     {
-        $this->setAttribute(self::OPTION_NAME, $name);
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->getAttribute(self::OPTION_VALUE);
-    }
-
-    /**
-     * @param $value
-     * @return OptionInterface
-     */
-    public function setValue($value): OptionInterface
-    {
-        $this->setAttribute(self::OPTION_VALUE, $value);
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAutoload(): ?string
-    {
-        return $this->getAttribute(self::AUTOLOAD);
-    }
-
-    /**
-     * @param string $autoload
-     * @return OptionInterface
-     */
-    public function setAutoload(string $autoload): OptionInterface
-    {
-        $this->setAttribute(self::AUTOLOAD, $autoload);
-        return $this;
-    }
-
-    /**
-     * @param Builder $builder
-     * @param string $name
-     */
-    public function scopeName(Builder $builder, string $name)
-    {
-        $builder->where(self::OPTION_NAME, $name);
+        return new OptionBuilder($query);
     }
 }
