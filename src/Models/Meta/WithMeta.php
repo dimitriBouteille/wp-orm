@@ -4,6 +4,7 @@ namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Udps\Session\Entities\Session;
 
 /**
  * Trait WithMeta
@@ -16,6 +17,21 @@ trait WithMeta
      * @var AbstractMeta|null
      */
     protected ?AbstractMeta $metaModel = null;
+
+    /**
+     * @var array
+     */
+    protected array $_tmpMetas = [];
+
+    /**
+     * @return void
+     */
+    protected static function bootWithMeta()
+    {
+        static::saved(function($model) {
+            $model->saveTmpMetas();
+        });
+    }
 
     /**
      * @throws MetaNotSupportedException
@@ -86,6 +102,11 @@ trait WithMeta
      */
     public function setMeta(string $metaKey, $value): ?AbstractMeta
     {
+        if (!$this->exists) {
+            $this->_tmpMetas[$metaKey] = $value;
+            return null;
+        }
+
         $instance = $this->metas()
             ->firstOrNew([
                 $this->metaModel->getKeyColumn() => $metaKey
@@ -113,4 +134,16 @@ trait WithMeta
      * @return string
      */
     abstract public function getMetaClass(): string;
+
+    /**
+     * @return void
+     */
+    protected function saveTmpMetas(): void
+    {
+        foreach ($this->_tmpMetas as $metaKey => $value) {
+            $this->setMeta($metaKey, $value);
+        }
+
+        $this->_tmpMetas = [];
+    }
 }
