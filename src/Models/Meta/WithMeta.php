@@ -76,6 +76,10 @@ trait WithMeta
      */
     public function getMetaValue(string $metaKey)
     {
+        if (!$this->exists) {
+            return $this->_tmpMetas[$metaKey] ?? null;
+        }
+
         $meta = $this->getMeta($metaKey);
         if (!$meta) {
             return null;
@@ -125,6 +129,11 @@ trait WithMeta
      */
     public function deleteMeta(string $metaKey): bool
     {
+        if (!$this->exists) {
+            unset($this->_tmpMetas[$metaKey]);
+            return true;
+        }
+
         return $this->metas()
             ->where($this->metaModel->getKeyColumn(), $metaKey)
             ->forceDelete();
