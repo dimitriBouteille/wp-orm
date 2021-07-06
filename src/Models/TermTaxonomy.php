@@ -41,6 +41,11 @@ class TermTaxonomy extends AbstractModel
     protected $table = 'term_taxonomy';
 
     /**
+     * @var string
+     */
+    protected $primaryKey = self::TERM_TAXONOMY_ID;
+
+    /**
      * @var string[]
      */
     protected $casts = [

@@ -18,6 +18,21 @@ trait WithMeta
     protected ?AbstractMeta $metaModel = null;
 
     /**
+     * @var array
+     */
+    protected array $_tmpMetas = [];
+
+    /**
+     * @return void
+     */
+    protected static function bootWithMeta()
+    {
+        static::saved(function($model) {
+            $model->saveTmpMetas();
+        });
+    }
+
+    /**
      * @throws MetaNotSupportedException
      * @throws \ReflectionException
      */
@@ -60,6 +75,10 @@ trait WithMeta
      */
     public function getMetaValue(string $metaKey)
     {
+        if (!$this->exists) {
+            return $this->_tmpMetas[$metaKey] ?? null;
+        }
+
         $meta = $this->getMeta($metaKey);
         if (!$meta) {
             return null;
@@ -86,6 +105,11 @@ trait WithMeta
      */
     public function setMeta(string $metaKey, $value): ?AbstractMeta
     {
+        if (!$this->exists) {
+            $this->_tmpMetas[$metaKey] = $value;
+            return null;
+        }
+
         $instance = $this->metas()
             ->firstOrNew([
                 $this->metaModel->getKeyColumn() => $metaKey
@@ -104,6 +128,11 @@ trait WithMeta
      */
     public function deleteMeta(string $metaKey): bool
     {
+        if (!$this->exists) {
+            unset($this->_tmpMetas[$metaKey]);
+            return true;
+        }
+
         return $this->metas()
             ->where($this->metaModel->getKeyColumn(), $metaKey)
             ->forceDelete();
@@ -113,4 +142,16 @@ trait WithMeta
      * @return string
      */
     abstract public function getMetaClass(): string;
+
+    /**
+     * @return void
+     */
+    protected function saveTmpMetas(): void
+    {
+        foreach ($this->_tmpMetas as $metaKey => $value) {
+            $this->setMeta($metaKey, $value);
+        }
+
+        $this->_tmpMetas = [];
+    }
 }
