@@ -4,7 +4,6 @@ namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Udps\Session\Entities\Session;
 
 /**
  * Trait WithMeta
