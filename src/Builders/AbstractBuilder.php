@@ -2,6 +2,7 @@
 
 namespace Dbout\WpOrm\Builders;
 
+use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -61,5 +62,15 @@ abstract class AbstractBuilder extends Builder
         }
 
         return false;
+    }
+
+    /**
+     * @param string $label
+     * @param string $key
+     * @return array
+     */
+    public function toArrayOptions(string $label = Post::TITLE, string $key = Post::POST_ID): array
+    {
+        return $this->pluck($label, $key)->toArray();
     }
 }
