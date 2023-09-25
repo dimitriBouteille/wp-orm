@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
@@ -8,9 +14,6 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class Comment
- * @package Dbout\WpOrm\Models
- *
  * @method static Comment|null find(int $commentId)
  * @method static CommentBuilder query()
  * @property User|null $user
@@ -19,24 +22,23 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Comment extends AbstractModel
 {
-
-    const COMMENT_ID = 'comment_ID';
-    const POST_ID = 'comment_post_ID';
-    const AUTHOR = 'comment_author';
-    const AUTHOR_EMAIL = 'comment_author_email';
-    const AUTHOR_URL = 'comment_author_url';
-    const AUTHOR_IP = 'comment_author_IP';
-    const DATE = 'comment_date';
-    const DATE_GMT = 'comment_date_gmt';
-    const CONTENT = 'comment_content';
-    const KARMA = 'comment_karma';
-    const APPROVED = 'comment_approved';
-    const AGENT = 'comment_agent';
-    const TYPE = 'comment_type';
-    const PARENT = 'comment_parent';
-    const USER_ID = 'user_id';
-    const CREATED_AT = self::DATE;
-    const UPDATED_AT =  null;
+    public const COMMENT_ID = 'comment_ID';
+    public const POST_ID = 'comment_post_ID';
+    public const AUTHOR = 'comment_author';
+    public const AUTHOR_EMAIL = 'comment_author_email';
+    public const AUTHOR_URL = 'comment_author_url';
+    public const AUTHOR_IP = 'comment_author_IP';
+    public const DATE = 'comment_date';
+    public const DATE_GMT = 'comment_date_gmt';
+    public const CONTENT = 'comment_content';
+    public const KARMA = 'comment_karma';
+    public const APPROVED = 'comment_approved';
+    public const AGENT = 'comment_agent';
+    public const TYPE = 'comment_type';
+    public const PARENT = 'comment_parent';
+    public const USER_ID = 'user_id';
+    public const CREATED_AT = self::DATE;
+    public const UPDATED_AT =  null;
 
     /**
      * @var string

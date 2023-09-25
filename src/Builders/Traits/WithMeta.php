@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Builders\Traits;
 
@@ -7,13 +13,8 @@ use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Trait WithMeta
- * @package Dbout\WpOrm\Builders\Traits
- */
 trait WithMeta
 {
-
     /**
      * @var array|string[]
      */
@@ -61,7 +62,7 @@ trait WithMeta
 
             $this->addMetaToSelect($metaName, $alias);
         }
-        
+
         return $this;
     }
 
@@ -88,7 +89,7 @@ trait WithMeta
     public function setModel(Model $model)
     {
         $traits = class_uses_recursive(get_class($model));
-        if (!in_array(\Dbout\WpOrm\Models\Meta\WithMeta::class, $traits)) {
+        if (!in_array(\Dbout\WpOrm\Models\Meta\WithMeta::class, $traits, true)) {
             throw new MetaNotSupportedException(sprintf(
                 "Model %s must be use trait %s",
                 get_class($model),
@@ -123,11 +124,11 @@ trait WithMeta
             /** @var \Illuminate\Database\Query\JoinClause $join */
             $join->on(
                 sprintf('%s.%s', $metaKey, $this->metaModel->getKeyColumn()),
-            '=',
+                '=',
                 $join->raw(sprintf("'%s'", $metaKey))
             )->on(
                 $join->raw(sprintf("%s.%s", $metaKey, $this->metaModel->getFkColumn())),
-            '=',
+                '=',
                 sprintf('%s.%s', $model->getTable(), $model->getKeyName()),
             );
         });

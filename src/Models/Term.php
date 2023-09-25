@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
@@ -7,9 +13,6 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class Term
- * @package Dbout\WpOrm\Models
- *
  * @method static self find(int $termId)
  * @method static TermBuilder query()
  *
@@ -24,11 +27,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Term extends AbstractModel
 {
-
-    const TERM_ID = 'term_id';
-    const NAME = 'name';
-    const SLUG = 'slug';
-    const TERM_GROUP = 'term_group';
+    public const TERM_ID = 'term_id';
+    public const NAME = 'name';
+    public const SLUG = 'slug';
+    public const TERM_GROUP = 'term_group';
 
     /**
      * @var string

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
@@ -6,9 +12,6 @@ use Dbout\WpOrm\Builders\OptionBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
- * Class Option
- * @package Dbout\WpOrm\Models
- *
  * @method static Option|null find($optionId)
  * @method static OptionBuilder query()
  *
@@ -21,11 +24,10 @@ use Dbout\WpOrm\Orm\AbstractModel;
  */
 class Option extends AbstractModel
 {
-
-    const OPTION_ID = 'option_id';
-    const NAME = 'option_name';
-    const VALUE = 'option_value';
-    const AUTOLOAD = 'autoload';
+    public const OPTION_ID = 'option_id';
+    public const NAME = 'option_name';
+    public const VALUE = 'option_value';
+    public const AUTOLOAD = 'autoload';
 
     /**
      * @var string

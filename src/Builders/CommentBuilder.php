@@ -1,17 +1,18 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Builders;
 
 use Dbout\WpOrm\Models\Comment;
 use Illuminate\Database\Eloquent\Collection;
 
-/**
- * Class CommentBuilder
- * @package Dbout\WpOrm\Builders
- */
 class CommentBuilder extends AbstractBuilder
 {
-
     /**
      * @param string $type
      * @return Collection

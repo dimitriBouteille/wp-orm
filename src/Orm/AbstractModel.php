@@ -1,17 +1,18 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-/**
- * Class AbstractModel
- * @package Dbout\WpOrm\Orm
- */
 abstract class AbstractModel extends Model
 {
-
     /**
      * AbstractModel constructor.
      * @param array $attributes
@@ -29,7 +30,9 @@ abstract class AbstractModel extends Model
     {
         $connection = $this->getConnection();
         return new Builder(
-            $connection, $connection->getQueryGrammar(), $connection->getPostProcessor()
+            $connection,
+            $connection->getQueryGrammar(),
+            $connection->getPostProcessor()
         );
     }
 
@@ -50,7 +53,7 @@ abstract class AbstractModel extends Model
     public function getTable(): string
     {
         $prefix = $this->getConnection()->getTablePrefix();
-        
+
         if (!empty($this->table)) {
             // Ajoute plusieurs fois le suffix, va savoir pourquoi ...
             // @todo Corriger le bug ci dessus

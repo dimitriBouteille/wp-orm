@@ -1,18 +1,19 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 
-/**
- * Class AbstractMeta
- * @package Dbout\WpOrm\Models\Meta
- */
 abstract class AbstractMeta extends AbstractModel implements MetaInterface
 {
-
-    const META_KEY = 'meta_key';
-    const META_VALUE = 'meta_value';
+    public const META_KEY = 'meta_key';
+    public const META_VALUE = 'meta_value';
 
     /**
      * Disable created_at and updated_at
@@ -24,7 +25,7 @@ abstract class AbstractMeta extends AbstractModel implements MetaInterface
      * @var array
      */
     protected $fillable = [
-        self::META_VALUE, self::META_KEY
+        self::META_VALUE, self::META_KEY,
     ];
 
     /**

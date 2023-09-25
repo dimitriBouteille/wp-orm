@@ -1,13 +1,16 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
- * Class TermRelationship
- * @package Dbout\WpOrm\Models
- *
  * @method int|null getTermOrder()
  * @method self setTermOrder(?int $order)
  * @method int|null getTermTaxonomyId()
@@ -17,10 +20,9 @@ use Dbout\WpOrm\Orm\AbstractModel;
  */
 class TermRelationship extends AbstractModel
 {
-
-    const OBJECT_ID = 'object_id';
-    const TERM_TAXONOMY_ID = 'term_taxonomy_id';
-    const TERM_ORDER = 'term_order';
+    public const OBJECT_ID = 'object_id';
+    public const TERM_TAXONOMY_ID = 'term_taxonomy_id';
+    public const TERM_ORDER = 'term_order';
 
     /**
      * @var string

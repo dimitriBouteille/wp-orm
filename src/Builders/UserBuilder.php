@@ -1,17 +1,18 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Builders;
 
 use Dbout\WpOrm\Builders\Traits\WithMeta;
 use Dbout\WpOrm\Models\User;
 
-/**
- * Class UserBuilder
- * @package Dbout\WpOrm\Builders
- */
 class UserBuilder extends AbstractBuilder
 {
-
     use WithMeta;
 
     /**

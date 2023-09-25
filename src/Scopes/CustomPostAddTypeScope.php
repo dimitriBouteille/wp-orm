@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Scopes;
 
@@ -7,16 +13,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-/**
- * Class CustomPostAddTypeScope
- * @package Dbout\WpOrm\Scopes
- */
 class CustomPostAddTypeScope implements Scope
 {
-
     /**
-     * @param Builder $builder
-     * @param Model $model
+     * @inheritDoc
      */
     public function apply(Builder $builder, Model $model)
     {

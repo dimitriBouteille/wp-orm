@@ -1,16 +1,17 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models\Traits;
 
 use Dbout\WpOrm\Exceptions\NotAllowedException;
 
-/**
- * Trait HasCustomType
- * @package Dbout\WpOrm\Models\Traits
- */
 trait HasCustomType
 {
-
     /**
      * @var string
      */
@@ -28,10 +29,10 @@ trait HasCustomType
      * @param string $postType
      * @throws NotAllowedException
      */
-    public final function setPostType(string $postType): void
+    final public function setPostType(string $postType): void
     {
         throw new NotAllowedException(sprintf(
-            "You cannot set a type for this object. Current type [%s]",
+            'You cannot set a type for this object. Current type [%s]',
             $this->_type
         ));
     }

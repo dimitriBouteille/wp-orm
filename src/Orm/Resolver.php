@@ -1,18 +1,19 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
+
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\ConnectionResolverInterface;
 
-/**
- * Class Resolver
- * @package Dbout\WpOrm\Orm
- */
 class Resolver implements ConnectionResolverInterface
 {
-
     /**
-     * @param null $name
-     * @return Database|\Illuminate\Database\ConnectionInterface|null
+     * @inheritDoc
      */
     public function connection($name = null)
     {
@@ -20,14 +21,14 @@ class Resolver implements ConnectionResolverInterface
     }
 
     /**
-     * @return string|void
+     * @inheritDoc
      */
     public function getDefaultConnection()
     {
     }
 
     /**
-     * @param string $name
+     * @inheritDoc
      */
     public function setDefaultConnection($name)
     {

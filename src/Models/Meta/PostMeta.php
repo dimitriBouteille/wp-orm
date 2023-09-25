@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models\Meta;
 
@@ -6,17 +12,13 @@ use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class PostMeta
- * @package Dbout\WpOrm\Models\Meta
- *
  * @method static PostMeta find(int $metaId);
  * @property Post|null $post
  */
 class PostMeta extends AbstractMeta
 {
-
-    const META_ID = 'meta_id';
-    const POST_ID = 'post_id';
+    public const META_ID = 'meta_id';
+    public const POST_ID = 'post_id';
 
     /**
      * @var string

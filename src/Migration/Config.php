@@ -1,14 +1,15 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Migration;
 
-/**
- * Class Config
- * @package Dbout\WpOrm\Migration
- */
 class Config
 {
-
     /**
      * @param array $userConfig
      * @return array
@@ -30,7 +31,7 @@ class Config
                     'user' => $userConfig['db_user'] ?? '',
                     'pass' => $userConfig['db_password'] ?? '',
                     'table_prefix' => $userConfig['table_prefix'] ?? '',
-                ]
+                ],
             ],
         ];
     }

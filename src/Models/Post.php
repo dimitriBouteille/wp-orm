@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
@@ -11,9 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class Post
- * @package Dbout\WpOrm\Models
- *
  * @method static Post find(int $postId)
  * @method static PostBuilder query()
  * @property User|null $author
@@ -61,34 +64,33 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Post extends AbstractModel
 {
-
     use WithMeta;
 
-    const CREATED_AT = 'post_date';
-    const UPDATED_AT = 'post_modified';
-    const POST_ID = 'ID';
-    const AUTHOR = 'post_author';
-    const DATE = 'post_date';
-    const DATE_GMT = 'post_date_gmt';
-    const CONTENT = 'post_content';
-    const TITLE = 'post_title';
-    const EXCERPT = 'post_excerpt';
-    const COMMENT_STATUS = 'comment_status';
-    const STATUS = 'post_status';
-    const PING_STATUS = 'ping_status';
-    const PASSWORD = 'post_password';
-    const POST_NAME = 'post_name';
-    const TO_PING = 'to_ping';
-    const PINGED = 'pinged';
-    const MODIFIED = 'post_modified';
-    const MODIFIED_GMT = 'post_modified_gmt';
-    const CONTENT_FILTERED = 'post_content_filtered';
-    const PARENT = 'post_parent';
-    const GUID = 'guid';
-    const MENU_ORDER = 'menu_order';
-    const TYPE = 'post_type';
-    const MIME_TYPE = 'post_mime_type';
-    const COMMENT_COUNT = 'comment_count';
+    public const CREATED_AT = 'post_date';
+    public const UPDATED_AT = 'post_modified';
+    public const POST_ID = 'ID';
+    public const AUTHOR = 'post_author';
+    public const DATE = 'post_date';
+    public const DATE_GMT = 'post_date_gmt';
+    public const CONTENT = 'post_content';
+    public const TITLE = 'post_title';
+    public const EXCERPT = 'post_excerpt';
+    public const COMMENT_STATUS = 'comment_status';
+    public const STATUS = 'post_status';
+    public const PING_STATUS = 'ping_status';
+    public const PASSWORD = 'post_password';
+    public const POST_NAME = 'post_name';
+    public const TO_PING = 'to_ping';
+    public const PINGED = 'pinged';
+    public const MODIFIED = 'post_modified';
+    public const MODIFIED_GMT = 'post_modified_gmt';
+    public const CONTENT_FILTERED = 'post_content_filtered';
+    public const PARENT = 'post_parent';
+    public const GUID = 'guid';
+    public const MENU_ORDER = 'menu_order';
+    public const TYPE = 'post_type';
+    public const MIME_TYPE = 'post_mime_type';
+    public const COMMENT_COUNT = 'comment_count';
 
     /**
      * @var string

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Builders;
 
@@ -6,13 +12,8 @@ use Dbout\WpOrm\Builders\Traits\WithMeta;
 use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
-/**
- * Class PostBuilder
- * @package Dbout\WpOrm\Builders
- */
 class PostBuilder extends AbstractBuilder
 {
-
     use WithMeta;
 
     /**

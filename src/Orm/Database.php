@@ -1,10 +1,17 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
+
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Database\Query\Expression;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 
@@ -14,7 +21,6 @@ use Illuminate\Support\Arr;
  */
 class Database implements ConnectionInterface
 {
-
     /**
      * @var \wpdb
      */
@@ -125,17 +131,19 @@ class Database implements ConnectionInterface
         return new Expression($value);
     }
 
-	/**
-	 * Get a new query builder instance.
-	 *
-	 * @return \Illuminate\Database\Query\Builder
-	 */
-	public function query()
-	{
-		return new Builder(
-			$this, $this->getQueryGrammar(), $this->getPostProcessor()
-		);
-	}
+    /**
+     * Get a new query builder instance.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function query()
+    {
+        return new Builder(
+            $this,
+            $this->getQueryGrammar(),
+            $this->getPostProcessor()
+        );
+    }
 
     /**
      * Run a select statement and return a single result
@@ -149,8 +157,9 @@ class Database implements ConnectionInterface
     {
         $query = $this->bind_params($query, $bindings);
         $result = $this->db->get_row($query);
-        if ($result === false || $this->db->last_error)
+        if ($result === false || $this->db->last_error) {
             throw new QueryException($query, $bindings, new \Exception($this->db->last_error));
+        }
 
         return $result;
     }
@@ -215,7 +224,7 @@ class Database implements ConnectionInterface
             return $replace;
         }, $bindings);
 
-        $query = \str_replace(array('%', '?'), array('%%', '%s'), $query);
+        $query = \str_replace(['%', '?'], ['%%', '%s'], $query);
         $query = \vsprintf($query, $bindings);
 
         return $query;
@@ -230,7 +239,7 @@ class Database implements ConnectionInterface
      *
      * @return array
      */
-    public function bind_and_run($query, $bindings = array())
+    public function bind_and_run($query, $bindings = [])
     {
         $new_query = $this->bind_params($query, $bindings);
         $result = $this->db->query($new_query);
@@ -256,7 +265,7 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return int
      */
-    public function update($query, $bindings = array())
+    public function update($query, $bindings = [])
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -266,7 +275,7 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return int
      */
-    public function delete($query, $bindings = array())
+    public function delete($query, $bindings = [])
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -276,7 +285,7 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return bool
      */
-    public function statement($query, $bindings = array())
+    public function statement($query, $bindings = [])
     {
         $newQuery = $this->bind_params($query, $bindings, true);
         return $this->unprepared($newQuery);
@@ -287,13 +296,14 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return int
      */
-    public function affectingStatement($query, $bindings = array())
+    public function affectingStatement($query, $bindings = [])
     {
         $new_query = $this->bind_params($query, $bindings, true);
         $result = $this->db->query($new_query);
 
-        if ($result === false || $this->db->last_error)
+        if ($result === false || $this->db->last_error) {
             throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
+        }
 
         return \intval($result);
     }
@@ -336,8 +346,8 @@ class Database implements ConnectionInterface
     /**
      * @param \Closure $callback
      * @param int $attempts
-     * @return mixed
      * @throws \Exception
+     * @return mixed
      */
     public function transaction(\Closure $callback, $attempts = 1)
     {
@@ -346,7 +356,7 @@ class Database implements ConnectionInterface
             $data = $callback();
             $this->commit();
             return $data;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->rollBack();
             throw $e;
         }

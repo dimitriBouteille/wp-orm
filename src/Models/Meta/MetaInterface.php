@@ -1,14 +1,15 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models\Meta;
 
-/**
- * Interface MetaInterface
- * @package Dbout\WpOrm\Models\Meta
- */
 interface MetaInterface
 {
-
     /**
      * @return string
      */

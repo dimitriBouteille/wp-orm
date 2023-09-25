@@ -1,17 +1,18 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * Trait WithMeta
- * @package Dbout\WpOrm\Models\Meta
- */
 trait WithMeta
 {
-
     /**
      * @var AbstractMeta|null
      */
@@ -27,7 +28,7 @@ trait WithMeta
      */
     protected static function bootWithMeta()
     {
-        static::saved(function($model) {
+        static::saved(function ($model) {
             $model->saveTmpMetas();
         });
     }
@@ -112,11 +113,11 @@ trait WithMeta
 
         $instance = $this->metas()
             ->firstOrNew([
-                $this->metaModel->getKeyColumn() => $metaKey
+                $this->metaModel->getKeyColumn() => $metaKey,
             ]);
 
         $instance->fill([
-            $this->metaModel->getValueColumn() => $value
+            $this->metaModel->getValueColumn() => $value,
         ])->save();
 
         return $instance;

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
@@ -10,9 +16,6 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class User
- * @package Dbout\WpOrm\Models
- *
  * @method static User|null find($userId)
  * @method static UserBuilder query()
  * @property UserMeta[] $metas
@@ -41,21 +44,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class User extends AbstractModel
 {
-
     use WithMeta;
 
-    const USER_ID = 'ID';
-    const LOGIN = 'user_login';
-    const PASSWORD = 'user_pass';
-    const NICE_NAME = 'user_nicename';
-    const EMAIL = 'user_email';
-    const URL = 'user_url';
-    const REGISTERED = 'user_registered';
-    const ACTIVATION_KEY = 'user_activation_key';
-    const DISPLAY_NAME = 'display_name';
-    const STATUS = 'user_status';
-    const CREATED_AT = 'user_registered';
-    const UPDATED_AT = null;
+    public const USER_ID = 'ID';
+    public const LOGIN = 'user_login';
+    public const PASSWORD = 'user_pass';
+    public const NICE_NAME = 'user_nicename';
+    public const EMAIL = 'user_email';
+    public const URL = 'user_url';
+    public const REGISTERED = 'user_registered';
+    public const ACTIVATION_KEY = 'user_activation_key';
+    public const DISPLAY_NAME = 'display_name';
+    public const STATUS = 'user_status';
+    public const CREATED_AT = 'user_registered';
+    public const UPDATED_AT = null;
 
     /**
      * @var string

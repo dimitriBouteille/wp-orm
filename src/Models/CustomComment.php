@@ -1,20 +1,18 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Models\Traits\HasCustomType;
 use Dbout\WpOrm\Scopes\CustomPostAddTypeScope;
 
-/**
- * Class CustomComment
- * @package Dbout\WpOrm\Models
- *
- * @author Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
- * @copyright Copyright (c) 2021
- */
 abstract class CustomComment extends Comment
 {
-
     use HasCustomType;
 
     /**

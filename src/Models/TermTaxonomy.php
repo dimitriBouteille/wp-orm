@@ -1,13 +1,16 @@
 <?php
+/**
+ * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
- * Class TermTaxonomy
- * @package Dbout\WpOrm\Models
- *
  * @method static TermTaxonomy|null find(int $id)
  * @method int|null getTermId()
  * @method self setTermId(int $id)
@@ -22,13 +25,12 @@ use Dbout\WpOrm\Orm\AbstractModel;
  */
 class TermTaxonomy extends AbstractModel
 {
-
-    const TERM_TAXONOMY_ID = 'term_taxonomy_id';
-    const TERM_ID = 'term_id';
-    const TAXONOMY = 'taxonomy';
-    const DESCRIPTION = 'description';
-    const PARENT = 'parent';
-    const COUNT = 'count';
+    public const TERM_TAXONOMY_ID = 'term_taxonomy_id';
+    public const TERM_ID = 'term_id';
+    public const TAXONOMY = 'taxonomy';
+    public const DESCRIPTION = 'description';
+    public const PARENT = 'parent';
+    public const COUNT = 'count';
 
     /**
      * @var bool
@@ -56,6 +58,6 @@ class TermTaxonomy extends AbstractModel
      * @var string[]
      */
     protected $fillable = [
-        self::TERM_TAXONOMY_ID, self::TERM_ID, self::TAXONOMY, self::DESCRIPTION, self::PARENT, self::COUNT
+        self::TERM_TAXONOMY_ID, self::TERM_ID, self::TAXONOMY, self::DESCRIPTION, self::PARENT, self::COUNT,
     ];
 }
