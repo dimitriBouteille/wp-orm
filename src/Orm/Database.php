@@ -15,10 +15,6 @@ use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 
-/**
- * Class Database
- * @package Dbout\WpOrm\Orm
- */
 class Database implements ConnectionInterface
 {
     /**

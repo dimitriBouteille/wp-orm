@@ -37,7 +37,7 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * @return Database|null
+     * @inheritDoc
      */
     public function getConnection()
     {
@@ -46,7 +46,7 @@ abstract class AbstractModel extends Model
 
     /**
      * Get table name associated with the model
-     * Add wordpress table prefix
+     * Add WordPress table prefix
      *
      * @return string
      */
@@ -57,13 +57,13 @@ abstract class AbstractModel extends Model
         if (!empty($this->table)) {
             // Ajoute plusieurs fois le suffix, va savoir pourquoi ...
             // @todo Corriger le bug ci dessus
-            return \substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
+            return str_starts_with($this->table, $prefix) ? $this->table : $prefix . $this->table;
         }
 
         $table = \substr(\strrchr(\get_class($this), "\\"), 1);
         $table = Str::snake(Str::plural($table));
 
-        // Add wordpress table prefix
+        // Add WordPress table prefix
         return $prefix . $table;
     }
 
@@ -86,9 +86,7 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * @param string $method
-     * @param array $parameters
-     * @return $this|mixed
+     * @inheritDoc
      */
     public function __call($method, $parameters)
     {
@@ -99,8 +97,6 @@ abstract class AbstractModel extends Model
 
         $type = $matchGetter[1];
         $attribute = $matchGetter[2];
-
-        // to pascal case
         $attribute = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $attribute));
 
         if ($type === 'get') {

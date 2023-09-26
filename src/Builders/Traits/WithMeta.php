@@ -91,12 +91,13 @@ trait WithMeta
         $traits = class_uses_recursive(get_class($model));
         if (!in_array(\Dbout\WpOrm\Models\Meta\WithMeta::class, $traits, true)) {
             throw new MetaNotSupportedException(sprintf(
-                "Model %s must be use trait %s",
+                'Model %s must be use trait %s',
                 get_class($model),
                 \Dbout\WpOrm\Models\Meta\WithMeta::class
             ));
         }
 
+        /** @var \Dbout\WpOrm\Models\Meta\WithMeta $model */
         $metaClass = $model->getMetaClass();
         $object = (new \ReflectionClass($metaClass));
         $this->metaModel = $object->newInstanceWithoutConstructor();

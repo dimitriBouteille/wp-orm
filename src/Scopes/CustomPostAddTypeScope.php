@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Scopes;
 
+use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Models\CustomPost;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Scope;
 class CustomPostAddTypeScope implements Scope
 {
     /**
+     * @param PostBuilder $builder
      * @inheritDoc
      */
     public function apply(Builder $builder, Model $model)
