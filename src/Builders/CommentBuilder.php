@@ -8,7 +8,7 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Models\Comment;
+use Dbout\WpOrm\Api\CommentInterface;
 use Illuminate\Database\Eloquent\Collection;
 
 class CommentBuilder extends AbstractBuilder
@@ -30,6 +30,6 @@ class CommentBuilder extends AbstractBuilder
      */
     public function whereTypes(...$types): self
     {
-        return $this->_whereOrIn(Comment::TYPE, $types);
+        return $this->_whereOrIn(CommentInterface::TYPE, $types);
     }
 }

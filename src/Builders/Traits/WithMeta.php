@@ -128,7 +128,7 @@ trait WithMeta
                 '=',
                 $join->raw(sprintf("'%s'", $metaKey))
             )->on(
-                $join->raw(sprintf("%s.%s", $metaKey, $this->metaModel->getFkColumn())),
+                $join->raw(sprintf('%s.%s', $metaKey, $this->metaModel->getFkColumn())),
                 '=',
                 sprintf('%s.%s', $model->getTable(), $model->getKeyName()),
             );

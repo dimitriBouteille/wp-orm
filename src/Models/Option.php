@@ -23,10 +23,6 @@ class Option extends AbstractModel implements OptionInterface
      */
     protected $primaryKey = self::OPTION_ID;
 
-    protected $casts = [
-        self::AUTOLOAD => 'boolean',
-    ];
-
     /**
      * @inheritDoc
      */
