@@ -22,9 +22,7 @@ class Builder extends EloquentBuilder
      */
     public function addWhereExistsQuery(EloquentBuilder $query, $boolean = 'and', $not = false)
     {
-
         $type = $not ? 'NotExists' : 'Exists';
-
         $this->wheres[] = compact('type', 'query', 'boolean');
 
         $this->addBinding($query->getBindings(), 'where');

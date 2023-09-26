@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
+use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Builders\CommentBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -20,33 +21,18 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property Post|null $post
  * @property Comment|null $parent
  */
-class Comment extends AbstractModel
+class Comment extends AbstractModel implements CommentInterface
 {
-    public const COMMENT_ID = 'comment_ID';
-    public const POST_ID = 'comment_post_ID';
-    public const AUTHOR = 'comment_author';
-    public const AUTHOR_EMAIL = 'comment_author_email';
-    public const AUTHOR_URL = 'comment_author_url';
-    public const AUTHOR_IP = 'comment_author_IP';
-    public const DATE = 'comment_date';
-    public const DATE_GMT = 'comment_date_gmt';
-    public const CONTENT = 'comment_content';
-    public const KARMA = 'comment_karma';
-    public const APPROVED = 'comment_approved';
-    public const AGENT = 'comment_agent';
-    public const TYPE = 'comment_type';
-    public const PARENT = 'comment_parent';
-    public const USER_ID = 'user_id';
     public const CREATED_AT = self::DATE;
     public const UPDATED_AT =  null;
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::COMMENT_ID;
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $table = 'comments';
 

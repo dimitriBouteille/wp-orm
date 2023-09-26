@@ -8,44 +8,37 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Api\OptionInterface;
 use Dbout\WpOrm\Builders\OptionBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
  * @method static Option|null find($optionId)
  * @method static OptionBuilder query()
- *
- * @method self setOptionName(string $name)
- * @method string getOptionName()
- * @method self setOptionValue($value)
- * @method mixed getOptionValue()
- * @method self setAutoload(string $autoload)
- * @method string getAutoload()
  */
-class Option extends AbstractModel
+class Option extends AbstractModel implements OptionInterface
 {
-    public const OPTION_ID = 'option_id';
-    public const NAME = 'option_name';
-    public const VALUE = 'option_value';
-    public const AUTOLOAD = 'autoload';
-
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::OPTION_ID;
 
+    protected $casts = [
+        self::AUTOLOAD => 'boolean',
+    ];
+
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $table = 'options';
 
     /**
-     * @var bool
+     * @inheritDoc
      */
     public $timestamps = false;
 
     /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $fillable = [
         self::OPTION_ID, self::NAME, self::VALUE, self::AUTOLOAD,
