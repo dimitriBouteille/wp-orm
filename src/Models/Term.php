@@ -8,54 +8,43 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Api\TermInterface;
+use Dbout\WpOrm\Api\TermTaxonomyInterface;
 use Dbout\WpOrm\Builders\TermBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @method static self find(int $termId)
+ * @method static Term|null find(int $termId)
  * @method static TermBuilder query()
- *
- * @method string|null getName()
- * @method self setName(?string $name);
- * @method string|null getSlug()
- * @method self setSlug(?string $slug)
- * @method int|null getTermGroup()
- * @method self setTermGroup(?int $group)
- *
  * @property TermTaxonomy|null $termTaxonomy
  */
-class Term extends AbstractModel
+class Term extends AbstractModel implements TermInterface
 {
-    public const TERM_ID = 'term_id';
-    public const NAME = 'name';
-    public const SLUG = 'slug';
-    public const TERM_GROUP = 'term_group';
-
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $table = 'terms';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::TERM_ID;
 
     /**
-     * @var bool
+     * @inheritDoc
      */
     public $timestamps = false;
 
     /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $casts = [
         self::TERM_GROUP => 'integer',
     ];
 
     /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $fillable = [
         self::SLUG, self::TERM_ID, self::TERM_GROUP, self::NAME,
@@ -66,12 +55,15 @@ class Term extends AbstractModel
      */
     public function termTaxonomy(): HasOne
     {
-        return $this->hasOne(TermTaxonomy::class, TermTaxonomy::TERM_ID, self::TERM_ID);
+        return $this->hasOne(
+            TermTaxonomy::class,
+            TermTaxonomyInterface::TERM_ID,
+            self::TERM_ID
+        );
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return TermBuilder
+     * @inheritDoc
      */
     public function newEloquentBuilder($query): TermBuilder
     {

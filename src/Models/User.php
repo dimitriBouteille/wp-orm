@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
@@ -58,7 +59,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, Comment::USER_ID);
+        return $this->hasMany(Comment::class, CommentInterface::USER_ID);
     }
 
     /**

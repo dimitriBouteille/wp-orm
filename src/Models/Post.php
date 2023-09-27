@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
@@ -74,7 +75,7 @@ class Post extends AbstractModel implements PostInterface
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, Comment::POST_ID);
+        return $this->hasMany(Comment::class, CommentInterface::POST_ID);
     }
 
     /**

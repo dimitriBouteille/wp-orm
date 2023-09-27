@@ -11,7 +11,7 @@ namespace Dbout\WpOrm\Models;
 class Page extends CustomPost
 {
     /**
-     * @var string
+     * @inheritDoc
      */
     protected string $_type = 'page';
 }
