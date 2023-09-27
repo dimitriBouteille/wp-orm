@@ -9,26 +9,27 @@
 namespace Dbout\WpOrm\Api;
 
 use Carbon\Carbon;
+use Dbout\WpOrm\Models\User;
 
 /**
  * @method string|null getUserLogin()
- * @method self setUserLogin(string $login)
+ * @method User setUserLogin(string $login)
  * @method string|null getUserPass()
- * @method self setUserPass(string $password)
+ * @method User setUserPass(string $password)
  * @method string|null getUserNicename()
- * @method self setUserNicename(string $nicename)
+ * @method User setUserNicename(string $nicename)
  * @method string|null getUserEmail()
- * @method self setUserEmail(string $email)
+ * @method User setUserEmail(string $email)
  * @method string|null getUserUrl()
- * @method self setUserUrl(?string $url)
+ * @method User setUserUrl(?string $url)
  * @method Carbon|null getUserRegistered()
- * @method self setUserRegistered($date)
+ * @method User setUserRegistered($date)
  * @method string|null getUserActivationKey()
- * @method self setUserActivationKey(?string $key)
+ * @method User setUserActivationKey(?string $key)
  * @method int getUserStatus()
- * @method self setUserStatus(int $status)
+ * @method User setUserStatus(int $status)
  * @method string|null getDisplayName()
- * @method self setDisplayName(?string $name)
+ * @method User setDisplayName(?string $name)
  */
 interface UserInterface
 {

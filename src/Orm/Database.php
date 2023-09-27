@@ -21,6 +21,7 @@ class Database implements ConnectionInterface
      * @var bool
      */
     public $loggingQueries;
+
     /**
      * @var \wpdb
      */

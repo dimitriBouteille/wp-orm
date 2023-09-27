@@ -8,13 +8,15 @@
 
 namespace Dbout\WpOrm\Api;
 
+use Dbout\WpOrm\Models\TermRelationship;
+
 /**
  * @method int|null getTermOrder()
- * @method self setTermOrder(?int $order)
+ * @method TermRelationship setTermOrder(?int $order)
  * @method int|null getTermTaxonomyId()
- * @method self setTermTaxonomyId(?int $id)
+ * @method TermRelationship setTermTaxonomyId(?int $id)
  * @method int|null getObjectId()
- * @method self setObjectId(?int $id)
+ * @method TermRelationship setObjectId(?int $id)
  */
 interface TermRelationshipInterface
 {

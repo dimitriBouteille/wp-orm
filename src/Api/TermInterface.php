@@ -8,13 +8,15 @@
 
 namespace Dbout\WpOrm\Api;
 
+use Dbout\WpOrm\Models\Term;
+
 /**
  * @method string|null getName()
- * @method self setName(?string $name);
+ * @method Term setName(?string $name);
  * @method string|null getSlug()
- * @method self setSlug(?string $slug)
+ * @method Term setSlug(?string $slug)
  * @method int|null getTermGroup()
- * @method self setTermGroup(?int $group)
+ * @method Term setTermGroup(?int $group)
  */
 interface TermInterface
 {

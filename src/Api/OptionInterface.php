@@ -8,12 +8,15 @@
 
 namespace Dbout\WpOrm\Api;
 
+use Dbout\WpOrm\Models\Option;
+use Dbout\WpOrm\Providers\YesNo;
+
 /**
- * @method self setOptionName(string $name)
+ * @method Option setOptionName(string $name)
  * @method string getOptionName()
- * @method self setOptionValue($value)
+ * @method Option setOptionValue($value)
  * @method mixed getOptionValue()
- * @method self setAutoload(string $autoload)
+ * @method Option setAutoload(string|YesNo $autoload)
  * @method string getAutoload()
  */
 interface OptionInterface

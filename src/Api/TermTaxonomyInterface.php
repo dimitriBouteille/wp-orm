@@ -8,17 +8,19 @@
 
 namespace Dbout\WpOrm\Api;
 
+use Dbout\WpOrm\Models\TermTaxonomy;
+
 /**
  * @method int|null getTermId()
- * @method self setTermId(int $id)
+ * @method TermTaxonomy setTermId(int $id)
  * @method string getTaxonomy()
- * @method self setTaxonomy(string $taxonomy)
+ * @method TermTaxonomy setTaxonomy(string $taxonomy)
  * @method string|null getDescription()
- * @method self setDescription(?string $description)
+ * @method TermTaxonomy setDescription(?string $description)
  * @method int|null getParent()
- * @method self setParent($parent)
+ * @method TermTaxonomy setParent($parent)
  * @method int|null getCount()
- * @method self setCount(int $count)
+ * @method TermTaxonomy setCount(int $count)
  */
 interface TermTaxonomyInterface
 {

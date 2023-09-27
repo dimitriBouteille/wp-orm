@@ -24,7 +24,7 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * @return Builder|\Illuminate\Database\Query\Builder
+     * @inheritDoc
      */
     protected function newBaseQueryBuilder()
     {
@@ -45,18 +45,13 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * Get table name associated with the model
-     * Add WordPress table prefix
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getTable(): string
     {
         $prefix = $this->getConnection()->getTablePrefix();
 
         if (!empty($this->table)) {
-            // Ajoute plusieurs fois le suffix, va savoir pourquoi ...
-            // @todo Corriger le bug ci dessus
             return str_starts_with($this->table, $prefix) ? $this->table : $prefix . $this->table;
         }
 
