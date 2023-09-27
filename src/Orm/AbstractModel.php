@@ -91,7 +91,7 @@ abstract class AbstractModel extends Model
     public function __call($method, $parameters)
     {
         preg_match('#^(get|set)(.*)#', $method, $matchGetter);
-        if (!$matchGetter) {
+        if ($matchGetter === []) {
             return parent::__call($method, $parameters);
         }
 

@@ -24,8 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Comment extends AbstractModel implements CommentInterface
 {
-    public const CREATED_AT = self::DATE;
-    public const UPDATED_AT =  null;
+    final public const CREATED_AT = self::DATE;
+    final public const UPDATED_AT =  null;
 
     /**
      * @inheritDoc

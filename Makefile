@@ -7,3 +7,7 @@ csFixer:
 # Run phpStan check
 runPHPStan:
 	vendor/bin/phpstan analyse -c phpstan.neon
+
+# Run rector
+runRector:
+	vendor/bin/rector process src --dry-run

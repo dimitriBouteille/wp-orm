@@ -17,8 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class UserMeta extends AbstractMeta
 {
-    public const META_ID = 'umeta_id';
-    public const USER_ID = 'user_id';
+    final public const META_ID = 'umeta_id';
+    final public const USER_ID = 'user_id';
 
     /**
      * @var string

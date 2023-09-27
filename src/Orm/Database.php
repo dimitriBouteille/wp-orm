@@ -18,6 +18,10 @@ use Illuminate\Support\Arr;
 class Database implements ConnectionInterface
 {
     /**
+     * @var bool
+     */
+    public $loggingQueries;
+    /**
      * @var \wpdb
      */
     public $db;
@@ -32,7 +36,9 @@ class Database implements ConnectionInterface
      * The database connection configuration options.
      * @var array
      */
-    protected array $config = [];
+    protected array $config = [
+        'name' => 'wp-eloquent-mysql2',
+    ];
 
     /**
      * @var string|null
@@ -49,7 +55,7 @@ class Database implements ConnectionInterface
      */
     public static function getInstance(): Database
     {
-        if (!self::$instance) {
+        if (!self::$instance instanceof \Dbout\WpOrm\Orm\Database) {
             self::$instance = new self();
         }
 
@@ -62,9 +68,6 @@ class Database implements ConnectionInterface
     public function __construct()
     {
         global $wpdb;
-        $this->config = [
-            'name' => 'wp-eloquent-mysql2',
-        ];
 
         if ($wpdb) {
             $this->tablePrefix = $wpdb->prefix;
@@ -203,10 +206,10 @@ class Database implements ConnectionInterface
      */
     private function bind_params($query, $bindings, $update = false)
     {
-        $query = \str_replace('"', '`', $query);
+        $query = \str_replace('"', '`', (string) $query);
         $bindings = $this->prepareBindings($bindings);
 
-        if (!$bindings) {
+        if ($bindings === []) {
             return $query;
         }
 
@@ -221,9 +224,8 @@ class Database implements ConnectionInterface
         }, $bindings);
 
         $query = \str_replace(['%', '?'], ['%%', '%s'], $query);
-        $query = \vsprintf($query, $bindings);
 
-        return $query;
+        return \vsprintf($query, $bindings);
     }
 
     /**
@@ -301,7 +303,7 @@ class Database implements ConnectionInterface
             throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
         }
 
-        return \intval($result);
+        return (int) $result;
     }
 
     /**
@@ -325,7 +327,7 @@ class Database implements ConnectionInterface
 
             // Micro-optimization: check for scalar values before instances
             if (\is_bool($value)) {
-                $bindings[$key] = \intval($value);
+                $bindings[$key] = (int) $value;
             } elseif (is_scalar($value)) {
                 continue;
             } elseif ($value instanceof \DateTime) {
@@ -366,7 +368,7 @@ class Database implements ConnectionInterface
     public function beginTransaction()
     {
         $transaction = $this->unprepared("START TRANSACTION;");
-        if (false !== $transaction) {
+        if ($transaction) {
             $this->transactionCount++;
         }
     }
@@ -382,7 +384,7 @@ class Database implements ConnectionInterface
             return;
         }
         $transaction = $this->unprepared("COMMIT;");
-        if (false !== $transaction) {
+        if ($transaction) {
             $this->transactionCount--;
         }
     }
@@ -398,7 +400,7 @@ class Database implements ConnectionInterface
             return;
         }
         $transaction = $this->unprepared("ROLLBACK;");
-        if (false !== $transaction) {
+        if ($transaction) {
             $this->transactionCount--;
         }
     }

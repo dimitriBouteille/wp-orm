@@ -17,8 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class PostMeta extends AbstractMeta
 {
-    public const META_ID = 'meta_id';
-    public const POST_ID = 'post_id';
+    final public const META_ID = 'meta_id';
+    final public const POST_ID = 'post_id';
 
     /**
      * @var string

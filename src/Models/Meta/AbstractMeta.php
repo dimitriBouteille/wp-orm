@@ -12,8 +12,8 @@ use Dbout\WpOrm\Orm\AbstractModel;
 
 abstract class AbstractMeta extends AbstractModel implements MetaInterface
 {
-    public const META_KEY = 'meta_key';
-    public const META_VALUE = 'meta_value';
+    final public const META_KEY = 'meta_key';
+    final public const META_VALUE = 'meta_value';
 
     /**
      * Disable created_at and updated_at

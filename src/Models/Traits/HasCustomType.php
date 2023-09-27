@@ -29,7 +29,7 @@ trait HasCustomType
      * @param string $postType
      * @throws NotAllowedException
      */
-    final public function setPostType(string $postType): void
+    final public function setPostType(string $postType): never
     {
         throw new NotAllowedException(sprintf(
             'You cannot set a type for this object. Current type [%s]',
