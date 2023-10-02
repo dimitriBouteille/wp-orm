@@ -53,8 +53,6 @@ use Dbout\WpOrm\Models\Post;
  */
 interface PostInterface
 {
-    public const CREATED_AT = 'post_date';
-    public const UPDATED_AT = 'post_modified';
     public const POST_ID = 'ID';
     public const AUTHOR = 'post_author';
     public const DATE = 'post_date';

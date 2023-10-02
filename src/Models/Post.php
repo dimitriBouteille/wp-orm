@@ -30,6 +30,10 @@ class Post extends AbstractModel implements PostInterface
 {
     use WithMeta;
 
+    public const UPDATED_AT = self::MODIFIED;
+
+    public const CREATED_AT = self::DATE;
+
     /**
      * @var string
      */
