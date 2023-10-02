@@ -43,7 +43,4 @@ interface UserInterface
     public const ACTIVATION_KEY = 'user_activation_key';
     public const DISPLAY_NAME = 'display_name';
     public const STATUS = 'user_status';
-    public const CREATED_AT = 'user_registered';
-    public const UPDATED_AT = null;
-
 }

@@ -28,6 +28,9 @@ class User extends AbstractModel implements UserInterface
 {
     use WithMeta;
 
+    public const CREATED_AT = self::REGISTERED;
+    public const UPDATED_AT = null;
+
     /**
      * @inheritDoc
      */
