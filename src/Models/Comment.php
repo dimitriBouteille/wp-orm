@@ -18,9 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * @method static Comment|null find(int $commentId)
  * @method static CommentBuilder query()
- * @property User|null $user
- * @property Post|null $post
- * @property Comment|null $parent
  */
 class Comment extends AbstractModel implements CommentInterface
 {
