@@ -40,8 +40,8 @@ class Comment extends AbstractModel implements CommentInterface
      */
     protected $casts = [
         self::KARMA => 'integer',
-        self::DATE_GMT => 'date',
-        self::DATE => 'date',
+        self::DATE_GMT => 'datetime',
+        self::DATE => 'datetime',
     ];
 
     /**

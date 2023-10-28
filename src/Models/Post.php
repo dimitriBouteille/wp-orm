@@ -55,10 +55,10 @@ class Post extends AbstractModel implements PostInterface
     protected $casts = [
         self::MENU_ORDER => 'integer',
         self::COMMENT_COUNT => 'integer',
-        self::DATE => 'date',
-        self::MODIFIED => 'date',
-        self::DATE_GMT => 'date',
-        self::MODIFIED_GMT => 'date',
+        self::DATE => 'datetime',
+        self::MODIFIED => 'datetime',
+        self::DATE_GMT => 'datetime',
+        self::MODIFIED_GMT => 'datetime',
     ];
 
     /**

@@ -41,7 +41,7 @@ class User extends AbstractModel implements UserInterface
      */
     protected $casts = [
         self::STATUS => 'integer',
-        self::REGISTERED => 'date',
+        self::REGISTERED => 'datetime',
     ];
 
     /**
