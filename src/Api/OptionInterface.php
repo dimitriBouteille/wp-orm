@@ -25,4 +25,12 @@ interface OptionInterface
     public const NAME = 'option_name';
     public const VALUE = 'option_value';
     public const AUTOLOAD = 'autoload';
+
+    /**
+     * Find option by name
+     *
+     * @param string $optionName
+     * @return self|null
+     */
+    public static function findByName(string $optionName): ?self;
 }
