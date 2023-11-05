@@ -5,25 +5,44 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/8.x/eloquent) and us
 
 The ORM also offers a system to simply manage database migrations based on [Phinx](https://phinx.org/).
 
-Requirements
---------
+💡 To simplify the integration of this library, we recommend using Wordpress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
+
+### Features :
+
+- ✅ Support core WordPress models: `Comment`, `Option`, `Post`, `TermTaxonomy`, `Term`, `User`, `PostMeta` and `UserMeta`.
+- ✅ Support core WordPress post type: `Article`, `Attachment` and `Page`.
+- ✅ Based on core Wordpress database connection (`wpdb` class)
+- ✅ Migration with `Phinx` library.
+- ❤️ Easy integration of a custom post type and comment.
+- ❤️ Easy model creation for projects with custom tables
+
+### Documentations :
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Migrations](doc/migration.md)
+
+## Requirements
 
 The server requirements are basically the same as for [WordPress](https://wordpress.org/about/requirements/) with the addition of a few ones :
 
-- PHP >= 7.4
-- [Composer](https://getcomposer.org/) ❤️
+- PHP >= 8.1
+- [Composer](https://getcomposer.org/)
 
-> To simplify the integration of this library, we recommend using Wordpress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
+## Installation
 
-Installation
---------
+You can use [Composer](https://getcomposer.org/). Follow the [installation instructions](https://getcomposer.org/doc/00-intro.md) if you do not already have composer installed.
 
-
-Install with composer, in the root of the Wordpress project run:
-
-```bash
+~~~bash
 composer require dbout/wp-orm
-```
+~~~
+
+In your PHP script, make sure you include the autoloader:
+
+~~~php
+require __DIR__ . '/vendor/autoload.php';
+~~~
+
 
 Basic usage with core Wordpress models 
 --------
@@ -48,25 +67,4 @@ $pages = \Dbout\WpOrm\Models\Page::query()
 $pages = \Dbout\WpOrm\Models\Page::query()
     ->whereStatus('publish')
     ->get();
-```
-
-
-### Migration
-
-To use phinx, you must create a configuration file named `config-phinx.php` at the root of your project. To create this file, please see one of the following documentation:
-
-- [Create config-phinx.php file for Bedrock Framework](doc/migration-with-bedrock.md)
-
-If you would like to learn more about the configuration file, please visit  [Phinx - Configuration](https://phinx.readthedocs.io/en/latest/configuration.html).
-
-#### Create new migration : 
-
-```bash
-php vendor/bin/phinx create -c config-phinx.php
-```
-
-#### Run migration :
-
-```bash
-php vendor/bin/phinx migrate -c config-phinx.php
 ```
