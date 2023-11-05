@@ -53,8 +53,15 @@ class User extends AbstractModel implements UserInterface
      * @inheritDoc
      */
     protected $fillable = [
-        self::LOGIN, self::PASSWORD, self::NICE_NAME, self::EMAIL, self::URL, self::REGISTERED, self::ACTIVATION_KEY,
-        self::DISPLAY_NAME, self::STATUS,
+        self::LOGIN,
+        self::PASSWORD,
+        self::NICE_NAME,
+        self::EMAIL,
+        self::URL,
+        self::REGISTERED,
+        self::ACTIVATION_KEY,
+        self::DISPLAY_NAME,
+        self::STATUS,
     ];
 
     /**
@@ -82,7 +89,7 @@ class User extends AbstractModel implements UserInterface
     }
 
     /**
-     * @inerhitDoc
+     * @inheritDoc
      */
     public function getMetaClass(): string
     {

@@ -99,7 +99,7 @@ class Post extends AbstractModel implements PostInterface
     }
 
     /**
-     * @inerhitDoc
+     * @inheritDoc
      */
     public function getMetaClass(): string
     {
