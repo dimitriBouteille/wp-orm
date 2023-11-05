@@ -43,4 +43,20 @@ interface UserInterface
     public const ACTIVATION_KEY = 'user_activation_key';
     public const DISPLAY_NAME = 'display_name';
     public const STATUS = 'user_status';
+
+    /**
+     * Find user by email
+     *
+     * @param string $email
+     * @return self|null
+     */
+    public static function findByEmail(string $email): ?self;
+
+    /**
+     * Find user by login
+     *
+     * @param string $login
+     * @return self|null
+     */
+    public static function findByLogin(string $login): ?self;
 }

@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static User|null find($userId)
  * @method static UserBuilder query()
  * @property UserMeta[] $metas
- * @property Comment $comments
+ * @property Comment[] $comments
  * @property Post[] $posts
  */
 class User extends AbstractModel implements UserInterface
@@ -87,5 +87,21 @@ class User extends AbstractModel implements UserInterface
     public function getMetaClass(): string
     {
         return \Dbout\WpOrm\Models\Meta\UserMeta::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function findByEmail(string $email): ?self
+    {
+        return self::query()->firstWhere(self::EMAIL, $email);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function findByLogin(string $login): ?self
+    {
+        return self::query()->firstWhere(self::LOGIN, $login);
     }
 }
