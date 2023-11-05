@@ -16,8 +16,7 @@ use Dbout\WpOrm\Providers\YesNo;
 /**
  * @method static Option|null find($optionId)
  * @method static OptionBuilder query()
- * @method static OptionBuilder autoload(bool|YesNo $autoload = YesNo::Yes)
- * @method OptionBuilder autoload(bool|YesNo $autoload = YesNo::Yes)
+ * @method static|OptionBuilder autoload(bool|YesNo $autoload = YesNo::Yes)
  */
 class Option extends AbstractModel implements OptionInterface
 {
@@ -64,7 +63,7 @@ class Option extends AbstractModel implements OptionInterface
      * @param bool|YesNo $autoload
      * @return void
      */
-    public function scopeAutoload(OptionBuilder $builder, bool|YesNo $autoload = YesNo::Yes): void
+    protected function scopeAutoload(OptionBuilder $builder, bool|YesNo $autoload = YesNo::Yes): void
     {
         if (is_bool($autoload)) {
             $autoload = $autoload ? YesNo::Yes : YesNo::No;
