@@ -20,7 +20,6 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 
 ### Documentation :
 
-- [Requirements](#requirements)
 - [Installation](#installation)
 - [Introduction]()
 - [Use the Wordpress models]()
@@ -28,14 +27,17 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 - [Create custom PostType/CommentType model]()
 - [Migration with Phinx](doc/migration.md)
 
-## Requirements
+
+## Installation
+
+**Requirements**
 
 The server requirements are basically the same as for [WordPress](https://wordpress.org/about/requirements/) with the addition of a few ones :
 
 - PHP >= 8.1
 - [Composer](https://getcomposer.org/)
 
-## Installation
+**Installation**
 
 You can use [Composer](https://getcomposer.org/). Follow the [installation instructions](https://getcomposer.org/doc/00-intro.md) if you do not already have composer installed.
 
