@@ -1,5 +1,7 @@
 # Wordpress ORM with Eloquent
 
+![GitHub Release](https://img.shields.io/github/v/release/dimitriBouteille/wp-orm) ![Packagist Downloads](https://img.shields.io/packagist/dt/dbout/wp-orm)
+
 WordPress ORM wih Eloquent is a small library that adds a basic ORM into WordPress, which is easily extendable and includes models for core WordPress models such as posts, post metas, users, comments and more.
 The ORM is based on [Eloquent ORM](https://laravel.com/docs/8.x/eloquent) and uses the Wordpress connection (`wpdb` class).
 
@@ -16,11 +18,15 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 - ❤️ Easy integration of a custom post type and comment.
 - ❤️ Easy model creation for projects with custom tables
 
-### Documentations :
+### Documentation :
 
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Migrations](doc/migration.md)
+- [Introduction]()
+- [Use the Wordpress models]()
+- [Create custom Model]()
+- [Create custom PostType/CommentType model]()
+- [Migration with Phinx](doc/migration.md)
 
 ## Requirements
 
@@ -43,28 +49,4 @@ In your PHP script, make sure you include the autoloader:
 require __DIR__ . '/vendor/autoload.php';
 ~~~
 
-
-Basic usage with core Wordpress models 
---------
-
-### Page model
-
-#### Queries
-
-```php
-# Get all pages
-$pages = \Dbout\WpOrm\Models\Page::all();
-
-# Get one page by ID
-$page = \Dbout\WpOrm\Models\Page::find(15);
-
-# Get all pages by author
-$pages = \Dbout\WpOrm\Models\Page::query()
-    ->whereAuthor(1)
-    ->get();
-
-# Get all publish pages
-$pages = \Dbout\WpOrm\Models\Page::query()
-    ->whereStatus('publish')
-    ->get();
-```
+## Introduction
