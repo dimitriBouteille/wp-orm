@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -16,7 +16,6 @@ abstract class CustomPost extends Post
     use HasCustomType;
 
     /**
-     * CustomPost constructor.
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
@@ -29,7 +28,7 @@ abstract class CustomPost extends Post
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
     protected static function booted()
     {

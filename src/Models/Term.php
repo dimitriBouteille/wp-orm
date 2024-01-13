@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -47,7 +47,10 @@ class Term extends AbstractModel implements TermInterface
      * @inheritDoc
      */
     protected $fillable = [
-        self::SLUG, self::TERM_ID, self::TERM_GROUP, self::NAME,
+        self::SLUG,
+        self::TERM_ID,
+        self::TERM_GROUP,
+        self::NAME,
     ];
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -8,8 +8,8 @@
 
 namespace Dbout\WpOrm\Api;
 
+use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Models\Option;
-use Dbout\WpOrm\Providers\YesNo;
 
 /**
  * @method Option setOptionName(string $name)
@@ -27,10 +27,10 @@ interface OptionInterface
     public const AUTOLOAD = 'autoload';
 
     /**
-     * Find option by name
+     * Find one option by name
      *
      * @param string $optionName
      * @return self|null
      */
-    public static function findByName(string $optionName): ?self;
+    public static function findOneByName(string $optionName): ?self;
 }

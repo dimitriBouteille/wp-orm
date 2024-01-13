@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * @method static Comment|null find(int $commentId)
  * @method static CommentBuilder query()
+ * @method static|CommentBuilder user(int|User $user)
  */
 class Comment extends AbstractModel implements CommentInterface
 {
@@ -250,5 +251,19 @@ class Comment extends AbstractModel implements CommentInterface
     public function getDateGMT(): ?Carbon
     {
         return $this->getCommentDateGmt();
+    }
+
+    /**
+     * @param CommentBuilder $builder
+     * @param int|User $user
+     * @return void
+     */
+    public function scopeUser(CommentBuilder $builder, int|User $user): void
+    {
+        if ($user instanceof User) {
+            $user = $user->getId();
+        }
+
+        $builder->where(self::USER_ID, $user);
     }
 }

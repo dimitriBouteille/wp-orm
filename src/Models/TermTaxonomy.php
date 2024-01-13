@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -42,6 +42,11 @@ class TermTaxonomy extends AbstractModel implements TermTaxonomyInterface
      * @var string[]
      */
     protected $fillable = [
-        self::TERM_TAXONOMY_ID, self::TERM_ID, self::TAXONOMY, self::DESCRIPTION, self::PARENT, self::COUNT,
+        self::TERM_TAXONOMY_ID,
+        self::TERM_ID,
+        self::TAXONOMY,
+        self::DESCRIPTION,
+        self::PARENT,
+        self::COUNT,
     ];
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -101,7 +101,9 @@ class User extends AbstractModel implements UserInterface
      */
     public static function findByEmail(string $email): ?self
     {
-        return self::query()->firstWhere(self::EMAIL, $email);
+        /** @var self|null $result */
+        $result = self::query()->firstWhere(self::EMAIL, $email);
+        return $result;
     }
 
     /**
@@ -109,6 +111,8 @@ class User extends AbstractModel implements UserInterface
      */
     public static function findByLogin(string $login): ?self
     {
-        return self::query()->firstWhere(self::LOGIN, $login);
+        /** @var self|null $result */
+        $result = self::query()->firstWhere(self::LOGIN, $login);
+        return $result;
     }
 }

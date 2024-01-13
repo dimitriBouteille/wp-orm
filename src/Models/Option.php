@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -10,8 +10,8 @@ namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Api\OptionInterface;
 use Dbout\WpOrm\Builders\OptionBuilder;
+use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Dbout\WpOrm\Providers\YesNo;
 
 /**
  * @method static Option|null find($optionId)
@@ -39,7 +39,10 @@ class Option extends AbstractModel implements OptionInterface
      * @inheritDoc
      */
     protected $fillable = [
-        self::OPTION_ID, self::NAME, self::VALUE, self::AUTOLOAD,
+        self::OPTION_ID,
+        self::NAME,
+        self::VALUE,
+        self::AUTOLOAD,
     ];
 
     /**
@@ -53,9 +56,11 @@ class Option extends AbstractModel implements OptionInterface
     /**
      * @inheritDoc
      */
-    public static function findByName(string $optionName): ?self
+    public static function findOneByName(string $optionName): ?self
     {
-        return self::query()->firstWhere(self::NAME, $optionName);
+        /** @var self|null $result */
+        $result = self::query()->firstWhere(self::NAME, $optionName);
+        return $result;
     }
 
     /**

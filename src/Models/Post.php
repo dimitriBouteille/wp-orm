@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -12,6 +12,8 @@ use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
+use Dbout\WpOrm\Enums\PingStatus;
+use Dbout\WpOrm\Enums\PostStatus;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -25,28 +27,44 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property PostMeta[] $metas
  * @property Post|null $parent
  * @property Comment[] $comments
+ * @method static|PostBuilder author(int|User $user)
+ * @method static|PostBuilder status(string|PostStatus $status)
+ * @method static|PostBuilder pingStatus(string|PingStatus $status)
+ * @method static|PostBuilder postType(string $type)
  */
 class Post extends AbstractModel implements PostInterface
 {
     use WithMeta;
 
     public const UPDATED_AT = self::MODIFIED;
-
     public const CREATED_AT = self::DATE;
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::POST_ID;
 
     /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $fillable = [
-        self::CONTENT, self::TITLE, self::EXCERPT, self::COMMENT_STATUS, self::STATUS,
-        self::PING_STATUS, self::PASSWORD, self::POST_NAME, self::TO_PING, self::PINGED,
-        self::CONTENT_FILTERED, self::PARENT, self::GUID, self::MENU_ORDER, self::TYPE,
-        self::MIME_TYPE, self::COMMENT_COUNT,
+        self::CONTENT,
+        self::TITLE,
+        self::EXCERPT,
+        self::COMMENT_STATUS,
+        self::STATUS,
+        self::PING_STATUS,
+        self::PASSWORD,
+        self::POST_NAME,
+        self::TO_PING,
+        self::PINGED,
+        self::CONTENT_FILTERED,
+        self::PARENT,
+        self::GUID,
+        self::MENU_ORDER,
+        self::TYPE,
+        self::MIME_TYPE,
+        self::COMMENT_COUNT,
     ];
 
     /**
@@ -104,5 +122,57 @@ class Post extends AbstractModel implements PostInterface
     public function getMetaClass(): string
     {
         return \Dbout\WpOrm\Models\Meta\PostMeta::class;
+    }
+
+    /**
+     * @param PostBuilder $builder
+     * @param int|User $user
+     * @return void
+     */
+    public function scopeAuthor(PostBuilder $builder, int|User $user): void
+    {
+        if ($user instanceof User) {
+            $user = $user->getId();
+        }
+
+        $builder->where(self::AUTHOR, $user);
+    }
+
+    /**
+     * @param PostBuilder $builder
+     * @param string|PostStatus $status
+     * @return void
+     */
+    public function scopeStatus(PostBuilder $builder, string|PostStatus $status): void
+    {
+        if ($status instanceof PostStatus) {
+            $status = $status->value;
+        }
+
+        $builder->where(self::STATUS, $status);
+    }
+
+    /**
+     * @param PostBuilder $builder
+     * @param string|PingStatus $status
+     * @return void
+     */
+    public function scopePingStatus(PostBuilder $builder, string|PingStatus $status): void
+    {
+        if ($status instanceof PingStatus) {
+            $status = $status->value;
+        }
+
+        $builder->where(self::PING_STATUS, $status);
+    }
+
+    /**
+     * @param PostBuilder $builder
+     * @param string $postType
+     * @return void
+     */
+    public function scopePostType(PostBuilder $builder, string $postType): void
+    {
+        $builder->where(self::TYPE, $postType);
     }
 }
