@@ -50,7 +50,7 @@ interface UserInterface
      * @param string $email
      * @return self|null
      */
-    public static function findByEmail(string $email): ?self;
+    public static function findOneByEmail(string $email): ?self;
 
     /**
      * Find user by login
@@ -58,5 +58,5 @@ interface UserInterface
      * @param string $login
      * @return self|null
      */
-    public static function findByLogin(string $login): ?self;
+    public static function findOneByLogin(string $login): ?self;
 }

@@ -99,7 +99,7 @@ class User extends AbstractModel implements UserInterface
     /**
      * @inheritDoc
      */
-    public static function findByEmail(string $email): ?self
+    public static function findOneByEmail(string $email): ?self
     {
         /** @var self|null $result */
         $result = self::query()->firstWhere(self::EMAIL, $email);
@@ -109,7 +109,7 @@ class User extends AbstractModel implements UserInterface
     /**
      * @inheritDoc
      */
-    public static function findByLogin(string $login): ?self
+    public static function findOneByLogin(string $login): ?self
     {
         /** @var self|null $result */
         $result = self::query()->firstWhere(self::LOGIN, $login);
