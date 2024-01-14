@@ -39,9 +39,9 @@ use Dbout\WpOrm\Models\User;
  * @method Comment setCommentDateGmt(mixed $date)
  * @method Carbon|null getCommentDateGmt()
  *
- * @property User|null $user
- * @property Post|null $post
- * @property Comment|null $parent
+ * @property-read User|null $user
+ * @property-read Post|null $post
+ * @property-read Comment|null $parent
  *
  * @since 3.0.0
  */

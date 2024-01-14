@@ -23,6 +23,7 @@ $header = <<<EOF
 $config = new \PhpCsFixer\Config();
 return $config
     ->setFinder($finder)
+    ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache')
     ->setRiskyAllowed(true)
     ->setRules([
         '@PSR12' => true,

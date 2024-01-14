@@ -18,11 +18,11 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @method static User|null find($userId)
+ * @method static static|null find($userId)
  * @method static UserBuilder query()
- * @property UserMeta[] $metas
- * @property Comment[] $comments
- * @property Post[] $posts
+ * @property-read UserMeta[] $metas
+ * @property-read Comment[] $comments
+ * @property-read Post[] $posts
  */
 class User extends AbstractModel implements UserInterface
 {

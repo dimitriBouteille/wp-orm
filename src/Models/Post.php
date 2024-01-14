@@ -12,8 +12,6 @@ use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
-use Dbout\WpOrm\Enums\PingStatus;
-use Dbout\WpOrm\Enums\PostStatus;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -21,16 +19,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @method static Post find(int $postId)
+ * @method static static find(int $postId)
  * @method static PostBuilder query()
- * @property User|null $author
- * @property PostMeta[] $metas
- * @property Post|null $parent
- * @property Comment[] $comments
- * @method static|PostBuilder author(int|User $user)
- * @method static|PostBuilder status(string|PostStatus $status)
- * @method static|PostBuilder pingStatus(string|PingStatus $status)
- * @method static|PostBuilder postType(string $type)
+ * @property-read User|null $author
+ * @property-read PostMeta[] $metas
+ * @property-read static|null $parent
+ * @property-read Comment[] $comments
  */
 class Post extends AbstractModel implements PostInterface
 {
@@ -122,58 +116,6 @@ class Post extends AbstractModel implements PostInterface
     public function getMetaClass(): string
     {
         return \Dbout\WpOrm\Models\Meta\PostMeta::class;
-    }
-
-    /**
-     * @param PostBuilder $builder
-     * @param int|User $user
-     * @return void
-     */
-    public function scopeAuthor(PostBuilder $builder, int|User $user): void
-    {
-        if ($user instanceof User) {
-            $user = $user->getId();
-        }
-
-        $builder->where(self::AUTHOR, $user);
-    }
-
-    /**
-     * @param PostBuilder $builder
-     * @param string|PostStatus $status
-     * @return void
-     */
-    public function scopeStatus(PostBuilder $builder, string|PostStatus $status): void
-    {
-        if ($status instanceof PostStatus) {
-            $status = $status->value;
-        }
-
-        $builder->where(self::STATUS, $status);
-    }
-
-    /**
-     * @param PostBuilder $builder
-     * @param string|PingStatus $status
-     * @return void
-     */
-    public function scopePingStatus(PostBuilder $builder, string|PingStatus $status): void
-    {
-        if ($status instanceof PingStatus) {
-            $status = $status->value;
-        }
-
-        $builder->where(self::PING_STATUS, $status);
-    }
-
-    /**
-     * @param PostBuilder $builder
-     * @param string $postType
-     * @return void
-     */
-    public function scopePostType(PostBuilder $builder, string $postType): void
-    {
-        $builder->where(self::TYPE, $postType);
     }
 
     /**

@@ -12,7 +12,7 @@ use Dbout\WpOrm\Api\TermTaxonomyInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
- * @method static TermTaxonomy|null find(int $id)
+ * @method static static|null find(int $id)
  */
 class TermTaxonomy extends AbstractModel implements TermTaxonomyInterface
 {

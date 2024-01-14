@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @method static PostMeta find(int $metaId);
- * @property Post|null $post
+ * @property-read Post|null $post
  */
 class PostMeta extends AbstractMeta
 {

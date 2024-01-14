@@ -15,9 +15,9 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @method static Term|null find(int $termId)
+ * @method static static|null find(int $termId)
  * @method static TermBuilder query()
- * @property TermTaxonomy|null $termTaxonomy
+ * @property-read TermTaxonomy|null $termTaxonomy
  */
 class Term extends AbstractModel implements TermInterface
 {

@@ -17,9 +17,8 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @method static Comment|null find(int $commentId)
+ * @method static static|null find(int $commentId)
  * @method static CommentBuilder query()
- * @method static|CommentBuilder user(int|User $user)
  */
 class Comment extends AbstractModel implements CommentInterface
 {
@@ -251,19 +250,5 @@ class Comment extends AbstractModel implements CommentInterface
     public function getDateGMT(): ?Carbon
     {
         return $this->getCommentDateGmt();
-    }
-
-    /**
-     * @param CommentBuilder $builder
-     * @param int|User $user
-     * @return void
-     */
-    public function scopeUser(CommentBuilder $builder, int|User $user): void
-    {
-        if ($user instanceof User) {
-            $user = $user->getId();
-        }
-
-        $builder->where(self::USER_ID, $user);
     }
 }
