@@ -6,12 +6,8 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Models;
+namespace Dbout\WpOrm\Exceptions;
 
-class Page extends CustomModelPost
+class WpOrmException extends \Exception
 {
-    /**
-     * @inheritDoc
-     */
-    protected string $_type = 'page';
 }

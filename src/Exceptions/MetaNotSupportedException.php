@@ -8,6 +8,6 @@
 
 namespace Dbout\WpOrm\Exceptions;
 
-class MetaNotSupportedException extends \Exception
+class MetaNotSupportedException extends WpOrmException
 {
 }

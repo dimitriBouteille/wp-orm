@@ -8,12 +8,16 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Models\Traits\HasCustomType;
-use Dbout\WpOrm\Scopes\CustomPostAddTypeScope;
+use Dbout\WpOrm\Api\CustomModelTypeInterface;
+use Dbout\WpOrm\Exceptions\NotAllowedException;
+use Dbout\WpOrm\Scopes\CustomModelTypeScope;
 
-abstract class CustomPost extends Post
+abstract class CustomPost extends Post implements CustomModelTypeInterface
 {
-    use HasCustomType;
+    /**
+     * @var string
+     */
+    protected string $_type;
 
     /**
      * @param array $attributes
@@ -30,8 +34,53 @@ abstract class CustomPost extends Post
     /**
      * @inheritDoc
      */
+    public function getPostType(): ?string
+    {
+        return $this->_type;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCustomTypeCode(): string
+    {
+        return $this->getPostType();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCustomTypeColumn(): string
+    {
+        return self::TYPE;
+    }
+
+    /**
+     * @param string $type
+     * @throws NotAllowedException
+     * @return never
+     */
+    final public function setPostType(string $type): never
+    {
+        throw new NotAllowedException(sprintf(
+            'You cannot set a type for this object. Current type [%s]',
+            $this->_type
+        ));
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function type(): ?string
+    {
+        return (new static())->getPostType();
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected static function booted()
     {
-        static::addGlobalScope(new CustomPostAddTypeScope());
+        static::addGlobalScope(new CustomModelTypeScope());
     }
 }

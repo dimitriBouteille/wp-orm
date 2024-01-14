@@ -8,6 +8,6 @@
 
 namespace Dbout\WpOrm\Exceptions;
 
-class NotAllowedException extends \Exception
+class NotAllowedException extends WpOrmException
 {
 }
