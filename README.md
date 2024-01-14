@@ -9,24 +9,27 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 
 💡 To simplify the integration of this library, we recommend using Wordpress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
 
-### Features :
+### Features
 
 - ✅ Support core WordPress models: `Comment`, `Option`, `Post`, `TermTaxonomy`, `Term`, `User`, `PostMeta` and `UserMeta`.
 - ✅ Support core WordPress post type: `Article`, `Attachment` and `Page`.
 - ✅ Based on core Wordpress database connection (`wpdb` class)
 - ✅ Migration with `Phinx` library.
-- ❤️ Easy integration of a custom post type and comment.
-- ❤️ Easy model creation for projects with custom tables
+- ❤️ Easy integration of a custom post type.
+- ❤️ Easy model creation for projects with custom tables.
 
-### Documentation :
+**Not yet developed but planned in a future version:**
+
+- 💡 Create custom comment type
+- 💡 Meta casting (ie [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting)) 
+
+### Documentation
 
 - [Installation](#installation)
 - [Introduction]()
 - [Use the Wordpress models]()
 - [Create custom Model]()
-- [Create custom PostType/CommentType model]()
 - [Migration with Phinx](doc/migration.md)
-
 
 ## Installation
 
