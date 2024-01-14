@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Api\CustomModelTypeInterface;
+use Dbout\WpOrm\Exceptions\CannotOverrideCustomTypeException;
 use Dbout\WpOrm\Exceptions\NotAllowedException;
 use Dbout\WpOrm\Scopes\CustomModelTypeScope;
 
@@ -62,10 +63,7 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
      */
     final public function setPostType(string $type): never
     {
-        throw new NotAllowedException(sprintf(
-            'You cannot set a type for this object. Current type [%s]',
-            $this->_type
-        ));
+        throw new CannotOverrideCustomTypeException($this->_type);
     }
 
     /**

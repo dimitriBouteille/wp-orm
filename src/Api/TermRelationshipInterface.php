@@ -17,6 +17,8 @@ use Dbout\WpOrm\Models\TermRelationship;
  * @method TermRelationship setTermTaxonomyId(?int $id)
  * @method int|null getObjectId()
  * @method TermRelationship setObjectId(?int $id)
+ *
+ * @since 3.0.0
  */
 interface TermRelationshipInterface
 {

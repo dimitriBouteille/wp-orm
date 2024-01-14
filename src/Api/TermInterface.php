@@ -17,6 +17,8 @@ use Dbout\WpOrm\Models\Term;
  * @method Term setSlug(?string $slug)
  * @method int|null getTermGroup()
  * @method Term setTermGroup(?int $group)
+ *
+ * @since 3.0.0
  */
 interface TermInterface
 {

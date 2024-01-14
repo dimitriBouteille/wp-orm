@@ -19,6 +19,8 @@ class UserBuilder extends AbstractBuilder
     /**
      * @param string $email
      * @return User|null
+     * @deprecated Remove in next version
+     * @see User::findOneByEmail()
      */
     public function findOneByEmail(string $email): ?User
     {
@@ -30,6 +32,8 @@ class UserBuilder extends AbstractBuilder
     /**
      * @param string $login
      * @return User|null
+     * @deprecated Remove in next version
+     * @see User::findOneByLogin()
      */
     public function findOneByLogin(string $login): ?User
     {

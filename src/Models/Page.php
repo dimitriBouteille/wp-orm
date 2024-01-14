@@ -8,7 +8,7 @@
 
 namespace Dbout\WpOrm\Models;
 
-class Page extends CustomModelPost
+class Page extends CustomPost
 {
     /**
      * @inheritDoc

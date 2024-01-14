@@ -30,6 +30,8 @@ use Dbout\WpOrm\Models\User;
  * @method User setUserStatus(int $status)
  * @method string|null getDisplayName()
  * @method User setDisplayName(?string $name)
+ *
+ * @since 3.0.0
  */
 interface UserInterface
 {

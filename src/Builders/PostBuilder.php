@@ -20,6 +20,8 @@ class PostBuilder extends AbstractBuilder
     /**
      * @param string|null $name
      * @return Post|null
+     * @deprecated Remove in next version
+     * @see Post::findOneByName()
      */
     public function findOneByName(?string $name): ?Post
     {

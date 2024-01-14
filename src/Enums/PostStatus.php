@@ -10,6 +10,7 @@ namespace Dbout\WpOrm\Enums;
 
 /**
  * @see https://wordpress.org/documentation/article/post-status/
+ * @since 3.0.0
  */
 enum PostStatus: string
 {

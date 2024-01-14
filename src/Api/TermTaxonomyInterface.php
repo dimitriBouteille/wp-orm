@@ -21,6 +21,8 @@ use Dbout\WpOrm\Models\TermTaxonomy;
  * @method TermTaxonomy setParent($parent)
  * @method int|null getCount()
  * @method TermTaxonomy setCount(int $count)
+ *
+ * @since 3.0.0
  */
 interface TermTaxonomyInterface
 {

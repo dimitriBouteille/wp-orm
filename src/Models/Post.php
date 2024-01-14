@@ -175,4 +175,14 @@ class Post extends AbstractModel implements PostInterface
     {
         $builder->where(self::TYPE, $postType);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findOneByName(?string $name): ?Post
+    {
+        /** @var Post|null $model */
+        $model = self::query()->firstWhere(self::POST_NAME, $name);
+        return $model;
+    }
 }

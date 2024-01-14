@@ -50,6 +50,8 @@ use Dbout\WpOrm\Models\Post;
  * @method int|null getMenuOrder()
  * @method Post setPostContentFiltered($content)
  * @method string|null getPostContentFiltered()
+ *
+ * @since 3.0.0
  */
 interface PostInterface
 {
@@ -76,4 +78,12 @@ interface PostInterface
     public const TYPE = 'post_type';
     public const MIME_TYPE = 'post_mime_type';
     public const COMMENT_COUNT = 'comment_count';
+
+    /**
+     * Find post by name
+     *
+     * @param string|null $name
+     * @return Post|null
+     */
+    public function findOneByName(?string $name): ?Post;
 }

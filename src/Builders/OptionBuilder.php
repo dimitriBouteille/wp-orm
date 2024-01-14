@@ -16,6 +16,8 @@ class OptionBuilder extends AbstractBuilder
     /**
      * @param string $optionName
      * @return Option|null
+     * @deprecated Remove in next version
+     * @see Option::findOneByName()
      */
     public function findOneByName(string $optionName): ?Option
     {

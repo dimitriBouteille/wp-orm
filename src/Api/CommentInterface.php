@@ -42,6 +42,8 @@ use Dbout\WpOrm\Models\User;
  * @property User|null $user
  * @property Post|null $post
  * @property Comment|null $parent
+ *
+ * @since 3.0.0
  */
 interface CommentInterface
 {

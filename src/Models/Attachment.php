@@ -11,7 +11,7 @@ namespace Dbout\WpOrm\Models;
 use Dbout\WpOrm\Builders\PostBuilder;
 
 /**
- * @method static|PostBuilder mimeType(string|array $type)
+ * @method static|PostBuilder mimeType(string $type)
  */
 class Attachment extends CustomPost
 {
@@ -22,16 +22,11 @@ class Attachment extends CustomPost
 
     /**
      * @param PostBuilder $builder
-     * @param ...$types
+     * @param string $type
      * @return void
      */
-    protected function scopeMimeType(PostBuilder $builder, ...$types): void
+    protected function scopeMimeType(PostBuilder $builder, string $type): void
     {
-        $firstValue = reset($types);
-        if (is_array($firstValue)) {
-            $builder->whereIn(self::MIME_TYPE, $firstValue);
-        } else {
-            $builder->where(self::MIME_TYPE, $firstValue);
-        }
+        $builder->where(self::MIME_TYPE, $type);
     }
 }

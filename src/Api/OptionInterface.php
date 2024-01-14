@@ -18,6 +18,8 @@ use Dbout\WpOrm\Models\Option;
  * @method mixed getOptionValue()
  * @method Option setAutoload(string|YesNo $autoload)
  * @method string getAutoload()
+ *
+ * @since 3.0.0
  */
 interface OptionInterface
 {
