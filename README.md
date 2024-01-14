@@ -55,3 +55,7 @@ require __DIR__ . '/vendor/autoload.php';
 ~~~
 
 ## Introduction
+
+## Contributing
+
+We encourage you to contribute to this repository, so everyone can benefit from new features, bug fixes, and any other improvements. Have a look at our [contributing guidelines](CONTRIBUTING.md) to find out how to raise a pull request.
