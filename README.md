@@ -26,9 +26,9 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 ### Documentation
 
 - [Installation](#installation)
-- [Introduction]()
-- [Use the Wordpress models]()
-- [Create custom Model]()
+- [Introduction](#introduction)
+- [Use WordPress models](doc/documentation.md#use-wordpress-models)
+- [Create custom Model](doc/documentation.md#create-model)
 - [Migration with Phinx](doc/migration.md)
 
 ## Installation
@@ -55,6 +55,20 @@ require __DIR__ . '/vendor/autoload.php';
 ~~~
 
 ## Introduction
+
+Simply put, wp-orm is a library that makes it easy to manipulate a Wordpress database via the Eloquent ORM. The objective of this library is to **simplify the manipulation of the Wordpress database** on large projects - you can also use it for small projects:p
+
+> Eloquent is an object-relational mapper (ORM) that makes it enjoyable to interact with your database. When using Eloquent, each database table has a corresponding "Model" that is used to interact with that table. In addition to retrieving records from the database table, Eloquent models allow you to insert, update, and delete records from the table as well.
+
+**Here is a list of available features :**
+
+- The `wpdb` connection is used so **no configuration is needed to use**.
+- Ability to [create models](doc/documentation.md#model) simply
+- WordPress works with custom content types, you can simply [use the default types of WordPress](doc/documentation.md#use-wordpress-models) (page, attachment, ...) and create [custom models for your types](doc/documentation.md#custom-post-type-model).
+- Ability to [filter data](doc/documentation.md#filter-data) easily via taps.
+- All the features available in Eloquent, are usable with this library.
+
+> 📘 If you want to know more about how Eloquent works, the easiest way is to [read the documentation](https://laravel.com/docs/10.x/eloquent).
 
 ## Contributing
 
