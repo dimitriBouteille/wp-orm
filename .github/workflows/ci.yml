@@ -30,3 +30,6 @@ jobs:
 
       - name: PHPStan
         run: vendor/bin/phpstan analyse -c phpstan.neon
+
+      - name: Rector
+        run: vendor/bin/rector process src --dry-run
