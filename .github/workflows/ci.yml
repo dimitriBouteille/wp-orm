@@ -24,3 +24,9 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
+
+      - name: PHPCsFixer
+        run: vendor/bin/php-cs-fixer fix --verbose --diff --dry-run
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse -c phpstan.neon
