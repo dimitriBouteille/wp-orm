@@ -12,6 +12,7 @@ use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
+use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -44,6 +45,13 @@ class User extends AbstractModel implements UserInterface
         self::REGISTERED => 'datetime',
     ];
 
+    protected array $metaConfig  = [
+        'class' => UserMeta::class,
+        'columnKey' => AbstractMeta::META_KEY,
+        'columnValue' => AbstractMeta::META_VALUE,
+        'foreignKey' => UserMeta::USER_ID,
+    ];
+
     /**
      * @inheritDoc
      */
@@ -52,17 +60,7 @@ class User extends AbstractModel implements UserInterface
     /**
      * @inheritDoc
      */
-    protected $fillable = [
-        self::LOGIN,
-        self::PASSWORD,
-        self::NICE_NAME,
-        self::EMAIL,
-        self::URL,
-        self::REGISTERED,
-        self::ACTIVATION_KEY,
-        self::DISPLAY_NAME,
-        self::STATUS,
-    ];
+    protected $guarded = [];
 
     /**
      * @return HasMany
@@ -86,14 +84,6 @@ class User extends AbstractModel implements UserInterface
     public function newEloquentBuilder($query): UserBuilder
     {
         return new UserBuilder($query);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMetaClass(): string
-    {
-        return \Dbout\WpOrm\Models\Meta\UserMeta::class;
     }
 
     /**

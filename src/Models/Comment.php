@@ -38,6 +38,11 @@ class Comment extends AbstractModel implements CommentInterface
     /**
      * @inheritDoc
      */
+    protected $guarded = [];
+
+    /**
+     * @inheritDoc
+     */
     protected $casts = [
         self::KARMA => 'integer',
         self::DATE_GMT => 'datetime',

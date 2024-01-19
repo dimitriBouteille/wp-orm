@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Models\Meta;
 
+use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -35,14 +36,6 @@ class UserMeta extends AbstractMeta
      */
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
-    }
-
-    /**
-     * @return string
-     */
-    public function getFkColumn(): string
-    {
-        return self::USER_ID;
+        return $this->hasOne(User::class, UserInterface::USER_ID, self::USER_ID);
     }
 }

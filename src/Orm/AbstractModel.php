@@ -74,9 +74,13 @@ abstract class AbstractModel extends Model
      * Returns model table name
      *
      * @return string
+     * @deprecated Remove in next version
+     * @see self::getTable()
+     * @see https://stackoverflow.com/a/20812314
      */
     public static function table(): string
     {
+        // @phpstan-ignore-next-line
         return (new static())->getTable();
     }
 

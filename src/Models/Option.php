@@ -36,12 +36,7 @@ class Option extends AbstractModel implements OptionInterface
     /**
      * @inheritDoc
      */
-    protected $fillable = [
-        self::OPTION_ID,
-        self::NAME,
-        self::VALUE,
-        self::AUTOLOAD,
-    ];
+    protected $guarded = [];
 
     /**
      * @inheritDoc

@@ -12,6 +12,7 @@ use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
+use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -41,25 +42,7 @@ class Post extends AbstractModel implements PostInterface
     /**
      * @inheritDoc
      */
-    protected $fillable = [
-        self::CONTENT,
-        self::TITLE,
-        self::EXCERPT,
-        self::COMMENT_STATUS,
-        self::STATUS,
-        self::PING_STATUS,
-        self::PASSWORD,
-        self::POST_NAME,
-        self::TO_PING,
-        self::PINGED,
-        self::CONTENT_FILTERED,
-        self::PARENT,
-        self::GUID,
-        self::MENU_ORDER,
-        self::TYPE,
-        self::MIME_TYPE,
-        self::COMMENT_COUNT,
-    ];
+    protected $guarded = [];
 
     /**
      * @inheritDoc
@@ -71,6 +54,16 @@ class Post extends AbstractModel implements PostInterface
         self::MODIFIED => 'datetime',
         self::DATE_GMT => 'datetime',
         self::MODIFIED_GMT => 'datetime',
+    ];
+
+    /**
+     * @var array
+     */
+    protected array $metaConfig = [
+        'class' => PostMeta::class,
+        'columnKey' => Meta\AbstractMeta::META_KEY,
+        'columnValue' => AbstractMeta::META_VALUE,
+        'foreignKey' => PostMeta::POST_ID,
     ];
 
     /**
@@ -108,14 +101,6 @@ class Post extends AbstractModel implements PostInterface
     public function newEloquentBuilder($query): PostBuilder
     {
         return new PostBuilder($query);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMetaClass(): string
-    {
-        return \Dbout\WpOrm\Models\Meta\PostMeta::class;
     }
 
     /**

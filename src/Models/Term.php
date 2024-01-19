@@ -46,12 +46,7 @@ class Term extends AbstractModel implements TermInterface
     /**
      * @inheritDoc
      */
-    protected $fillable = [
-        self::SLUG,
-        self::TERM_ID,
-        self::TERM_GROUP,
-        self::NAME,
-    ];
+    protected $guarded = [];
 
     /**
      * @return HasOne

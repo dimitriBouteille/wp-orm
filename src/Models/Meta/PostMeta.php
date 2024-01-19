@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Models\Meta;
 
+use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -35,14 +36,6 @@ class PostMeta extends AbstractMeta
      */
     public function post(): HasOne
     {
-        return $this->hasOne(Post::class, Post::POST_ID, self::POST_ID);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getFkColumn(): string
-    {
-        return self::POST_ID;
+        return $this->hasOne(Post::class, PostInterface::POST_ID, self::POST_ID);
     }
 }

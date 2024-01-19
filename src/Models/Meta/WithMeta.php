@@ -8,15 +8,17 @@
 
 namespace Dbout\WpOrm\Models\Meta;
 
-use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
+use Dbout\WpOrm\Exceptions\WpOrmException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait WithMeta
 {
-    /**
-     * @var AbstractMeta|null
-     */
-    protected ?AbstractMeta $metaModel = null;
+    protected array $metaConfig = [
+        'class' => '',
+        'columnKey' => '',
+        'columnValue' => '',
+        'foreignKey' => '',
+    ];
 
     /**
      * @var array
@@ -26,7 +28,7 @@ trait WithMeta
     /**
      * @return void
      */
-    protected static function bootWithMeta()
+    protected static function bootWithMeta(): void
     {
         static::saved(function ($model) {
             $model->saveTmpMetas();
@@ -34,22 +36,16 @@ trait WithMeta
     }
 
     /**
-     * @throws MetaNotSupportedException
-     * @throws \ReflectionException
+     * @throws WpOrmException
+     * @return void
      */
     public function initializeWithMeta(): void
     {
-        $metaClass = $this->getMetaClass();
-        $object = (new \ReflectionClass($metaClass));
-        if (!$object->implementsInterface(MetaInterface::class)) {
-            throw new MetaNotSupportedException(sprintf(
-                "Model %s must be implement %s",
-                $metaClass,
-                MetaInterface::class
-            ));
+        foreach ($this->metaConfig as $optionKey => $optionValue) {
+            if ($optionValue === null || $optionValue === '') {
+                throw new WpOrmException(sprintf('Please define %s key in metaConfig property.', $optionKey));
+            }
         }
-
-        $this->metaModel = $object->newInstanceWithoutConstructor();
     }
 
     /**
@@ -57,7 +53,7 @@ trait WithMeta
      */
     public function metas(): HasMany
     {
-        return $this->hasMany(get_class($this->metaModel), $this->metaModel->getFkColumn());
+        return $this->hasMany($this->metaConfig['class'], $this->getMetaForeignKey());
     }
 
     /**
@@ -66,26 +62,24 @@ trait WithMeta
      */
     public function getMeta(string $metaKey): ?AbstractMeta
     {
-        return $this->metas()
-            ->firstWhere($this->metaModel->getKeyColumn(), $metaKey);
+        /** @var ?AbstractMeta $value */
+        $value =  $this->metas()->firstWhere($this->getMetaColumnKey(), $metaKey);
+        return $value;
     }
 
     /**
      * @param string $metaKey
      * @return mixed|null
      */
-    public function getMetaValue(string $metaKey)
+    public function getMetaValue(string $metaKey): mixed
     {
         if (!$this->exists) {
             return $this->_tmpMetas[$metaKey] ?? null;
         }
 
         $meta = $this->getMeta($metaKey);
-        if (!$meta) {
-            return null;
-        }
+        return $meta?->getValue();
 
-        return $meta->getValue();
     }
 
     /**
@@ -95,29 +89,30 @@ trait WithMeta
     public function hasMeta(string $metaKey): bool
     {
         return $this->metas()
-            ->where($this->metaModel->getKeyColumn(), $metaKey)
+            ->where($this->getMetaColumnKey(), $metaKey)
             ->exists();
     }
 
     /**
      * @param string $metaKey
-     * @param $value
+     * @param mixed $value
      * @return AbstractMeta|null
      */
-    public function setMeta(string $metaKey, $value): ?AbstractMeta
+    public function setMeta(string $metaKey, mixed $value): ?AbstractMeta
     {
         if (!$this->exists) {
             $this->_tmpMetas[$metaKey] = $value;
             return null;
         }
 
+        /** @var AbstractMeta $instance */
         $instance = $this->metas()
             ->firstOrNew([
-                $this->metaModel->getKeyColumn() => $metaKey,
+                $this->getMetaForeignKey() => $metaKey,
             ]);
 
         $instance->fill([
-            $this->metaModel->getValueColumn() => $value,
+            $this->getMetaColumnValue() => $value,
         ])->save();
 
         return $instance;
@@ -135,14 +130,9 @@ trait WithMeta
         }
 
         return $this->metas()
-            ->where($this->metaModel->getKeyColumn(), $metaKey)
+            ->where($this->getMetaColumnKey(), $metaKey)
             ->forceDelete();
     }
-
-    /**
-     * @return string
-     */
-    abstract public function getMetaClass(): string;
 
     /**
      * @return void
@@ -154,5 +144,29 @@ trait WithMeta
         }
 
         $this->_tmpMetas = [];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMetaColumnKey(): string
+    {
+        return $this->metaConfig['columnKey'] ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMetaColumnValue(): string
+    {
+        return $this->metaConfig['columnValue'] ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMetaForeignKey(): string
+    {
+        return $this->metaConfig['foreignKey'] ?? '';
     }
 }

@@ -10,7 +10,7 @@ namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 
-abstract class AbstractMeta extends AbstractModel implements MetaInterface
+abstract class AbstractMeta extends AbstractModel
 {
     final public const META_KEY = 'meta_key';
     final public const META_VALUE = 'meta_value';
@@ -22,10 +22,11 @@ abstract class AbstractMeta extends AbstractModel implements MetaInterface
     public $timestamps = false;
 
     /**
-     * @var array
+     * @inheritDoc
      */
     protected $fillable = [
-        self::META_VALUE, self::META_KEY,
+        self::META_VALUE,
+        self::META_KEY,
     ];
 
     /**
@@ -62,21 +63,5 @@ abstract class AbstractMeta extends AbstractModel implements MetaInterface
     {
         $this->setAttribute(self::META_VALUE, $value);
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKeyColumn(): string
-    {
-        return self::META_KEY;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValueColumn(): string
-    {
-        return self::META_VALUE;
     }
 }

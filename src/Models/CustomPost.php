@@ -25,9 +25,9 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
      */
     public function __construct(array $attributes = [])
     {
-        $this->attributes = [
+        $this->setRawAttributes([
             self::TYPE => $this->_type,
-        ];
+        ]);
 
         parent::__construct($attributes);
     }
@@ -68,9 +68,11 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
 
     /**
      * @return string|null
+     * @deprecated Remove in next version - Use constant
      */
     public static function type(): ?string
     {
+        // @phpstan-ignore-next-line
         return (new static())->getPostType();
     }
 
