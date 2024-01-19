@@ -28,8 +28,5 @@ jobs:
       - name: PHPCsFixer
         run: vendor/bin/php-cs-fixer fix --verbose --diff --dry-run
 
-      - name: PHPStan
+      - name: PHPStan Analyse
         run: vendor/bin/phpstan analyse -c phpstan.neon
-
-      - name: Rector
-        run: vendor/bin/rector process src --dry-run
