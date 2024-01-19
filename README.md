@@ -21,7 +21,7 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 **Not yet developed but planned in a future version:**
 
 - 💡 Create custom comment type
-- 💡 Meta casting (ie [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting)) 
+- 💡 Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting)) 
 
 ### Documentation
 
