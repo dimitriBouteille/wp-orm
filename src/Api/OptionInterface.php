@@ -8,17 +8,7 @@
 
 namespace Dbout\WpOrm\Api;
 
-use Dbout\WpOrm\Enums\YesNo;
-use Dbout\WpOrm\Models\Option;
-
 /**
- * @method Option setOptionName(string $name)
- * @method string getOptionName()
- * @method Option setOptionValue($value)
- * @method mixed getOptionValue()
- * @method Option setAutoload(string|YesNo $autoload)
- * @method string getAutoload()
- *
  * @since 3.0.0
  */
 interface OptionInterface
@@ -27,12 +17,4 @@ interface OptionInterface
     public const NAME = 'option_name';
     public const VALUE = 'option_value';
     public const AUTOLOAD = 'autoload';
-
-    /**
-     * Find one option by name
-     *
-     * @param string $optionName
-     * @return self|null
-     */
-    public static function findOneByName(string $optionName): ?self;
 }

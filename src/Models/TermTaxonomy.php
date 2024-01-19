@@ -12,6 +12,16 @@ use Dbout\WpOrm\Api\TermTaxonomyInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
+ * @method int|null getTermId()
+ * @method TermTaxonomy setTermId(int $id)
+ * @method string getTaxonomy()
+ * @method TermTaxonomy setTaxonomy(string $taxonomy)
+ * @method string|null getDescription()
+ * @method TermTaxonomy setDescription(?string $description)
+ * @method int|null getParent()
+ * @method TermTaxonomy setParent($parent)
+ * @method int|null getCount()
+ * @method TermTaxonomy setCount(int $count)
  * @method static static|null find(int $id)
  */
 class TermTaxonomy extends AbstractModel implements TermTaxonomyInterface

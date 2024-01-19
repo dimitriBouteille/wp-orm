@@ -11,6 +11,14 @@ namespace Dbout\WpOrm\Models;
 use Dbout\WpOrm\Api\TermRelationshipInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 
+/**
+ * @method int|null getTermOrder()
+ * @method TermRelationship setTermOrder(?int $order)
+ * @method int|null getTermTaxonomyId()
+ * @method TermRelationship setTermTaxonomyId(?int $id)
+ * @method int|null getObjectId()
+ * @method TermRelationship setObjectId(?int $id)
+ */
 class TermRelationship extends AbstractModel implements TermRelationshipInterface
 {
     /**

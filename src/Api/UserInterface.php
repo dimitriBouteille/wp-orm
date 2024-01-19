@@ -8,29 +8,7 @@
 
 namespace Dbout\WpOrm\Api;
 
-use Carbon\Carbon;
-use Dbout\WpOrm\Models\User;
-
 /**
- * @method string|null getUserLogin()
- * @method User setUserLogin(string $login)
- * @method string|null getUserPass()
- * @method User setUserPass(string $password)
- * @method string|null getUserNicename()
- * @method User setUserNicename(string $nicename)
- * @method string|null getUserEmail()
- * @method User setUserEmail(string $email)
- * @method string|null getUserUrl()
- * @method User setUserUrl(?string $url)
- * @method Carbon|null getUserRegistered()
- * @method User setUserRegistered($date)
- * @method string|null getUserActivationKey()
- * @method User setUserActivationKey(?string $key)
- * @method int getUserStatus()
- * @method User setUserStatus(int $status)
- * @method string|null getDisplayName()
- * @method User setDisplayName(?string $name)
- *
  * @since 3.0.0
  */
 interface UserInterface
@@ -45,20 +23,4 @@ interface UserInterface
     public const ACTIVATION_KEY = 'user_activation_key';
     public const DISPLAY_NAME = 'display_name';
     public const STATUS = 'user_status';
-
-    /**
-     * Find user by email
-     *
-     * @param string $email
-     * @return self|null
-     */
-    public static function findOneByEmail(string $email): ?self;
-
-    /**
-     * Find user by login
-     *
-     * @param string $login
-     * @return self|null
-     */
-    public static function findOneByLogin(string $login): ?self;
 }

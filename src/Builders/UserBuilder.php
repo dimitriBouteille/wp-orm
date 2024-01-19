@@ -9,13 +9,10 @@
 namespace Dbout\WpOrm\Builders;
 
 use Dbout\WpOrm\Api\UserInterface;
-use Dbout\WpOrm\Builders\Traits\WithMeta;
 use Dbout\WpOrm\Models\User;
 
-class UserBuilder extends AbstractBuilder
+class UserBuilder extends AbstractWithMetaBuilder
 {
-    use WithMeta;
-
     /**
      * @param string $email
      * @return User|null

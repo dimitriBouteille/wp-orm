@@ -17,8 +17,36 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
+ * @method Comment setCommentAuthor(?string $author)
+ * @method string|null getCommentAuthor()
+ * @method Comment setCommentAuthorEmail(?string $email)
+ * @method string|null getCommentAuthorEmail()
+ * @method Comment setCommentAuthorUrl(?string $url)
+ * @method string|null getCommentAuthorUrl()
+ * @method Comment setCommentAuthorIP(?string $ip)
+ * @method string|null getCommentAuthorIP()
+ * @method Comment setCommentContent(?string $content)
+ * @method string|null getCommentContent()
+ * @method Comment setCommentKarma(?int $karma)
+ * @method int|null getCommentKarma()
+ * @method Comment setCommentApproved(string $approved)
+ * @method string getCommentApproved()
+ * @method Comment setCommentAgent(?string $agent)
+ * @method string|null getCommentAgent()
+ * @method Comment setCommentType(?string $type)
+ * @method string|null getCommentType()
+ * @method Comment setUserId(?int $userId)
+ * @method int|null getUserId()
+ * @method Comment setCommentDate(mixed $date)
+ * @method Carbon|null getCommentDate()
+ * @method Comment setCommentDateGmt(mixed $date)
+ * @method Carbon|null getCommentDateGmt()
  * @method static static|null find(int $commentId)
  * @method static CommentBuilder query()
+ *
+ * @property-read User|null $user
+ * @property-read Post|null $post
+ * @property-read Comment|null $parent
  */
 class Comment extends AbstractModel implements CommentInterface
 {
@@ -34,11 +62,6 @@ class Comment extends AbstractModel implements CommentInterface
      * @inheritDoc
      */
     protected $table = 'comments';
-
-    /**
-     * @inheritDoc
-     */
-    protected $guarded = [];
 
     /**
      * @inheritDoc
@@ -82,15 +105,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string $author
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentAuthor()
      */
-    public function setAuthor(string $author): CommentInterface
+    public function setAuthor(string $author): self
     {
         return $this->setCommentAuthor($author);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see getCommentAuthor()
      */
     public function getAuthor(): ?string
     {
@@ -98,15 +126,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string|null $email
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentAuthorEmail()
      */
-    public function setAuthorEmail(?string $email): CommentInterface
+    public function setAuthorEmail(?string $email): self
     {
         return $this->setCommentAuthorEmail($email);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see getCommentAuthorEmail()
      */
     public function getAuthorEmail(): ?string
     {
@@ -114,15 +147,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string|null $url
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentAuthorUrl()
      */
-    public function setAuthorUrl(?string $url): CommentInterface
+    public function setAuthorUrl(?string $url): self
     {
         return $this->setCommentAuthorUrl($url);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see getCommentAuthorUrl()
      */
     public function getAuthorUrl(): ?string
     {
@@ -130,15 +168,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string|null $ip
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentAuthorIP()
      */
-    public function setAuthorIp(?string $ip): CommentInterface
+    public function setAuthorIp(?string $ip): self
     {
         return $this->setCommentAuthorIP($ip);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see getCommentAuthorIP()
      */
     public function getAuthorIp(): ?string
     {
@@ -146,15 +189,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string|null $content
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentContent()
      */
-    public function setContent(?string $content): CommentInterface
+    public function setContent(?string $content): self
     {
         return $this->setCommentContent($content);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see gsetCommentContent()
      */
     public function getContent(): ?string
     {
@@ -162,15 +210,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param int|null $karma
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentKarma()
      */
-    public function setKarma(?int $karma): CommentInterface
+    public function setKarma(?int $karma): self
     {
         return $this->setCommentKarma($karma);
     }
 
     /**
      * @inheritDoc
+     * @deprecated Remove in next version
+     * @see getCommentKarma()
      */
     public function getKarma(): ?int
     {
@@ -178,15 +231,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string|null $agent
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentAgent()
      */
-    public function setAgent(?string $agent): CommentInterface
+    public function setAgent(?string $agent): self
     {
         return $this->setCommentAgent($agent);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see getCommentAgent()
      */
     public function getAgent(): ?string
     {
@@ -194,15 +252,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string|null $type
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentType()
      */
-    public function setType(?string $type): CommentInterface
+    public function setType(?string $type): self
     {
         return $this->setCommentType($type);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see getCommentType()
      */
     public function getType(): ?string
     {
@@ -210,15 +273,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string|null $approved
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentApproved()
      */
-    public function setApproved(?string $approved): CommentInterface
+    public function setApproved(?string $approved): self
     {
         return $this->setCommentApproved($approved);
     }
 
     /**
-     * @inheritDoc
+     * @return string|null
+     * @deprecated Remove in next version
+     * @see getCommentApproved()
      */
     public function getApproved(): ?string
     {
@@ -226,15 +294,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $date
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentDate()
      */
-    public function setDate(mixed $date): CommentInterface
+    public function setDate(mixed $date): self
     {
         return $this->setCommentDate($date);
     }
 
     /**
-     * @inheritDoc
+     * @return Carbon|null
+     * @deprecated Remove in next version
+     * @see getCommentDate()
      */
     public function getDate(): ?Carbon
     {
@@ -242,15 +315,20 @@ class Comment extends AbstractModel implements CommentInterface
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $date
+     * @return self
+     * @deprecated Remove in next version
+     * @see setCommentDateGmt()
      */
-    public function setDateGMT(mixed $date): CommentInterface
+    public function setDateGMT(mixed $date): self
     {
         return $this->setCommentDateGmt($date);
     }
 
     /**
-     * @inheritDoc
+     * @return Carbon|null
+     * @deprecated Remove in next version
+     * @see getCommentDateGmt()
      */
     public function getDateGMT(): ?Carbon
     {

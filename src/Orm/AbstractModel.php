@@ -14,7 +14,11 @@ use Illuminate\Support\Str;
 abstract class AbstractModel extends Model
 {
     /**
-     * AbstractModel constructor.
+     * @inheritDoc
+     */
+    protected $guarded = [];
+
+    /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
@@ -41,6 +45,7 @@ abstract class AbstractModel extends Model
      */
     public function getConnection()
     {
+        // @phpstan-ignore-next-line
         return Database::getInstance();
     }
 

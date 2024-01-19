@@ -10,9 +10,16 @@ namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Api\OptionInterface;
 use Dbout\WpOrm\Builders\OptionBuilder;
+use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
+ * @method Option setOptionName(string $name)
+ * @method string getOptionName()
+ * @method Option setOptionValue($value)
+ * @method mixed getOptionValue()
+ * @method Option setAutoload(string|YesNo $autoload)
+ * @method string getAutoload()
  * @method static static|null find($optionId)
  * @method static OptionBuilder query()
  */
@@ -36,18 +43,14 @@ class Option extends AbstractModel implements OptionInterface
     /**
      * @inheritDoc
      */
-    protected $guarded = [];
-
-    /**
-     * @inheritDoc
-     */
     public function newEloquentBuilder($query): OptionBuilder
     {
         return new OptionBuilder($query);
     }
 
     /**
-     * @inheritDoc
+     * @param string $optionName
+     * @return self|null
      */
     public static function findOneByName(string $optionName): ?self
     {

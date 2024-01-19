@@ -8,18 +8,38 @@
 
 namespace Dbout\WpOrm\Models;
 
+use Carbon\Carbon;
 use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
+use Dbout\WpOrm\Concerns\HasMeta;
 use Dbout\WpOrm\Models\Meta\UserMeta;
-use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @method string|null getUserLogin()
+ * @method User setUserLogin(string $login)
+ * @method string|null getUserPass()
+ * @method User setUserPass(string $password)
+ * @method string|null getUserNicename()
+ * @method User setUserNicename(string $nicename)
+ * @method string|null getUserEmail()
+ * @method User setUserEmail(string $email)
+ * @method string|null getUserUrl()
+ * @method User setUserUrl(?string $url)
+ * @method Carbon|null getUserRegistered()
+ * @method User setUserRegistered($date)
+ * @method string|null getUserActivationKey()
+ * @method User setUserActivationKey(?string $key)
+ * @method int getUserStatus()
+ * @method User setUserStatus(int $status)
+ * @method string|null getDisplayName()
+ * @method User setDisplayName(?string $name)
  * @method static static|null find($userId)
  * @method static UserBuilder query()
+ *
  * @property-read UserMeta[] $metas
  * @property-read Comment[] $comments
  * @property-read Post[] $posts
@@ -27,10 +47,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[\Dbout\WpOrm\Attributes\MetaConfigAttribute(UserMeta::class, UserMeta::USER_ID)]
 class User extends AbstractModel implements UserInterface
 {
-    use WithMeta;
+    use HasMeta;
 
-    public const CREATED_AT = self::REGISTERED;
-    public const UPDATED_AT = null;
+    final public const CREATED_AT = self::REGISTERED;
+    final public const UPDATED_AT = null;
 
     /**
      * @inheritDoc
@@ -49,11 +69,6 @@ class User extends AbstractModel implements UserInterface
      * @inheritDoc
      */
     protected $primaryKey = self::USER_ID;
-
-    /**
-     * @inheritDoc
-     */
-    protected $guarded = [];
 
     /**
      * @return HasMany
@@ -80,7 +95,8 @@ class User extends AbstractModel implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string $email
+     * @return self|null
      */
     public static function findOneByEmail(string $email): ?self
     {
@@ -90,7 +106,8 @@ class User extends AbstractModel implements UserInterface
     }
 
     /**
-     * @inheritDoc
+     * @param string $login
+     * @return self|null
      */
     public static function findOneByLogin(string $login): ?self
     {

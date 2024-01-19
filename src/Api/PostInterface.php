@@ -8,49 +8,7 @@
 
 namespace Dbout\WpOrm\Api;
 
-use Carbon\Carbon;
-use Dbout\WpOrm\Models\Post;
-
 /**
- * @method Post setPostDate($date)
- * @method Carbon|null getPostDate()
- * @method Post setPostDateGMT($date)
- * @method Carbon|null getPostDateGMT()
- * @method Post setPostContent(?string $content)
- * @method string|null getPostContent()
- * @method Post setPostType(string $type)
- * @method string|null getPostType()
- * @method Post setGuid(?string $guid)
- * @method string|null getGuid()
- * @method Post setPostTitle(?string $title)
- * @method string|null getPostTitle()
- * @method Post setPostExcerpt(?string $excerpt)
- * @method string|null getPostExcerpt()
- * @method Post setPostStatus(?string $status)
- * @method string|null getPostStatus()
- * @method Post setCommentStatus(string $status)
- * @method string|null getCommentStatus()
- * @method Post setPingStatus(string $status)
- * @method string|null getPingStatus()
- * @method Post setPostPassword(?string $password)
- * @method string|null getPostPassword()
- * @method Post setPostName(?string $name)
- * @method string|null getPostName()
- * @method Post setToPing(?string $toPing)
- * @method string|null getToPing()
- * @method Post setPinged(?string $pinged)
- * @method string|null getPinged()
- * @method Post setPostModified($modified)
- * @method Carbon|null getPostModified()
- * @method Post setPostModifiedGMT($modified)
- * @method Carbon|null getPostModifiedGMT()
- * @method setPostMimeType(?string $mimeType)
- * @method string|null getPostMimeType()
- * @method Post setMenuOrder(?int $order)
- * @method int|null getMenuOrder()
- * @method Post setPostContentFiltered($content)
- * @method string|null getPostContentFiltered()
- *
  * @since 3.0.0
  */
 interface PostInterface
@@ -78,12 +36,4 @@ interface PostInterface
     public const TYPE = 'post_type';
     public const MIME_TYPE = 'post_mime_type';
     public const COMMENT_COUNT = 'comment_count';
-
-    /**
-     * Find post by name
-     *
-     * @param string|null $name
-     * @return Post|null
-     */
-    public function findOneByName(?string $name): ?Post;
 }

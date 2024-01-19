@@ -8,16 +8,7 @@
 
 namespace Dbout\WpOrm\Api;
 
-use Dbout\WpOrm\Models\Term;
-
 /**
- * @method string|null getName()
- * @method Term setName(?string $name);
- * @method string|null getSlug()
- * @method Term setSlug(?string $slug)
- * @method int|null getTermGroup()
- * @method Term setTermGroup(?int $group)
- *
  * @since 3.0.0
  */
 interface TermInterface

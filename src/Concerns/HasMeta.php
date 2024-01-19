@@ -6,13 +6,14 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Models\Meta;
+namespace Dbout\WpOrm\Concerns;
 
 use Dbout\WpOrm\Attributes\MetaConfigAttribute;
 use Dbout\WpOrm\Exceptions\WpOrmException;
+use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait WithMeta
+trait HasMeta
 {
     /**
      * @var MetaConfigAttribute
@@ -27,7 +28,7 @@ trait WithMeta
     /**
      * @return void
      */
-    protected static function bootWithMeta(): void
+    protected static function bootHasMeta(): void
     {
         static::saved(function ($model) {
             $model->saveTmpMetas();
@@ -38,7 +39,7 @@ trait WithMeta
      * @throws WpOrmException
      * @return void
      */
-    public function initializeWithMeta(): void
+    public function initializeHasMeta(): void
     {
         $reflection = new \ReflectionClass(static::class);
         $configs = $reflection->getAttributes(MetaConfigAttribute::class);
@@ -47,7 +48,7 @@ trait WithMeta
         }
 
         /** @var MetaConfigAttribute $config */
-        $config  = $configs[0];
+        $config = $configs[0];
         $this->metaConfig = $config;
     }
 
@@ -150,5 +151,13 @@ trait WithMeta
         }
 
         $this->_tmpMetas = [];
+    }
+
+    /**
+     * @return MetaConfigAttribute|null
+     */
+    public function getMetaConfig(): ?MetaConfigAttribute
+    {
+        return $this->metaConfig;
     }
 }
