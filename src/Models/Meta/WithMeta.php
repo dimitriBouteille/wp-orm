@@ -8,17 +8,16 @@
 
 namespace Dbout\WpOrm\Models\Meta;
 
+use Dbout\WpOrm\Attributes\MetaConfigAttribute;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait WithMeta
 {
-    protected array $metaConfig = [
-        'class' => '',
-        'columnKey' => '',
-        'columnValue' => '',
-        'foreignKey' => '',
-    ];
+    /**
+     * @var MetaConfigAttribute
+     */
+    protected MetaConfigAttribute $metaConfig;
 
     /**
      * @var array
@@ -41,11 +40,15 @@ trait WithMeta
      */
     public function initializeWithMeta(): void
     {
-        foreach ($this->metaConfig as $optionKey => $optionValue) {
-            if ($optionValue === null || $optionValue === '') {
-                throw new WpOrmException(sprintf('Please define %s key in metaConfig property.', $optionKey));
-            }
+        $reflection = new \ReflectionClass(static::class);
+        $configs = $reflection->getAttributes(MetaConfigAttribute::class);
+        if ($configs === []) {
+            throw new WpOrmException(sprintf('Please define attribute %s.', MetaConfigAttribute::class));
         }
+
+        /** @var MetaConfigAttribute $config */
+        $config  = $configs[0];
+        $this->metaConfig = $config;
     }
 
     /**
@@ -53,7 +56,7 @@ trait WithMeta
      */
     public function metas(): HasMany
     {
-        return $this->hasMany($this->metaConfig['class'], $this->getMetaForeignKey());
+        return $this->hasMany($this->metaConfig->metaClass, $this->metaConfig->foreignKey);
     }
 
     /**
@@ -63,7 +66,8 @@ trait WithMeta
     public function getMeta(string $metaKey): ?AbstractMeta
     {
         /** @var ?AbstractMeta $value */
-        $value =  $this->metas()->firstWhere($this->getMetaColumnKey(), $metaKey);
+        // @phpstan-ignore-next-line
+        $value =  $this->metas()->firstWhere($this->metaConfig->columnKey, $metaKey);
         return $value;
     }
 
@@ -88,8 +92,9 @@ trait WithMeta
      */
     public function hasMeta(string $metaKey): bool
     {
+        // @phpstan-ignore-next-line
         return $this->metas()
-            ->where($this->getMetaColumnKey(), $metaKey)
+            ->where($this->metaConfig->columnKey, $metaKey)
             ->exists();
     }
 
@@ -108,11 +113,11 @@ trait WithMeta
         /** @var AbstractMeta $instance */
         $instance = $this->metas()
             ->firstOrNew([
-                $this->getMetaForeignKey() => $metaKey,
+                $this->metaConfig->foreignKey => $metaKey,
             ]);
 
         $instance->fill([
-            $this->getMetaColumnValue() => $value,
+            $this->metaConfig->columnValue => $value,
         ])->save();
 
         return $instance;
@@ -129,8 +134,9 @@ trait WithMeta
             return true;
         }
 
+        // @phpstan-ignore-next-line
         return $this->metas()
-            ->where($this->getMetaColumnKey(), $metaKey)
+            ->where($this->metaConfig->columnKey, $metaKey)
             ->forceDelete();
     }
 
@@ -144,29 +150,5 @@ trait WithMeta
         }
 
         $this->_tmpMetas = [];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getMetaColumnKey(): string
-    {
-        return $this->metaConfig['columnKey'] ?? '';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getMetaColumnValue(): string
-    {
-        return $this->metaConfig['columnValue'] ?? '';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getMetaForeignKey(): string
-    {
-        return $this->metaConfig['foreignKey'] ?? '';
     }
 }

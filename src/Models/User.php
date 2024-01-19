@@ -12,7 +12,6 @@ use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
-use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -25,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Comment[] $comments
  * @property-read Post[] $posts
  */
+#[\Dbout\WpOrm\Attributes\MetaConfigAttribute(UserMeta::class, UserMeta::USER_ID)]
 class User extends AbstractModel implements UserInterface
 {
     use WithMeta;
@@ -43,13 +43,6 @@ class User extends AbstractModel implements UserInterface
     protected $casts = [
         self::STATUS => 'integer',
         self::REGISTERED => 'datetime',
-    ];
-
-    protected array $metaConfig  = [
-        'class' => UserMeta::class,
-        'columnKey' => AbstractMeta::META_KEY,
-        'columnValue' => AbstractMeta::META_VALUE,
-        'foreignKey' => UserMeta::USER_ID,
     ];
 
     /**

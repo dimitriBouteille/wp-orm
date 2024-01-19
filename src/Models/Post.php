@@ -12,7 +12,6 @@ use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
-use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -27,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read static|null $parent
  * @property-read Comment[] $comments
  */
+#[\Dbout\WpOrm\Attributes\MetaConfigAttribute(PostMeta::class, PostMeta::POST_ID)]
 class Post extends AbstractModel implements PostInterface
 {
     use WithMeta;
@@ -54,16 +54,6 @@ class Post extends AbstractModel implements PostInterface
         self::MODIFIED => 'datetime',
         self::DATE_GMT => 'datetime',
         self::MODIFIED_GMT => 'datetime',
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $metaConfig = [
-        'class' => PostMeta::class,
-        'columnKey' => Meta\AbstractMeta::META_KEY,
-        'columnValue' => AbstractMeta::META_VALUE,
-        'foreignKey' => PostMeta::POST_ID,
     ];
 
     /**
