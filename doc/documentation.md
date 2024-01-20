@@ -4,6 +4,37 @@
 
 ## Filter data
 
+You can easily filter data via the `tap` function :
+
+```php
+use Dbout\WpOrm\Taps\Post\IsAuthorTap;
+use Dbout\WpOrm\Taps\Post\IsStatusTap;
+use Dbout\WpOrm\Enums\PostStatus;
+use Dbout\WpOrm\Models\Post;
+
+$posts = Post::query()
+    ->tap(new IsAuthorTap(1))
+    ->get();
+```
+
+This query, returns all user posts with ID 1.
+
+If you want to apply multiple filters, nothing complicated :
+
+```php
+use Dbout\WpOrm\Taps\Post\IsAuthorTap;
+use Dbout\WpOrm\Taps\Post\IsStatusTap;
+use Dbout\WpOrm\Enums\PostStatus;
+use Dbout\WpOrm\Models\Post;
+
+$posts = Post::query()
+    ->tap(new IsAuthorTap(1))
+    ->tap(new IsStatusTap(PostStatus::Publish))
+    ->get();
+```
+
+You can find all the available filters here: [Available filters](available-filters.md).
+
 ## Create Model
 
 ### Model

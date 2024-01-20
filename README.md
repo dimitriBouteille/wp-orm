@@ -65,7 +65,7 @@ Simply put, wp-orm is a library that makes it easy to manipulate a WordPress dat
 
 - The `wpdb` connection is used so **no configuration is needed to use**
 - Ability to [create models](doc/documentation.md#model) simply
-- WordPress works with custom content types, you can simply [use the default types of WordPress](doc/documentation.md#use-wordpress-models) (page, attachment, ...) and create [custom models](doc/documentation.md#create-model)
+- WordPress works with custom content types, you can simply [use the default types of WordPress](doc/documentation.md#use-wordpress-models) (page, attachment, ...) and create [custom models for your types](doc/documentation.md#custom-post-type-model) or create [custom model](doc/documentation.md)
 - Ability to [filter data](doc/documentation.md#filter-data) easily via taps
 - All the features available in Eloquent, are usable with this library
 
