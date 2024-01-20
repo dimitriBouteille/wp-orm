@@ -29,7 +29,7 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 - [Introduction](#introduction)
 - [Use WordPress models](doc/documentation.md#use-wordpress-models)
 - [Filter  data](/doc/documentation.md#filter-data)
-- [Create custom Model](doc/documentation.md#create-model)
+- [Create custom Model](doc/create-model.md)
 - [Migration with Phinx](doc/migration.md)
 
 ## Installation
