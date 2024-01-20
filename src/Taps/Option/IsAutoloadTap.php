@@ -8,9 +8,9 @@
 
 namespace Dbout\WpOrm\Taps\Option;
 
-use Dbout\WpOrm\Api\OptionInterface;
 use Dbout\WpOrm\Builders\OptionBuilder;
 use Dbout\WpOrm\Enums\YesNo;
+use Dbout\WpOrm\Models\Option;
 
 /**
  * @since 3.0.0
@@ -33,6 +33,6 @@ class IsAutoloadTap
             $autoload = $autoload ? YesNo::Yes : YesNo::No;
         }
 
-        $builder->where(OptionInterface::AUTOLOAD, $autoload->value);
+        $builder->where(Option::AUTOLOAD, $autoload->value);
     }
 }

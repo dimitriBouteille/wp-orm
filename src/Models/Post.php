@@ -9,9 +9,6 @@
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
-use Dbout\WpOrm\Api\CommentInterface;
-use Dbout\WpOrm\Api\PostInterface;
-use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Concerns\HasMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
@@ -67,12 +64,35 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Comment[] $comments
  */
 #[\Dbout\WpOrm\Attributes\MetaConfigAttribute(PostMeta::class, PostMeta::POST_ID)]
-class Post extends AbstractModel implements PostInterface
+class Post extends AbstractModel
 {
     use HasMeta;
 
     public const UPDATED_AT = self::MODIFIED;
     public const CREATED_AT = self::DATE;
+    final public const POST_ID = 'ID';
+    final public const AUTHOR = 'post_author';
+    final public const DATE = 'post_date';
+    final public const DATE_GMT = 'post_date_gmt';
+    final public const CONTENT = 'post_content';
+    final public const TITLE = 'post_title';
+    final public const EXCERPT = 'post_excerpt';
+    final public const COMMENT_STATUS = 'comment_status';
+    final public const STATUS = 'post_status';
+    final public const PING_STATUS = 'ping_status';
+    final public const PASSWORD = 'post_password';
+    final public const POST_NAME = 'post_name';
+    final public const TO_PING = 'to_ping';
+    final public const PINGED = 'pinged';
+    final public const MODIFIED = 'post_modified';
+    final public const MODIFIED_GMT = 'post_modified_gmt';
+    final public const CONTENT_FILTERED = 'post_content_filtered';
+    final public const PARENT = 'post_parent';
+    final public const GUID = 'guid';
+    final public const MENU_ORDER = 'menu_order';
+    final public const TYPE = 'post_type';
+    final public const MIME_TYPE = 'post_mime_type';
+    final public const COMMENT_COUNT = 'comment_count';
 
     /**
      * @inheritDoc
@@ -101,7 +121,7 @@ class Post extends AbstractModel implements PostInterface
      */
     public function author(): HasOne
     {
-        return $this->hasOne(User::class, UserInterface::USER_ID, self::AUTHOR);
+        return $this->hasOne(User::class, User::USER_ID, self::AUTHOR);
     }
 
     /**
@@ -109,7 +129,7 @@ class Post extends AbstractModel implements PostInterface
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, CommentInterface::POST_ID);
+        return $this->hasMany(Comment::class, Comment::POST_ID);
     }
 
     /**
@@ -117,7 +137,7 @@ class Post extends AbstractModel implements PostInterface
      */
     public function parent(): HasOne
     {
-        return $this->hasOne(Post::class, PostInterface::POST_ID, self::PARENT);
+        return $this->hasOne(Post::class, Post::POST_ID, self::PARENT);
     }
 
     /**

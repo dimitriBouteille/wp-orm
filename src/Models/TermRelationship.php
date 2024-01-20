@@ -8,7 +8,6 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Api\TermRelationshipInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
@@ -19,8 +18,12 @@ use Dbout\WpOrm\Orm\AbstractModel;
  * @method int|null getObjectId()
  * @method TermRelationship setObjectId(?int $id)
  */
-class TermRelationship extends AbstractModel implements TermRelationshipInterface
+class TermRelationship extends AbstractModel
 {
+    final public const OBJECT_ID = 'object_id';
+    final public const TERM_TAXONOMY_ID = 'term_taxonomy_id';
+    final public const TERM_ORDER = 'term_order';
+
     /**
      * @inheritDoc
      */

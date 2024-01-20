@@ -8,8 +8,6 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Api\TermInterface;
-use Dbout\WpOrm\Api\TermTaxonomyInterface;
 use Dbout\WpOrm\Builders\TermBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -26,8 +24,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property-read TermTaxonomy|null $termTaxonomy
  */
-class Term extends AbstractModel implements TermInterface
+class Term extends AbstractModel
 {
+    final public const TERM_ID = 'term_id';
+    final public const NAME = 'name';
+    final public const SLUG = 'slug';
+    final public const TERM_GROUP = 'term_group';
+
     /**
      * @inheritDoc
      */
@@ -57,7 +60,7 @@ class Term extends AbstractModel implements TermInterface
     {
         return $this->hasOne(
             TermTaxonomy::class,
-            TermTaxonomyInterface::TERM_ID,
+            TermTaxonomy::TERM_ID,
             self::TERM_ID
         );
     }

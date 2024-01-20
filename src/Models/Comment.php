@@ -9,9 +9,6 @@
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
-use Dbout\WpOrm\Api\CommentInterface;
-use Dbout\WpOrm\Api\PostInterface;
-use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\CommentBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -48,10 +45,25 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Post|null $post
  * @property-read Comment|null $parent
  */
-class Comment extends AbstractModel implements CommentInterface
+class Comment extends AbstractModel
 {
     final public const CREATED_AT = self::DATE;
     final public const UPDATED_AT =  null;
+    final public const COMMENT_ID = 'comment_ID';
+    final public const POST_ID = 'comment_post_ID';
+    final public const AUTHOR = 'comment_author';
+    final public const AUTHOR_EMAIL = 'comment_author_email';
+    final public const AUTHOR_URL = 'comment_author_url';
+    final public const AUTHOR_IP = 'comment_author_IP';
+    final public const DATE = 'comment_date';
+    final public const DATE_GMT = 'comment_date_gmt';
+    final public const CONTENT = 'comment_content';
+    final public const KARMA = 'comment_karma';
+    final public const APPROVED = 'comment_approved';
+    final public const AGENT = 'comment_agent';
+    final public const TYPE = 'comment_type';
+    final public const PARENT = 'comment_parent';
+    final public const USER_ID = 'user_id';
 
     /**
      * @inheritDoc
@@ -77,7 +89,7 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, UserInterface::USER_ID, self::USER_ID);
+        return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
     }
 
     /**
@@ -85,7 +97,7 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function post(): HasOne
     {
-        return $this->hasOne(Post::class, PostInterface::POST_ID, self::POST_ID);
+        return $this->hasOne(Post::class, Post::POST_ID, self::POST_ID);
     }
 
     /**
@@ -93,7 +105,7 @@ class Comment extends AbstractModel implements CommentInterface
      */
     public function parent(): HasOne
     {
-        return $this->hasOne(Comment::class, CommentInterface::COMMENT_ID, self::PARENT);
+        return $this->hasOne(Comment::class, Comment::COMMENT_ID, self::PARENT);
     }
 
     /**

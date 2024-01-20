@@ -9,9 +9,6 @@
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
-use Dbout\WpOrm\Api\CommentInterface;
-use Dbout\WpOrm\Api\PostInterface;
-use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
 use Dbout\WpOrm\Concerns\HasMeta;
 use Dbout\WpOrm\Models\Meta\UserMeta;
@@ -45,12 +42,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Post[] $posts
  */
 #[\Dbout\WpOrm\Attributes\MetaConfigAttribute(UserMeta::class, UserMeta::USER_ID)]
-class User extends AbstractModel implements UserInterface
+class User extends AbstractModel
 {
     use HasMeta;
 
     final public const CREATED_AT = self::REGISTERED;
     final public const UPDATED_AT = null;
+
+    final public const USER_ID = 'ID';
+    final public const LOGIN = 'user_login';
+    final public const PASSWORD = 'user_pass';
+    final public const NICE_NAME = 'user_nicename';
+    final public const EMAIL = 'user_email';
+    final public const URL = 'user_url';
+    final public const REGISTERED = 'user_registered';
+    final public const ACTIVATION_KEY = 'user_activation_key';
+    final public const DISPLAY_NAME = 'display_name';
+    final public const STATUS = 'user_status';
 
     /**
      * @inheritDoc
@@ -75,7 +83,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, CommentInterface::USER_ID);
+        return $this->hasMany(Comment::class, Comment::USER_ID);
     }
 
     /**
@@ -83,7 +91,7 @@ class User extends AbstractModel implements UserInterface
      */
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, PostInterface::AUTHOR);
+        return $this->hasMany(Post::class, Post::AUTHOR);
     }
 
     /**

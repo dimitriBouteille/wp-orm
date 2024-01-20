@@ -8,8 +8,8 @@
 
 namespace Dbout\WpOrm\Taps\Comment;
 
-use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Builders\CommentBuilder;
+use Dbout\WpOrm\Models\Comment;
 
 /**
  * @since 3.0.0
@@ -30,6 +30,6 @@ class IsApprovedTap
      */
     public function __invoke(CommentBuilder $builder): void
     {
-        $builder->where(CommentInterface::APPROVED, $this->isApproved);
+        $builder->where(Comment::APPROVED, $this->isApproved);
     }
 }

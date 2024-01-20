@@ -8,9 +8,9 @@
 
 namespace Dbout\WpOrm\Taps\Post;
 
-use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Enums\PingStatus;
+use Dbout\WpOrm\Models\Post;
 
 /**
  * @since 3.0.0
@@ -36,6 +36,6 @@ class IsPingStatusTap
             $status = $status->value;
         }
 
-        $builder->where(PostInterface::PING_STATUS, $status);
+        $builder->where(Post::PING_STATUS, $status);
     }
 }

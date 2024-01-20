@@ -8,7 +8,7 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Api\TermTaxonomyInterface;
+use Dbout\WpOrm\Models\TermTaxonomy;
 use Illuminate\Database\Eloquent\Collection;
 
 class TermBuilder extends AbstractBuilder
@@ -20,7 +20,7 @@ class TermBuilder extends AbstractBuilder
     public function findAllByTaxonomy(string $taxonomy): Collection
     {
         return $this->whereHas('termTaxonomy', function ($query) use ($taxonomy) {
-            return $query->where(TermTaxonomyInterface::TAXONOMY, $taxonomy);
+            return $query->where(TermTaxonomy::TAXONOMY, $taxonomy);
         })->get();
     }
 }

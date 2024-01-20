@@ -8,7 +8,6 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Api\OptionInterface;
 use Dbout\WpOrm\Builders\OptionBuilder;
 use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -23,8 +22,13 @@ use Dbout\WpOrm\Orm\AbstractModel;
  * @method static static|null find($optionId)
  * @method static OptionBuilder query()
  */
-class Option extends AbstractModel implements OptionInterface
+class Option extends AbstractModel
 {
+    final public const OPTION_ID = 'option_id';
+    final public const NAME = 'option_name';
+    final public const VALUE = 'option_value';
+    final public const AUTOLOAD = 'autoload';
+
     /**
      * @inheritDoc
      */

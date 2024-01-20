@@ -8,8 +8,8 @@
 
 namespace Dbout\WpOrm\Taps\Post;
 
-use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
+use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Models\User;
 
 /**
@@ -36,6 +36,6 @@ class IsAuthorTap
             $author = $author->getId();
         }
 
-        $builder->where(PostInterface::AUTHOR, $author);
+        $builder->where(Post::AUTHOR, $author);
     }
 }

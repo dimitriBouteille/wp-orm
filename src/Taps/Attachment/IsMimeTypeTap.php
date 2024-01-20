@@ -8,8 +8,8 @@
 
 namespace Dbout\WpOrm\Taps\Attachment;
 
-use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
+use Dbout\WpOrm\Models\Post;
 
 /**
  * @since 3.0.0
@@ -30,6 +30,6 @@ class IsMimeTypeTap
      */
     public function __invoke(PostBuilder $builder): void
     {
-        $builder->where(PostInterface::MIME_TYPE, $this->mimeType);
+        $builder->where(Post::MIME_TYPE, $this->mimeType);
     }
 }

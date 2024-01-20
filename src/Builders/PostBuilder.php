@@ -8,7 +8,6 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -27,7 +26,7 @@ class PostBuilder extends AbstractWithMetaBuilder
         }
 
         /** @var Post|null $model */
-        $model = $this->firstWhere(PostInterface::POST_NAME, $name);
+        $model = $this->firstWhere(Post::POST_NAME, $name);
         return $model;
     }
 
@@ -48,7 +47,7 @@ class PostBuilder extends AbstractWithMetaBuilder
      */
     public function whereTypes(...$types): self
     {
-        return $this->_whereOrIn(PostInterface::TYPE, $types);
+        return $this->_whereOrIn(Post::TYPE, $types);
     }
 
     /**
@@ -57,7 +56,7 @@ class PostBuilder extends AbstractWithMetaBuilder
      */
     public function whereAuthor($author): self
     {
-        $this->where(PostInterface::AUTHOR, $author);
+        $this->where(Post::AUTHOR, $author);
         return $this;
     }
 
@@ -67,6 +66,6 @@ class PostBuilder extends AbstractWithMetaBuilder
      */
     public function whereStatus(...$status): self
     {
-        return $this->_whereOrIn(PostInterface::STATUS, $status);
+        return $this->_whereOrIn(Post::STATUS, $status);
     }
 }

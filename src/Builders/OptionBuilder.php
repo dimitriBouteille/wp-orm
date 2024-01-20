@@ -8,7 +8,6 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Api\OptionInterface;
 use Dbout\WpOrm\Models\Option;
 
 class OptionBuilder extends AbstractBuilder
@@ -22,7 +21,7 @@ class OptionBuilder extends AbstractBuilder
     public function findOneByName(string $optionName): ?Option
     {
         /** @var Option|null $model */
-        $model = $this->firstWhere(OptionInterface::NAME, $optionName);
+        $model = $this->firstWhere(Option::NAME, $optionName);
         return $model;
     }
 
@@ -32,6 +31,6 @@ class OptionBuilder extends AbstractBuilder
      */
     public function whereName(string $optionName): self
     {
-        return $this->where(OptionInterface::NAME, $optionName);
+        return $this->where(Option::NAME, $optionName);
     }
 }

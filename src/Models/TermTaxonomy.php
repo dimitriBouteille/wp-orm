@@ -8,7 +8,6 @@
 
 namespace Dbout\WpOrm\Models;
 
-use Dbout\WpOrm\Api\TermTaxonomyInterface;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
@@ -24,8 +23,15 @@ use Dbout\WpOrm\Orm\AbstractModel;
  * @method TermTaxonomy setCount(int $count)
  * @method static static|null find(int $id)
  */
-class TermTaxonomy extends AbstractModel implements TermTaxonomyInterface
+class TermTaxonomy extends AbstractModel
 {
+    final public const TERM_TAXONOMY_ID = 'term_taxonomy_id';
+    final public const TERM_ID = 'term_id';
+    final public const TAXONOMY = 'taxonomy';
+    final public const DESCRIPTION = 'description';
+    final public const PARENT = 'parent';
+    final public const COUNT = 'count';
+
     /**
      * @inheritDoc
      */

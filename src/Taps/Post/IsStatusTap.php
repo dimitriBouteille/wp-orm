@@ -8,9 +8,9 @@
 
 namespace Dbout\WpOrm\Taps\Post;
 
-use Dbout\WpOrm\Api\PostInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Enums\PostStatus;
+use Dbout\WpOrm\Models\Post;
 
 /**
  * @since 3.0.0
@@ -36,6 +36,6 @@ class IsStatusTap
             $status = $status->value;
         }
 
-        $builder->where(PostInterface::STATUS, $status);
+        $builder->where(Post::STATUS, $status);
     }
 }

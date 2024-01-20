@@ -8,8 +8,8 @@
 
 namespace Dbout\WpOrm\Taps\Comment;
 
-use Dbout\WpOrm\Api\CommentInterface;
 use Dbout\WpOrm\Builders\CommentBuilder;
+use Dbout\WpOrm\Models\Comment;
 use Dbout\WpOrm\Models\User;
 
 /**
@@ -36,6 +36,6 @@ class IsUserTap
             $user = $user->getId();
         }
 
-        $builder->where(CommentInterface::USER_ID, $user);
+        $builder->where(Comment::USER_ID, $user);
     }
 }

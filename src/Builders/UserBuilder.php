@@ -8,7 +8,6 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Api\UserInterface;
 use Dbout\WpOrm\Models\User;
 
 class UserBuilder extends AbstractWithMetaBuilder
@@ -22,7 +21,7 @@ class UserBuilder extends AbstractWithMetaBuilder
     public function findOneByEmail(string $email): ?User
     {
         /** @var User|null $model */
-        $model = $this->firstWhere(UserInterface::EMAIL, $email);
+        $model = $this->firstWhere(User::EMAIL, $email);
         return $model;
     }
 
@@ -35,7 +34,7 @@ class UserBuilder extends AbstractWithMetaBuilder
     public function findOneByLogin(string $login): ?User
     {
         /** @var User|null $model */
-        $model = $this->firstWhere(UserInterface::LOGIN, $login);
+        $model = $this->firstWhere(User::LOGIN, $login);
         return $model;
     }
 
@@ -45,7 +44,7 @@ class UserBuilder extends AbstractWithMetaBuilder
      */
     public function whereEmail(string $email): self
     {
-        return $this->where(UserInterface::EMAIL, $email);
+        return $this->where(User::EMAIL, $email);
     }
 
     /**
@@ -54,7 +53,7 @@ class UserBuilder extends AbstractWithMetaBuilder
      */
     public function whereLogin(string $login): self
     {
-        return $this->where(UserInterface::LOGIN, $login);
+        return $this->where(User::LOGIN, $login);
     }
 
     /**
@@ -63,7 +62,7 @@ class UserBuilder extends AbstractWithMetaBuilder
      */
     public function whereEmails(... $emails): self
     {
-        return $this->_whereOrIn(UserInterface::EMAIL, $emails);
+        return $this->_whereOrIn(User::EMAIL, $emails);
     }
 
     /**
@@ -72,6 +71,6 @@ class UserBuilder extends AbstractWithMetaBuilder
      */
     public function whereLogins(... $logins): self
     {
-        return $this->_whereOrIn(UserInterface::LOGIN, $logins);
+        return $this->_whereOrIn(User::LOGIN, $logins);
     }
 }
