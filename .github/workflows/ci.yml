@@ -32,7 +32,4 @@ jobs:
         run: vendor/bin/phpstan analyse -c phpstan.neon
 
       - name: Running unit test
-        uses: php-actions/phpunit@v3
-        with:
-          version: 10.5.8
-          php_version: 8.1
+        run: vendor/bin/phpunit
