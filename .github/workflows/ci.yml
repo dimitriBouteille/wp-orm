@@ -1,4 +1,4 @@
-name: Coding Style & Tests
+name: CI
 
 on:
   pull_request:
@@ -42,6 +42,9 @@ jobs:
         with:
           php-version: 8.1
           tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
 
       - name: Running unit test
         run: vendor/bin/phpunit
