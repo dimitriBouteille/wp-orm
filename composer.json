@@ -1,8 +1,8 @@
 {
   "name": "dbout/wp-orm",
-  "description": "Wordpress ORM with Eloquent and Phinx",
+  "description": "Wordpress ORM with Eloquent and Phinx.",
   "type": "package",
-  "license": "GPL-2.0-or-later",
+  "license": "MIT",
   "version": "3.0.0",
   "authors": [
     {
@@ -13,9 +13,10 @@
     }
   ],
   "keywords": ["wordpress", "wp", "orm", "database", "eloquent", "db", "sql", "migration", "phinx"],
-  "homepage": "https://github.com/dimitriBouteille/wp-orm/",
+  "homepage": "https://github.com/dimitriBouteille/wp-orm",
   "support": {
-    "issues": "https://github.com/dimitriBouteille/wp-orm/issues"
+    "issues": "https://github.com/dimitriBouteille/wp-orm/issues",
+    "source": "https://github.com/dimitriBouteille/wp-orm/"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
