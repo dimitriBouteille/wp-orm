@@ -6,13 +6,12 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Attributes;
+namespace Dbout\WpOrm;
 
 /**
  * @since 3.0.0
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
-class MetaConfigAttribute
+class MetaMappingConfig
 {
     /**
      * @param string $metaClass Meta className

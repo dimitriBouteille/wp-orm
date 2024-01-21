@@ -2,7 +2,7 @@
 
 You can create two model types:
 
-- A model that corresponds to a custom table (e.g. `User`, `Option`, ... tables)
+- A model that corresponds to a custom table (e.g. `User`, `Option`, ...)
 - A model that corresponds to a Custom Post Type (e.g `Page`, `Attachment`, `Article`, ...)
 
 ## Generic Model
@@ -40,7 +40,7 @@ Once a model is defined, you are ready to start retrieving and creating records 
 
 ## Custom Post Type Model
 
-All Custom Post Type (CPT) models extend `Dbout\WpOrm\Models\MyCustomType`.
+All Custom Post Type (CPT) models extend `Dbout\WpOrm\Models\CustomPost`.
 
 ```php
 use Dbout\WpOrm\Models\CustomPost;

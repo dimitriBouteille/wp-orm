@@ -8,18 +8,12 @@
 
 namespace Dbout\WpOrm\Concerns;
 
-use Dbout\WpOrm\Attributes\MetaConfigAttribute;
-use Dbout\WpOrm\Exceptions\WpOrmException;
+use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasMeta
 {
-    /**
-     * @var MetaConfigAttribute
-     */
-    protected MetaConfigAttribute $metaConfig;
-
     /**
      * @var array
      */
@@ -36,28 +30,11 @@ trait HasMeta
     }
 
     /**
-     * @throws WpOrmException
-     * @return void
-     */
-    public function initializeHasMeta(): void
-    {
-        $reflection = new \ReflectionClass(static::class);
-        $configs = $reflection->getAttributes(MetaConfigAttribute::class);
-        if ($configs === []) {
-            throw new WpOrmException(sprintf('Please define attribute %s.', MetaConfigAttribute::class));
-        }
-
-        /** @var MetaConfigAttribute $config */
-        $config = $configs[0];
-        $this->metaConfig = $config;
-    }
-
-    /**
      * @return HasMany
      */
     public function metas(): HasMany
     {
-        return $this->hasMany($this->metaConfig->metaClass, $this->metaConfig->foreignKey);
+        return $this->hasMany($this->getMetaConfigMapping()->metaClass, $this->getMetaConfigMapping()->foreignKey);
     }
 
     /**
@@ -68,7 +45,7 @@ trait HasMeta
     {
         /** @var ?AbstractMeta $value */
         // @phpstan-ignore-next-line
-        $value =  $this->metas()->firstWhere($this->metaConfig->columnKey, $metaKey);
+        $value =  $this->metas()->firstWhere($this->getMetaConfigMapping()->columnKey, $metaKey);
         return $value;
     }
 
@@ -95,7 +72,7 @@ trait HasMeta
     {
         // @phpstan-ignore-next-line
         return $this->metas()
-            ->where($this->metaConfig->columnKey, $metaKey)
+            ->where($this->getMetaConfigMapping()->columnKey, $metaKey)
             ->exists();
     }
 
@@ -114,11 +91,11 @@ trait HasMeta
         /** @var AbstractMeta $instance */
         $instance = $this->metas()
             ->firstOrNew([
-                $this->metaConfig->foreignKey => $metaKey,
+                $this->getMetaConfigMapping()->foreignKey => $metaKey,
             ]);
 
         $instance->fill([
-            $this->metaConfig->columnValue => $value,
+            $this->getMetaConfigMapping()->columnValue => $value,
         ])->save();
 
         return $instance;
@@ -137,7 +114,7 @@ trait HasMeta
 
         // @phpstan-ignore-next-line
         return $this->metas()
-            ->where($this->metaConfig->columnKey, $metaKey)
+            ->where($this->getMetaConfigMapping()->columnKey, $metaKey)
             ->forceDelete();
     }
 
@@ -154,10 +131,7 @@ trait HasMeta
     }
 
     /**
-     * @return MetaConfigAttribute|null
+     * @return MetaMappingConfig
      */
-    public function getMetaConfig(): ?MetaConfigAttribute
-    {
-        return $this->metaConfig;
-    }
+    abstract public function getMetaConfigMapping(): MetaMappingConfig;
 }

@@ -9,8 +9,10 @@
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
+use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
 use Dbout\WpOrm\Concerns\HasMeta;
+use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,8 +43,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Comment[] $comments
  * @property-read Post[] $posts
  */
-#[\Dbout\WpOrm\Attributes\MetaConfigAttribute(UserMeta::class, UserMeta::USER_ID)]
-class User extends AbstractModel
+class User extends AbstractModel implements WithMetaModelInterface
 {
     use HasMeta;
 
@@ -122,5 +123,13 @@ class User extends AbstractModel
         /** @var self|null $result */
         $result = self::query()->firstWhere(self::LOGIN, $login);
         return $result;
+    }
+
+    /**
+     * @return MetaMappingConfig
+     */
+    public function getMetaConfigMapping(): MetaMappingConfig
+    {
+        return new MetaMappingConfig(UserMeta::class, UserMeta::USER_ID);
     }
 }

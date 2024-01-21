@@ -8,9 +8,10 @@
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Attributes\MetaConfigAttribute;
+use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Dbout\WpOrm\Exceptions\WpOrmException;
+use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,9 +30,9 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
     ];
 
     /**
-     * @var MetaConfigAttribute|null
+     * @var MetaMappingConfig|null
      */
-    protected ?MetaConfigAttribute $metaConfig = null;
+    protected ?MetaMappingConfig $metaConfig = null;
 
     /**
      * @var string|null
@@ -145,17 +146,15 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
      */
     protected function initMeta(): void
     {
-        $traits = class_uses_recursive(get_class($this->model));
-        if (!in_array(\Dbout\WpOrm\Concerns\HasMeta::class, $traits, true)) {
+        if (!$this->model instanceof WithMetaModelInterface) {
             throw new MetaNotSupportedException(sprintf(
-                'Model %s must be use trait %s',
+                'Model %s must be implement %s',
                 get_class($this->model),
-                \Dbout\WpOrm\Concerns\HasMeta::class
+                WithMetaModelInterface::class
             ));
         }
 
-        // @phpstan-ignore-next-line
-        $config = $this->model->getMetaConfig();
+        $config = $this->model->getMetaConfigMapping();
         $reflection = new \ReflectionClass($config->metaClass);
         if (!$reflection->isSubclassOf(AbstractModel::class)) {
             throw new WpOrmException(sprintf(

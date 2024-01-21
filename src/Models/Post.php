@@ -9,8 +9,10 @@
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
+use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Concerns\HasMeta;
+use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,8 +65,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read static|null $parent
  * @property-read Comment[] $comments
  */
-#[\Dbout\WpOrm\Attributes\MetaConfigAttribute(PostMeta::class, PostMeta::POST_ID)]
-class Post extends AbstractModel
+class Post extends AbstractModel implements WithMetaModelInterface
 {
     use HasMeta;
 
@@ -152,10 +153,18 @@ class Post extends AbstractModel
      * @param string|null $name
      * @return Post|null
      */
-    public function findOneByName(?string $name): ?Post
+    public static function findOneByName(?string $name): ?Post
     {
         /** @var Post|null $model */
         $model = self::query()->firstWhere(self::POST_NAME, $name);
         return $model;
+    }
+
+    /**
+     * @return MetaMappingConfig
+     */
+    public function getMetaConfigMapping(): MetaMappingConfig
+    {
+        return new MetaMappingConfig(PostMeta::class, PostMeta::POST_ID);
     }
 }
