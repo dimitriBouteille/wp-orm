@@ -25,11 +25,9 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
      */
     public function __construct(array $attributes = [])
     {
-        $this->setRawAttributes([
+        parent::__construct(array_merge($attributes, [
             self::TYPE => $this->_type,
-        ]);
-
-        parent::__construct($attributes);
+        ]));
     }
 
     /**

@@ -11,3 +11,7 @@ runPHPStan:
 # Run rector
 runRector:
 	vendor/bin/rector process src --dry-run
+
+# Run PHPUnit
+runPHPUnit:
+	vendor/bin/phpunit --verbose
