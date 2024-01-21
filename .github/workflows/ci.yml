@@ -1,16 +1,12 @@
-name: ci
+name: Coding Style & Tests
 
 on:
   pull_request:
 
 jobs:
-  analyze:
-    name: Analyze
+  codingStyle:
+    name: Coding Style
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
 
     steps:
       - name: Checkout repo
@@ -29,7 +25,23 @@ jobs:
         run: vendor/bin/php-cs-fixer fix --verbose --diff --dry-run
 
       - name: PHPStan Analyse
-        run: vendor/bin/phpstan analyse -c phpstan.neon
+        run: php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          tools: composer:v2
 
       - name: Running unit test
         run: vendor/bin/phpunit
