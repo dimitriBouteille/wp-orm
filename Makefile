@@ -14,4 +14,4 @@ runRector:
 
 # Run PHPUnit
 runPHPUnit:
-	vendor/bin/phpunit --verbose
+	./vendor/bin/phpunit
