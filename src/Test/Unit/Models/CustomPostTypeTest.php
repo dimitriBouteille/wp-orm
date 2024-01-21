@@ -14,12 +14,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @since 3.0.0
+ * @coversDefaultClass \Dbout\WpOrm\Models\Attachment
  */
 class CustomPostTypeTest extends TestCase
 {
     /**
      * @throws \Dbout\WpOrm\Exceptions\NotAllowedException
      * @return void
+     * @covers ::setPostType
      */
     public function testSetPostTypeException(): void
     {
@@ -31,6 +33,7 @@ class CustomPostTypeTest extends TestCase
 
     /**
      * @return void
+     * @covers ::setPostType
      */
     public function testSetPostTypeInConstructor(): void
     {
