@@ -34,7 +34,7 @@ class MyModel extends AbstractModel
 
 Once a model is defined, you are ready to start retrieving and creating records in your table. Note that you will need to place `updated_at` and `created_at` columns on your table by default. If you do not wish to have these columns automatically maintained, set the `$timestamps` property on your model to false.
 
-> 💡 If your model may have metas, you can easily link metas to your model. You can look `Dbout\WpOrm\Models\Post` to understand how it works.
+> 💡 If your model have metas, you can easily link metas to your model and use custom functions (e.g. `getMeta`, `getMetaValue`, ...). You can look `Dbout\WpOrm\Models\Post` to understand how it works.
 
 > 📘 If you want to know more about creating a model you can look the [Eloquent documentation](https://laravel.com/docs/5.0/eloquent#basic-usage).
 

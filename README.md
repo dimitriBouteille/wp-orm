@@ -7,7 +7,9 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/8.x/eloquent) and us
 
 The ORM also offers a system to simply manage database migrations based on [Phinx](https://phinx.org/).
 
-💡 To simplify the integration of this library, we recommend using WordPress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
+> 📘 This is documentation for additional functionality on top of Eloquent. For documentation on all of Eloquent's features you visit the documentation.
+
+> 💡 To simplify the integration of this library, we recommend using WordPress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
 
 ### Features
 
@@ -26,10 +28,9 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 ### Documentation
 
 - [Installation](#installation)
-- [Introduction](#introduction)
-- [Use WordPress models](doc/documentation.md#use-wordpress-models)
+- [Use WordPress core models](doc/wordpress-core-models.md)
+- [Create custom model](doc/create-model.md)
 - [Filter  data](/doc/documentation.md#filter-data)
-- [Create custom Model](doc/create-model.md)
 - [Migration with Phinx](doc/migration.md)
 
 ## Installation
