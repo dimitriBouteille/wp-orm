@@ -60,7 +60,7 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
     {
         $this->joinToMeta($metaKey);
         if ($alias === null || $alias === '') {
-            $alias = $metaKey;
+            $alias = sprintf('%s_value', $metaKey);
         }
 
         $column = sprintf('%s.%s AS %s', $metaKey, $this->metaConfig?->columnValue, $alias);
@@ -128,7 +128,7 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
             $join->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->columnKey),
                 '=',
-                $join->raw(sprintf("'%s'", $metaKey))
+                "$metaKey"
             )->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->foreignKey),
                 '=',
