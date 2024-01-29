@@ -161,6 +161,17 @@ class Post extends AbstractModel implements WithMetaModelInterface
     }
 
     /**
+     * @param string $guid
+     * @return Post|null
+     */
+    public static function findOneByGuid(string $guid): ?Post
+    {
+        /** @var Post|null $model */
+        $model = self::query()->firstWhere(self::GUID, $guid);
+        return $model;
+    }
+
+    /**
      * @return MetaMappingConfig
      */
     public function getMetaConfigMapping(): MetaMappingConfig
