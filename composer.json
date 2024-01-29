@@ -3,7 +3,6 @@
   "description": "Wordpress ORM with Eloquent and Phinx.",
   "type": "package",
   "license": "MIT",
-  "version": "3.0.0",
   "authors": [
     {
       "name": "Dimitri BOUTEILLE",
