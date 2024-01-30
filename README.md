@@ -11,24 +11,33 @@ The ORM also offers a system to simply manage database migrations based on [Phin
 
 ### Features
 
-- ✅ Support core WordPress models: `Comment`, `Option`, `Post`, `TermTaxonomy`, `Term`, `User`, `PostMeta` and `UserMeta`.
-- ✅ Support core WordPress post type: `Article`, `Attachment` and `Page`.
-- ✅ Based on core WordPress database connection (`wpdb` class)
-- ✅ Migration with `Phinx` library.
-- ❤️ Easy integration of a custom post type.
-- ❤️ Easy model creation for projects with custom tables.
+- ✅ Support core WordPress models: `Comment`, `Option`, `Post`, `TermTaxonomy`, `Term`, `User`, `PostMeta` and `UserMeta`
+- ✅ Support core WordPress post type: `Article`, `Attachment` and `Page`
+- ✅ Based on core WordPress database connection (`wpdb` class), no configuration required !
+- ✅ Migration with `Phinx`
+- ✅ Custom functions to filter models with meta
+- ❤️ Easy integration of a custom post type
+- ❤️ Easy model creation for projects with custom tables
+- ❤️ All the features available in Eloquent, are usable with this library !
 
 **Not yet developed but planned in a future version:**
 
-- 💡 Create custom comment type
-- 💡 Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting)) 
+- 🗓️ Create custom comment type
+- 🗓️ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting)) 
 
 ### Documentation
 
+This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/10.x/eloquent) :)
+
 - [Installation](#installation)
 - [Use WordPress core models](doc/wordpress-core-models.md)
+- [Filter data](/doc/filter-data.md)
+    - [With findOneBy*](/doc/filter-data.md#with-findoneby)
+    - [With predefined taps](/doc/filter-data.md#with-taps)
+    - [With query builder](/doc/filter-data.md#with-query-builder)
 - [Create custom model](doc/create-model.md)
-- [Filter  data](/doc/documentation.md#filter-data)
+    - [Generic Model](doc/create-model.md#generic-model)
+    - [Custom Post Type Model](doc/create-model.md#custom-post-type-model)
 - [Migration with Phinx](doc/migration.md)
 
 ## Installation
@@ -54,21 +63,7 @@ In your PHP script, make sure you include the autoloader:
 require __DIR__ . '/vendor/autoload.php';
 ~~~
 
-## Introduction
-
-Simply put, wp-orm is a library that makes it easy to manipulate a WordPress database via the Eloquent ORM. The objective of this library is to **simplify the manipulation of the WordPress database** on large projects - you can also use it for small projects.
-
-> Eloquent is an object-relational mapper (ORM) that makes it enjoyable to interact with your database. When using Eloquent, each database table has a corresponding "Model" that is used to interact with that table. In addition to retrieving records from the database table, Eloquent models allow you to insert, update, and delete records from the table as well.
-
-**Here is a list of available features :**
-
-- The `wpdb` connection is used so **no configuration is needed to use**
-- Ability to [create models](doc/documentation.md#model) simply
-- WordPress works with custom content types, you can simply [use the default types of WordPress](doc/documentation.md#use-wordpress-models) (page, attachment, ...) and create [custom models for your types](doc/documentation.md#custom-post-type-model) or create [custom model](doc/documentation.md)
-- Ability to [filter data](doc/documentation.md#filter-data) easily via taps
-- All the features available in Eloquent, are usable with this library
-
-> 📘 If you want to know more about how Eloquent works, the easiest way is to [read the documentation](https://laravel.com/docs/10.x/eloquent).
+🎉 You have nothing more to do, you can use the library now! Not even need to configure database accesses because it's the `wpdb` connection that is used.
 
 ## Contributing
 
