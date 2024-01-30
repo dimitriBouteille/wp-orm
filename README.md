@@ -1,4 +1,4 @@
-# Wordpress ORM with Eloquent
+# WordPress ORM with Eloquent
 
 ![GitHub Release](https://img.shields.io/github/v/release/dimitriBouteille/wp-orm) [![tests](https://img.shields.io/github/actions/workflow/status/dimitriBouteille/wp-orm/tests.yml?label=tests)](https://github.com/dimitriBouteille/wp-orm/actions/workflows/tests.yml) [![Packagist Downloads](https://img.shields.io/packagist/dt/dbout/wp-orm?color=yellow)](https://packagist.org/packages/dbout/wp-orm) ![Eloquent version](https://img.shields.io/packagist/dependency-v/dbout/wp-orm/illuminate%2Fdatabase?color=orange)
 
@@ -6,8 +6,6 @@ WordPress ORM wih Eloquent is a small library that adds a basic ORM into WordPre
 The ORM is based on [Eloquent ORM](https://laravel.com/docs/8.x/eloquent) and uses the WordPress connection (`wpdb` class).
 
 The ORM also offers a system to simply manage database migrations based on [Phinx](https://phinx.org/).
-
-> 📘 This is documentation for additional functionality on top of Eloquent. For documentation on all of Eloquent's features you visit the documentation.
 
 > 💡 To simplify the integration of this library, we recommend using WordPress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
 

@@ -1,6 +1,6 @@
 {
   "name": "dbout/wp-orm",
-  "description": "Wordpress ORM with Eloquent and Phinx.",
+  "description": "WordPress ORM with Eloquent and Phinx.",
   "type": "package",
   "license": "MIT",
   "authors": [
