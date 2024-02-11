@@ -1,19 +1,26 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
+
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Database\Query\Expression;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 
-/**
- * Class Database
- * @package Dbout\WpOrm\Orm
- */
 class Database implements ConnectionInterface
 {
+    /**
+     * @var bool
+     */
+    public $loggingQueries;
 
     /**
      * @var \wpdb
@@ -30,7 +37,9 @@ class Database implements ConnectionInterface
      * The database connection configuration options.
      * @var array
      */
-    protected array $config = [];
+    protected array $config = [
+        'name' => 'wp-eloquent-mysql2',
+    ];
 
     /**
      * @var string|null
@@ -47,7 +56,7 @@ class Database implements ConnectionInterface
      */
     public static function getInstance(): Database
     {
-        if (!self::$instance) {
+        if (!self::$instance instanceof \Dbout\WpOrm\Orm\Database) {
             self::$instance = new self();
         }
 
@@ -60,9 +69,6 @@ class Database implements ConnectionInterface
     public function __construct()
     {
         global $wpdb;
-        $this->config = [
-            'name' => 'wp-eloquent-mysql2',
-        ];
 
         if ($wpdb) {
             $this->tablePrefix = $wpdb->prefix;
@@ -76,7 +82,7 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * @return mixed|string
+     * @inheritDoc
      */
     public function getDatabaseName()
     {
@@ -100,9 +106,7 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * @param \Closure|\Illuminate\Database\Query\Builder|string $table
-     * @param null $as
-     * @return Builder|\Illuminate\Database\Query\Builder
+     * @inheritDoc
      */
     public function table($table, $as = null)
     {
@@ -114,61 +118,50 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Get a new raw query expression.
-     *
-     * @param  mixed $value
-     *
-     * @return \Illuminate\Database\Query\Expression
+     * @inheritDoc
      */
     public function raw($value)
     {
         return new Expression($value);
     }
 
-	/**
-	 * Get a new query builder instance.
-	 *
-	 * @return \Illuminate\Database\Query\Builder
-	 */
-	public function query()
-	{
-		return new Builder(
-			$this, $this->getQueryGrammar(), $this->getPostProcessor()
-		);
-	}
+    /**
+     * Get a new query builder instance.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function query()
+    {
+        return new Builder(
+            $this,
+            $this->getQueryGrammar(),
+            $this->getPostProcessor()
+        );
+    }
 
     /**
-     * Run a select statement and return a single result
-     *
-     * @param string $query
-     * @param array $bindings
-     * @param bool $useReadPdo
-     * @return array|mixed|object|void|null
+     * @inheritDoc
      */
     public function selectOne($query, $bindings = [], $useReadPdo = true)
     {
         $query = $this->bind_params($query, $bindings);
         $result = $this->db->get_row($query);
-        if ($result === false || $this->db->last_error)
-            throw new QueryException($query, $bindings, new \Exception($this->db->last_error));
+        if ($result === false || $this->db->last_error) {
+            throw new QueryException($this->getName(), $query, $bindings, new \Exception($this->db->last_error));
+        }
 
         return $result;
     }
 
     /**
-     * Run a select statement
-     *
-     * @param string $query
-     * @param array $bindings
-     * @param bool $useReadPdo
-     * @return array|object|null
+     * @inheritDoc
      */
     public function select($query, $bindings = [], $useReadPdo = true)
     {
         $query = $this->bind_params($query, $bindings);
         $result = $this->db->get_results($query);
         if ($result === false || $this->db->last_error) {
-            throw new QueryException($query, $bindings, new \Exception($this->db->last_error));
+            throw new QueryException($this->getName(), $query, $bindings, new \Exception($this->db->last_error));
         }
 
         return $result;
@@ -198,10 +191,10 @@ class Database implements ConnectionInterface
      */
     private function bind_params($query, $bindings, $update = false)
     {
-        $query = \str_replace('"', '`', $query);
+        $query = \str_replace('"', '`', (string) $query);
         $bindings = $this->prepareBindings($bindings);
 
-        if (!$bindings) {
+        if ($bindings === []) {
             return $query;
         }
 
@@ -215,10 +208,9 @@ class Database implements ConnectionInterface
             return $replace;
         }, $bindings);
 
-        $query = \str_replace(array('%', '?'), array('%%', '%s'), $query);
-        $query = \vsprintf($query, $bindings);
+        $query = \str_replace(['%', '?'], ['%%', '%s'], $query);
 
-        return $query;
+        return \vsprintf($query, $bindings);
     }
 
     /**
@@ -230,7 +222,7 @@ class Database implements ConnectionInterface
      *
      * @return array
      */
-    public function bind_and_run($query, $bindings = array())
+    public function bind_and_run($query, $bindings = [])
     {
         $new_query = $this->bind_params($query, $bindings);
         $result = $this->db->query($new_query);
@@ -256,7 +248,7 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return int
      */
-    public function update($query, $bindings = array())
+    public function update($query, $bindings = [])
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -266,7 +258,7 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return int
      */
-    public function delete($query, $bindings = array())
+    public function delete($query, $bindings = [])
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -276,7 +268,7 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return bool
      */
-    public function statement($query, $bindings = array())
+    public function statement($query, $bindings = [])
     {
         $newQuery = $this->bind_params($query, $bindings, true);
         return $this->unprepared($newQuery);
@@ -287,20 +279,20 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @return int
      */
-    public function affectingStatement($query, $bindings = array())
+    public function affectingStatement($query, $bindings = [])
     {
-        $new_query = $this->bind_params($query, $bindings, true);
-        $result = $this->db->query($new_query);
+        $newQuery = $this->bind_params($query, $bindings, true);
+        $result = $this->db->query($newQuery);
 
-        if ($result === false || $this->db->last_error)
-            throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
+        if ($result === false || $this->db->last_error) {
+            throw new QueryException($this->getName(), $newQuery, $bindings, new \Exception($this->db->last_error));
+        }
 
-        return \intval($result);
+        return (int) $result;
     }
 
     /**
-     * @param string $query
-     * @return bool
+     * @inheritDoc
      */
     public function unprepared($query)
     {
@@ -309,8 +301,7 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * @param array $bindings
-     * @return array
+     * @inheritDoc
      */
     public function prepareBindings(array $bindings)
     {
@@ -319,7 +310,7 @@ class Database implements ConnectionInterface
 
             // Micro-optimization: check for scalar values before instances
             if (\is_bool($value)) {
-                $bindings[$key] = \intval($value);
+                $bindings[$key] = (int) $value;
             } elseif (is_scalar($value)) {
                 continue;
             } elseif ($value instanceof \DateTime) {
@@ -334,10 +325,7 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * @param \Closure $callback
-     * @param int $attempts
-     * @return mixed
-     * @throws \Exception
+     * @inheritDoc
      */
     public function transaction(\Closure $callback, $attempts = 1)
     {
@@ -346,29 +334,25 @@ class Database implements ConnectionInterface
             $data = $callback();
             $this->commit();
             return $data;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->rollBack();
             throw $e;
         }
     }
 
     /**
-     * Start a new database transaction.
-     *
-     * @return void
+     * @inheritDoc
      */
     public function beginTransaction()
     {
         $transaction = $this->unprepared("START TRANSACTION;");
-        if (false !== $transaction) {
+        if ($transaction) {
             $this->transactionCount++;
         }
     }
 
     /**
-     * Commit the active database transaction.
-     *
-     * @return void
+     * @inheritDoc
      */
     public function commit()
     {
@@ -376,15 +360,13 @@ class Database implements ConnectionInterface
             return;
         }
         $transaction = $this->unprepared("COMMIT;");
-        if (false !== $transaction) {
+        if ($transaction) {
             $this->transactionCount--;
         }
     }
 
     /**
-     * Rollback the active database transaction.
-     *
-     * @return void
+     * @inheritDoc
      */
     public function rollBack()
     {
@@ -392,15 +374,13 @@ class Database implements ConnectionInterface
             return;
         }
         $transaction = $this->unprepared("ROLLBACK;");
-        if (false !== $transaction) {
+        if ($transaction) {
             $this->transactionCount--;
         }
     }
 
     /**
-     * Get the number of active transactions.
-     *
-     * @return int
+     * @inheritDoc
      */
     public function transactionLevel()
     {
@@ -408,11 +388,7 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Execute the given callback in "dry run" mode.
-     *
-     * @param  \Closure $callback
-     *
-     * @return array
+     * @inheritDoc
      */
     public function pretend(\Closure $callback)
     {

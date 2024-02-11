@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models\Meta;
 
@@ -6,17 +12,13 @@ use Dbout\WpOrm\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class UserMeta
- * @package Dbout\WpOrm\Models\Meta
- *
  * @method static UserMeta find(int $metaId);
- * @property User|null $user
+ * @property-read User|null $user
  */
 class UserMeta extends AbstractMeta
 {
-
-    const META_ID = 'umeta_id';
-    const USER_ID = 'user_id';
+    final public const META_ID = 'umeta_id';
+    final public const USER_ID = 'user_id';
 
     /**
      * @var string
@@ -34,13 +36,5 @@ class UserMeta extends AbstractMeta
     public function user(): HasOne
     {
         return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
-    }
-
-    /**
-     * @return string
-     */
-    public function getFkColumn(): string
-    {
-        return self::USER_ID;
     }
 }

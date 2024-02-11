@@ -1,23 +1,23 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Builders\Traits\WithMeta;
 use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
-/**
- * Class PostBuilder
- * @package Dbout\WpOrm\Builders
- */
-class PostBuilder extends AbstractBuilder
+class PostBuilder extends AbstractWithMetaBuilder
 {
-
-    use WithMeta;
-
     /**
      * @param string|null $name
      * @return Post|null
+     * @deprecated Remove in next version
+     * @see Post::findOneByName()
      */
     public function findOneByName(?string $name): ?Post
     {
@@ -25,9 +25,9 @@ class PostBuilder extends AbstractBuilder
             return null;
         }
 
-        return $this
-            ->where(Post::POST_NAME, $name)
-            ->first();
+        /** @var Post|null $model */
+        $model = $this->firstWhere(Post::POST_NAME, $name);
+        return $model;
     }
 
     /**

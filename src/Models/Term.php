@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
@@ -7,56 +13,44 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class Term
- * @package Dbout\WpOrm\Models
- *
- * @method static self find(int $termId)
+ * @method string|null getName()
+ * @method Term setName(?string $name);
+ * @method string|null getSlug()
+ * @method Term setSlug(?string $slug)
+ * @method int|null getTermGroup()
+ * @method Term setTermGroup(?int $group)
+ * @method static static|null find(int $termId)
  * @method static TermBuilder query()
  *
- * @method string|null getName()
- * @method self setName(?string $name);
- * @method string|null getSlug()
- * @method self setSlug(?string $slug)
- * @method int|null getTermGroup()
- * @method self setTermGroup(?int $group)
- *
- * @property TermTaxonomy|null $termTaxonomy
+ * @property-read TermTaxonomy|null $termTaxonomy
  */
 class Term extends AbstractModel
 {
-
-    const TERM_ID = 'term_id';
-    const NAME = 'name';
-    const SLUG = 'slug';
-    const TERM_GROUP = 'term_group';
+    final public const TERM_ID = 'term_id';
+    final public const NAME = 'name';
+    final public const SLUG = 'slug';
+    final public const TERM_GROUP = 'term_group';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $table = 'terms';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::TERM_ID;
 
     /**
-     * @var bool
+     * @inheritDoc
      */
     public $timestamps = false;
 
     /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $casts = [
         self::TERM_GROUP => 'integer',
-    ];
-
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        self::SLUG, self::TERM_ID, self::TERM_GROUP, self::NAME,
     ];
 
     /**
@@ -64,12 +58,15 @@ class Term extends AbstractModel
      */
     public function termTaxonomy(): HasOne
     {
-        return $this->hasOne(TermTaxonomy::class, TermTaxonomy::TERM_ID, self::TERM_ID);
+        return $this->hasOne(
+            TermTaxonomy::class,
+            TermTaxonomy::TERM_ID,
+            self::TERM_ID
+        );
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return TermBuilder
+     * @inheritDoc
      */
     public function newEloquentBuilder($query): TermBuilder
     {

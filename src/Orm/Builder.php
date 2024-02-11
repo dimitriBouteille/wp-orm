@@ -1,14 +1,17 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
+
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\Query\Builder as EloquentBuilder;
 
-/**
- * Class Builder
- * @package Dbout\WpOrm\Orm
- */
-class Builder extends EloquentBuilder {
-
+class Builder extends EloquentBuilder
+{
     /**
      * Add an exists clause to the query.
      *
@@ -17,11 +20,10 @@ class Builder extends EloquentBuilder {
      * @param  bool  $not
      * @return $this
      */
-    public function addWhereExistsQuery(EloquentBuilder $query, $boolean = 'and', $not = false) {
-        
+    public function addWhereExistsQuery(EloquentBuilder $query, $boolean = 'and', $not = false)
+    {
         $type = $not ? 'NotExists' : 'Exists';
-
-        $this->wheres[] = compact('type', 'query', 'boolean');
+        $this->wheres[] = ['type' => $type, 'query' => $query, 'boolean' => $boolean];
 
         $this->addBinding($query->getBindings(), 'where');
 

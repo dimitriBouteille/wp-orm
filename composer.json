@@ -1,8 +1,8 @@
 {
   "name": "dbout/wp-orm",
-  "description": "Wordpress ORM with Eloquent and Phinx",
+  "description": "WordPress ORM with Eloquent and Phinx.",
   "type": "package",
-  "license": "GPL-2.0-or-later",
+  "license": "MIT",
   "authors": [
     {
       "name": "Dimitri BOUTEILLE",
@@ -12,16 +12,17 @@
     }
   ],
   "keywords": ["wordpress", "wp", "orm", "database", "eloquent", "db", "sql", "migration", "phinx"],
-  "homepage": "https://github.com/dimitriBouteille/wp-orm/",
+  "homepage": "https://github.com/dimitriBouteille/wp-orm",
   "support": {
-    "issues": "https://github.com/dimitriBouteille/wp-orm/issues"
+    "issues": "https://github.com/dimitriBouteille/wp-orm/issues",
+    "source": "https://github.com/dimitriBouteille/wp-orm/"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": "^7.4|^8.0",
-    "illuminate/database": "^8.0",
-    "robmorgan/phinx": "^0.12.5"
+    "php": ">=8.1",
+    "robmorgan/phinx": "^0.12.5",
+    "illuminate/database": "^10.0"
   },
   "suggest": {
     "illuminate/events": "Add events to your models"
@@ -33,5 +34,32 @@
     "psr-4": {
       "Dbout\\WpOrm\\": "src/"
     }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.28",
+    "phpstan/phpstan": "^1.10",
+    "rector/rector": "^0.18.4",
+    "phpunit/phpunit": "^10.5",
+    "phpstan/phpstan-phpunit": "^1.3",
+    "phpstan/extension-installer": "^1.3"
+  },
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true
+    }
+  },
+  "extra": {
+    "phpstan": {
+      "includes": [
+        "extension.neon"
+      ]
+    }
+  },
+  "scripts": {
+    "rector": "vendor/bin/rector process src --dry-run",
+    "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
+    "phpunit": "vendor/bin/phpunit",
+    "csFixer": "vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
+    "fix:csFixer": "vendor/bin/php-cs-fixer fix"
   }
 }

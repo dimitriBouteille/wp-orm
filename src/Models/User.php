@@ -1,93 +1,83 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
+use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
+use Dbout\WpOrm\Concerns\HasMeta;
+use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\UserMeta;
-use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class User
- * @package Dbout\WpOrm\Models
- *
- * @method static User|null find($userId)
- * @method static UserBuilder query()
- * @property UserMeta[] $metas
- * @property Comment $comments
- * @property Post[] $posts
- *
  * @method string|null getUserLogin()
- * @method self setUserLogin(string $login)
+ * @method User setUserLogin(string $login)
  * @method string|null getUserPass()
- * @method self setUserPass(string $password)
+ * @method User setUserPass(string $password)
  * @method string|null getUserNicename()
- * @method self setUserNicename(string $nicename)
+ * @method User setUserNicename(string $nicename)
  * @method string|null getUserEmail()
- * @method self setUserEmail(string $email)
+ * @method User setUserEmail(string $email)
  * @method string|null getUserUrl()
- * @method self setUserUrl(?string $url)
+ * @method User setUserUrl(?string $url)
  * @method Carbon|null getUserRegistered()
- * @method self setUserRegistered($date)
+ * @method User setUserRegistered($date)
  * @method string|null getUserActivationKey()
- * @method self setUserActivationKey(?string $key)
+ * @method User setUserActivationKey(?string $key)
  * @method int getUserStatus()
- * @method self setUserStatus(int $status)
+ * @method User setUserStatus(int $status)
  * @method string|null getDisplayName()
- * @method self setDisplayName(?string $name)
+ * @method User setDisplayName(?string $name)
+ * @method static static|null find($userId)
+ * @method static UserBuilder query()
  *
+ * @property-read UserMeta[] $metas
+ * @property-read Comment[] $comments
+ * @property-read Post[] $posts
  */
-class User extends AbstractModel
+class User extends AbstractModel implements WithMetaModelInterface
 {
+    use HasMeta;
 
-    use WithMeta;
+    final public const CREATED_AT = self::REGISTERED;
+    final public const UPDATED_AT = null;
 
-    const USER_ID = 'ID';
-    const LOGIN = 'user_login';
-    const PASSWORD = 'user_pass';
-    const NICE_NAME = 'user_nicename';
-    const EMAIL = 'user_email';
-    const URL = 'user_url';
-    const REGISTERED = 'user_registered';
-    const ACTIVATION_KEY = 'user_activation_key';
-    const DISPLAY_NAME = 'display_name';
-    const STATUS = 'user_status';
-    const CREATED_AT = 'user_registered';
-    const UPDATED_AT = null;
+    final public const USER_ID = 'ID';
+    final public const LOGIN = 'user_login';
+    final public const PASSWORD = 'user_pass';
+    final public const NICE_NAME = 'user_nicename';
+    final public const EMAIL = 'user_email';
+    final public const URL = 'user_url';
+    final public const REGISTERED = 'user_registered';
+    final public const ACTIVATION_KEY = 'user_activation_key';
+    final public const DISPLAY_NAME = 'display_name';
+    final public const STATUS = 'user_status';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $table = 'users';
 
     /**
-     * @var string[]
-     */
-    protected $dates = [
-        self::REGISTERED,
-    ];
-
-    /**
-     * @var array
+     * @inheritDoc
      */
     protected $casts = [
         self::STATUS => 'integer',
+        self::REGISTERED => 'datetime',
     ];
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::USER_ID;
-
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        self::LOGIN, self::PASSWORD, self::NICE_NAME, self::EMAIL, self::URL, self::REGISTERED, self::ACTIVATION_KEY,
-        self::DISPLAY_NAME, self::STATUS,
-    ];
 
     /**
      * @return HasMany
@@ -114,10 +104,32 @@ class User extends AbstractModel
     }
 
     /**
-     * @inerhitDoc
+     * @param string $email
+     * @return self|null
      */
-    public function getMetaClass(): string
+    public static function findOneByEmail(string $email): ?self
     {
-        return \Dbout\WpOrm\Models\Meta\UserMeta::class;
+        /** @var self|null $result */
+        $result = self::query()->firstWhere(self::EMAIL, $email);
+        return $result;
+    }
+
+    /**
+     * @param string $login
+     * @return self|null
+     */
+    public static function findOneByLogin(string $login): ?self
+    {
+        /** @var self|null $result */
+        $result = self::query()->firstWhere(self::LOGIN, $login);
+        return $result;
+    }
+
+    /**
+     * @return MetaMappingConfig
+     */
+    public function getMetaConfigMapping(): MetaMappingConfig
+    {
+        return new MetaMappingConfig(UserMeta::class, UserMeta::USER_ID);
     }
 }

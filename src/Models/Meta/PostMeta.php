@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models\Meta;
 
@@ -6,17 +12,13 @@ use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class PostMeta
- * @package Dbout\WpOrm\Models\Meta
- *
  * @method static PostMeta find(int $metaId);
- * @property Post|null $post
+ * @property-read Post|null $post
  */
 class PostMeta extends AbstractMeta
 {
-
-    const META_ID = 'meta_id';
-    const POST_ID = 'post_id';
+    final public const META_ID = 'meta_id';
+    final public const POST_ID = 'post_id';
 
     /**
      * @var string
@@ -34,13 +36,5 @@ class PostMeta extends AbstractMeta
     public function post(): HasOne
     {
         return $this->hasOne(Post::class, Post::POST_ID, self::POST_ID);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getFkColumn(): string
-    {
-        return self::POST_ID;
     }
 }

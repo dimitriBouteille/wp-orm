@@ -1,35 +1,41 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Builders\Traits\WithMeta;
 use Dbout\WpOrm\Models\User;
 
-/**
- * Class UserBuilder
- * @package Dbout\WpOrm\Builders
- */
-class UserBuilder extends AbstractBuilder
+class UserBuilder extends AbstractWithMetaBuilder
 {
-
-    use WithMeta;
-
     /**
      * @param string $email
      * @return User|null
+     * @deprecated Remove in next version
+     * @see User::findOneByEmail()
      */
     public function findOneByEmail(string $email): ?User
     {
-        return $this->firstWhere(User::EMAIL, $email);
+        /** @var User|null $model */
+        $model = $this->firstWhere(User::EMAIL, $email);
+        return $model;
     }
 
     /**
      * @param string $login
      * @return User|null
+     * @deprecated Remove in next version
+     * @see User::findOneByLogin()
      */
     public function findOneByLogin(string $login): ?User
     {
-        return $this->firstWhere(User::LOGIN, $login);
+        /** @var User|null $model */
+        $model = $this->firstWhere(User::LOGIN, $login);
+        return $model;
     }
 
     /**

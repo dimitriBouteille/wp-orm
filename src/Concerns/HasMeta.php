@@ -1,22 +1,19 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
-namespace Dbout\WpOrm\Models\Meta;
+namespace Dbout\WpOrm\Concerns;
 
-use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
+use Dbout\WpOrm\MetaMappingConfig;
+use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * Trait WithMeta
- * @package Dbout\WpOrm\Models\Meta
- */
-trait WithMeta
+trait HasMeta
 {
-
-    /**
-     * @var AbstractMeta|null
-     */
-    protected ?AbstractMeta $metaModel = null;
-
     /**
      * @var array
      */
@@ -25,30 +22,11 @@ trait WithMeta
     /**
      * @return void
      */
-    protected static function bootWithMeta()
+    protected static function bootHasMeta(): void
     {
-        static::saved(function($model) {
+        static::saved(function ($model) {
             $model->saveTmpMetas();
         });
-    }
-
-    /**
-     * @throws MetaNotSupportedException
-     * @throws \ReflectionException
-     */
-    public function initializeWithMeta(): void
-    {
-        $metaClass = $this->getMetaClass();
-        $object = (new \ReflectionClass($metaClass));
-        if (!$object->implementsInterface(MetaInterface::class)) {
-            throw new MetaNotSupportedException(sprintf(
-                "Model %s must be implement %s",
-                $metaClass,
-                MetaInterface::class
-            ));
-        }
-
-        $this->metaModel = $object->newInstanceWithoutConstructor();
     }
 
     /**
@@ -56,7 +34,7 @@ trait WithMeta
      */
     public function metas(): HasMany
     {
-        return $this->hasMany(get_class($this->metaModel), $this->metaModel->getFkColumn());
+        return $this->hasMany($this->getMetaConfigMapping()->metaClass, $this->getMetaConfigMapping()->foreignKey);
     }
 
     /**
@@ -65,26 +43,25 @@ trait WithMeta
      */
     public function getMeta(string $metaKey): ?AbstractMeta
     {
-        return $this->metas()
-            ->firstWhere($this->metaModel->getKeyColumn(), $metaKey);
+        /** @var ?AbstractMeta $value */
+        // @phpstan-ignore-next-line
+        $value =  $this->metas()->firstWhere($this->getMetaConfigMapping()->columnKey, $metaKey);
+        return $value;
     }
 
     /**
      * @param string $metaKey
      * @return mixed|null
      */
-    public function getMetaValue(string $metaKey)
+    public function getMetaValue(string $metaKey): mixed
     {
         if (!$this->exists) {
             return $this->_tmpMetas[$metaKey] ?? null;
         }
 
         $meta = $this->getMeta($metaKey);
-        if (!$meta) {
-            return null;
-        }
+        return $meta?->getValue();
 
-        return $meta->getValue();
     }
 
     /**
@@ -93,30 +70,32 @@ trait WithMeta
      */
     public function hasMeta(string $metaKey): bool
     {
+        // @phpstan-ignore-next-line
         return $this->metas()
-            ->where($this->metaModel->getKeyColumn(), $metaKey)
+            ->where($this->getMetaConfigMapping()->columnKey, $metaKey)
             ->exists();
     }
 
     /**
      * @param string $metaKey
-     * @param $value
+     * @param mixed $value
      * @return AbstractMeta|null
      */
-    public function setMeta(string $metaKey, $value): ?AbstractMeta
+    public function setMeta(string $metaKey, mixed $value): ?AbstractMeta
     {
         if (!$this->exists) {
             $this->_tmpMetas[$metaKey] = $value;
             return null;
         }
 
+        /** @var AbstractMeta $instance */
         $instance = $this->metas()
             ->firstOrNew([
-                $this->metaModel->getKeyColumn() => $metaKey
+                $this->getMetaConfigMapping()->foreignKey => $metaKey,
             ]);
 
         $instance->fill([
-            $this->metaModel->getValueColumn() => $value
+            $this->getMetaConfigMapping()->columnValue => $value,
         ])->save();
 
         return $instance;
@@ -133,15 +112,11 @@ trait WithMeta
             return true;
         }
 
+        // @phpstan-ignore-next-line
         return $this->metas()
-            ->where($this->metaModel->getKeyColumn(), $metaKey)
+            ->where($this->getMetaConfigMapping()->columnKey, $metaKey)
             ->forceDelete();
     }
-
-    /**
-     * @return string
-     */
-    abstract public function getMetaClass(): string;
 
     /**
      * @return void
@@ -154,4 +129,9 @@ trait WithMeta
 
         $this->_tmpMetas = [];
     }
+
+    /**
+     * @return MetaMappingConfig
+     */
+    abstract public function getMetaConfigMapping(): MetaMappingConfig;
 }

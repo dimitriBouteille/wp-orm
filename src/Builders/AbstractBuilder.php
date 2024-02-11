@@ -1,18 +1,18 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Builders;
 
-use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class AbstractBuilder
- * @package Dbout\WpOrm\Builders
- */
 abstract class AbstractBuilder extends Builder
 {
-
     /**
      * @inheritDoc
      */
@@ -34,7 +34,7 @@ abstract class AbstractBuilder extends Builder
         $first = reset($value);
         if(is_array($first)) {
             $this->whereIn($columns, $first);
-        } else if(count($value) == 1) {
+        } elseif(count($value) == 1) {
             $this->where($columns, reset($value));
         } else {
             $this->whereIn($columns, $value);
@@ -62,15 +62,5 @@ abstract class AbstractBuilder extends Builder
         }
 
         return false;
-    }
-
-    /**
-     * @param string $label
-     * @param string $key
-     * @return array
-     */
-    public function toArrayOptions(string $label = Post::TITLE, string $key = Post::POST_ID): array
-    {
-        return $this->pluck($label, $key)->toArray();
     }
 }

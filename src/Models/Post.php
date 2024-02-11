@@ -1,123 +1,115 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
 use Carbon\Carbon;
+use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
+use Dbout\WpOrm\Concerns\HasMeta;
+use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\PostMeta;
-use Dbout\WpOrm\Models\Meta\WithMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class Post
- * @package Dbout\WpOrm\Models
- *
- * @method static Post find(int $postId)
- * @method static PostBuilder query()
- * @property User|null $author
- * @property PostMeta[] $metas
- * @property Post|null $parent
- *
- * @method self setPostDate($date)
+ * @method Post setPostDate($date)
  * @method Carbon|null getPostDate()
- * @method self setPostDateGMT($date)
+ * @method Post setPostDateGMT($date)
  * @method Carbon|null getPostDateGMT()
- * @method self setPostContent(?string $content)
+ * @method Post setPostContent(?string $content)
  * @method string|null getPostContent()
- * @method self setPostType(string $type)
+ * @method Post setPostType(string $type)
  * @method string|null getPostType()
- * @method self setGuid(?string $guid)
+ * @method Post setGuid(?string $guid)
  * @method string|null getGuid()
- * @method self setPostTitle(?string $title)
+ * @method Post setPostTitle(?string $title)
  * @method string|null getPostTitle()
- * @method self setPostExcerpt(?string $excerpt)
+ * @method Post setPostExcerpt(?string $excerpt)
  * @method string|null getPostExcerpt()
- * @method self setPostStatus(?string $status)
+ * @method Post setPostStatus(?string $status)
  * @method string|null getPostStatus()
- * @method self setCommentStatus(string $status)
+ * @method Post setCommentStatus(string $status)
  * @method string|null getCommentStatus()
- * @method self setPingStatus(string $status)
+ * @method Post setPingStatus(string $status)
  * @method string|null getPingStatus()
- * @method self setPostPassword(?string $password)
+ * @method Post setPostPassword(?string $password)
  * @method string|null getPostPassword()
- * @method self setPostName(?string $name)
+ * @method Post setPostName(?string $name)
  * @method string|null getPostName()
- * @method self setToPing(?string $toPing)
+ * @method Post setToPing(?string $toPing)
  * @method string|null getToPing()
- * @method self setPinged(?string $pinged)
+ * @method Post setPinged(?string $pinged)
  * @method string|null getPinged()
- * @method self setPostModified($modified)
+ * @method Post setPostModified($modified)
  * @method Carbon|null getPostModified()
- * @method self setPostModifiedGMT($modified)
+ * @method Post setPostModifiedGMT($modified)
  * @method Carbon|null getPostModifiedGMT()
  * @method setPostMimeType(?string $mimeType)
  * @method string|null getPostMimeType()
- * @method self setMenuOrder(?int $order)
+ * @method Post setMenuOrder(?int $order)
  * @method int|null getMenuOrder()
- * @method self setPostContentFiltered($content)
+ * @method Post setPostContentFiltered($content)
  * @method string|null getPostContentFiltered()
+ * @method static static find(int $postId)
+ * @method static PostBuilder query()
+ *
+ * @property-read User|null $author
+ * @property-read PostMeta[] $metas
+ * @property-read static|null $parent
+ * @property-read Comment[] $comments
  */
-class Post extends AbstractModel
+class Post extends AbstractModel implements WithMetaModelInterface
 {
+    use HasMeta;
 
-    use WithMeta;
-
-    const CREATED_AT = 'post_date';
-    const UPDATED_AT = 'post_modified';
-    const POST_ID = 'ID';
-    const AUTHOR = 'post_author';
-    const DATE = 'post_date';
-    const DATE_GMT = 'post_date_gmt';
-    const CONTENT = 'post_content';
-    const TITLE = 'post_title';
-    const EXCERPT = 'post_excerpt';
-    const COMMENT_STATUS = 'comment_status';
-    const STATUS = 'post_status';
-    const PING_STATUS = 'ping_status';
-    const PASSWORD = 'post_password';
-    const POST_NAME = 'post_name';
-    const TO_PING = 'to_ping';
-    const PINGED = 'pinged';
-    const MODIFIED = 'post_modified';
-    const MODIFIED_GMT = 'post_modified_gmt';
-    const CONTENT_FILTERED = 'post_content_filtered';
-    const PARENT = 'post_parent';
-    const GUID = 'guid';
-    const MENU_ORDER = 'menu_order';
-    const TYPE = 'post_type';
-    const MIME_TYPE = 'post_mime_type';
-    const COMMENT_COUNT = 'comment_count';
+    public const UPDATED_AT = self::MODIFIED;
+    public const CREATED_AT = self::DATE;
+    final public const POST_ID = 'ID';
+    final public const AUTHOR = 'post_author';
+    final public const DATE = 'post_date';
+    final public const DATE_GMT = 'post_date_gmt';
+    final public const CONTENT = 'post_content';
+    final public const TITLE = 'post_title';
+    final public const EXCERPT = 'post_excerpt';
+    final public const COMMENT_STATUS = 'comment_status';
+    final public const STATUS = 'post_status';
+    final public const PING_STATUS = 'ping_status';
+    final public const PASSWORD = 'post_password';
+    final public const POST_NAME = 'post_name';
+    final public const TO_PING = 'to_ping';
+    final public const PINGED = 'pinged';
+    final public const MODIFIED = 'post_modified';
+    final public const MODIFIED_GMT = 'post_modified_gmt';
+    final public const CONTENT_FILTERED = 'post_content_filtered';
+    final public const PARENT = 'post_parent';
+    final public const GUID = 'guid';
+    final public const MENU_ORDER = 'menu_order';
+    final public const TYPE = 'post_type';
+    final public const MIME_TYPE = 'post_mime_type';
+    final public const COMMENT_COUNT = 'comment_count';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::POST_ID;
 
     /**
-     * @var string[]
-     */
-    protected $dates = [
-        self::DATE, self::MODIFIED, self::DATE_GMT,  self::MODIFIED_GMT,
-    ];
-
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        self::CONTENT, self::TITLE, self::EXCERPT, self::COMMENT_STATUS, self::STATUS,
-        self::PING_STATUS, self::PASSWORD, self::POST_NAME, self::TO_PING, self::PINGED,
-        self::CONTENT_FILTERED, self::PARENT, self::GUID, self::MENU_ORDER, self::TYPE,
-        self::MIME_TYPE, self::COMMENT_COUNT,
-    ];
-
-    /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $casts = [
         self::MENU_ORDER => 'integer',
         self::COMMENT_COUNT => 'integer',
+        self::DATE => 'datetime',
+        self::MODIFIED => 'datetime',
+        self::DATE_GMT => 'datetime',
+        self::MODIFIED_GMT => 'datetime',
     ];
 
     /**
@@ -158,10 +150,32 @@ class Post extends AbstractModel
     }
 
     /**
-     * @inerhitDoc
+     * @param string|null $name
+     * @return Post|null
      */
-    public function getMetaClass(): string
+    public static function findOneByName(?string $name): ?Post
     {
-        return \Dbout\WpOrm\Models\Meta\PostMeta::class;
+        /** @var Post|null $model */
+        $model = self::query()->firstWhere(self::POST_NAME, $name);
+        return $model;
+    }
+
+    /**
+     * @param string $guid
+     * @return Post|null
+     */
+    public static function findOneByGuid(string $guid): ?Post
+    {
+        /** @var Post|null $model */
+        $model = self::query()->firstWhere(self::GUID, $guid);
+        return $model;
+    }
+
+    /**
+     * @return MetaMappingConfig
+     */
+    public function getMetaConfigMapping(): MetaMappingConfig
+    {
+        return new MetaMappingConfig(PostMeta::class, PostMeta::POST_ID);
     }
 }

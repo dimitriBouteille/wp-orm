@@ -1,16 +1,17 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
-/**
- * Class Attachment
- * @package Dbout\WpOrm\Models
- */
 class Attachment extends CustomPost
 {
-
     /**
-     * @var string
+     * @inheritDoc
      */
     protected string $_type = 'attachment';
 }

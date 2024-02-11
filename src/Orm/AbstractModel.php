@@ -1,19 +1,24 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-/**
- * Class AbstractModel
- * @package Dbout\WpOrm\Orm
- */
 abstract class AbstractModel extends Model
 {
+    /**
+     * @inheritDoc
+     */
+    protected $guarded = [];
 
     /**
-     * AbstractModel constructor.
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
@@ -23,44 +28,42 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * @return Builder|\Illuminate\Database\Query\Builder
+     * @inheritDoc
      */
     protected function newBaseQueryBuilder()
     {
         $connection = $this->getConnection();
         return new Builder(
-            $connection, $connection->getQueryGrammar(), $connection->getPostProcessor()
+            $connection,
+            $connection->getQueryGrammar(),
+            $connection->getPostProcessor()
         );
     }
 
     /**
-     * @return Database|null
+     * @inheritDoc
      */
     public function getConnection()
     {
+        // @phpstan-ignore-next-line
         return Database::getInstance();
     }
 
     /**
-     * Get table name associated with the model
-     * Add wordpress table prefix
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getTable(): string
     {
         $prefix = $this->getConnection()->getTablePrefix();
-        
+
         if (!empty($this->table)) {
-            // Ajoute plusieurs fois le suffix, va savoir pourquoi ...
-            // @todo Corriger le bug ci dessus
-            return \substr($this->table, 0, strlen($prefix)) === $prefix ? $this->table : $prefix . $this->table;
+            return str_starts_with($this->table, $prefix) ? $this->table : $prefix . $this->table;
         }
 
         $table = \substr(\strrchr(\get_class($this), "\\"), 1);
         $table = Str::snake(Str::plural($table));
 
-        // Add wordpress table prefix
+        // Add WordPress table prefix
         return $prefix . $table;
     }
 
@@ -76,28 +79,28 @@ abstract class AbstractModel extends Model
      * Returns model table name
      *
      * @return string
+     * @deprecated Remove in next version
+     * @see self::getTable()
+     * @see https://stackoverflow.com/a/20812314
      */
     public static function table(): string
     {
+        // @phpstan-ignore-next-line
         return (new static())->getTable();
     }
 
     /**
-     * @param string $method
-     * @param array $parameters
-     * @return $this|mixed
+     * @inheritDoc
      */
     public function __call($method, $parameters)
     {
         preg_match('#^(get|set)(.*)#', $method, $matchGetter);
-        if (!$matchGetter) {
+        if ($matchGetter === []) {
             return parent::__call($method, $parameters);
         }
 
         $type = $matchGetter[1];
         $attribute = $matchGetter[2];
-
-        // to pascal case
         $attribute = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $attribute));
 
         if ($type === 'get') {

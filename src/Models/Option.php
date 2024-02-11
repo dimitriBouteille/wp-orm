@@ -1,53 +1,48 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Builders\OptionBuilder;
+use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
- * Class Option
- * @package Dbout\WpOrm\Models
- *
- * @method static Option|null find($optionId)
- * @method static OptionBuilder query()
- *
- * @method self setOptionName(string $name)
+ * @method Option setOptionName(string $name)
  * @method string getOptionName()
- * @method self setOptionValue($value)
+ * @method Option setOptionValue($value)
  * @method mixed getOptionValue()
- * @method self setAutoload(string $autoload)
+ * @method Option setAutoload(string|YesNo $autoload)
  * @method string getAutoload()
+ * @method static static|null find($optionId)
+ * @method static OptionBuilder query()
  */
 class Option extends AbstractModel
 {
-
-    const OPTION_ID = 'option_id';
-    const NAME = 'option_name';
-    const VALUE = 'option_value';
-    const AUTOLOAD = 'autoload';
+    final public const OPTION_ID = 'option_id';
+    final public const NAME = 'option_name';
+    final public const VALUE = 'option_value';
+    final public const AUTOLOAD = 'autoload';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::OPTION_ID;
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $table = 'options';
 
     /**
-     * @var bool
+     * @inheritDoc
      */
     public $timestamps = false;
-
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        self::OPTION_ID, self::NAME, self::VALUE, self::AUTOLOAD,
-    ];
 
     /**
      * @inheritDoc
@@ -55,5 +50,16 @@ class Option extends AbstractModel
     public function newEloquentBuilder($query): OptionBuilder
     {
         return new OptionBuilder($query);
+    }
+
+    /**
+     * @param string $optionName
+     * @return self|null
+     */
+    public static function findOneByName(string $optionName): ?self
+    {
+        /** @var self|null $result */
+        $result = self::query()->firstWhere(self::NAME, $optionName);
+        return $result;
     }
 }

@@ -1,52 +1,54 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 
 /**
- * Class TermTaxonomy
- * @package Dbout\WpOrm\Models
- *
- * @method static TermTaxonomy|null find(int $id)
  * @method int|null getTermId()
- * @method self setTermId(int $id)
+ * @method TermTaxonomy setTermId(int $id)
  * @method string getTaxonomy()
- * @method self setTaxonomy(string $taxonomy)
+ * @method TermTaxonomy setTaxonomy(string $taxonomy)
  * @method string|null getDescription()
- * @method self setDescription(?string $description)
+ * @method TermTaxonomy setDescription(?string $description)
  * @method int|null getParent()
- * @method self setParent($parent)
+ * @method TermTaxonomy setParent($parent)
  * @method int|null getCount()
- * @method self setCount(int $count)
+ * @method TermTaxonomy setCount(int $count)
+ * @method static static|null find(int $id)
  */
 class TermTaxonomy extends AbstractModel
 {
-
-    const TERM_TAXONOMY_ID = 'term_taxonomy_id';
-    const TERM_ID = 'term_id';
-    const TAXONOMY = 'taxonomy';
-    const DESCRIPTION = 'description';
-    const PARENT = 'parent';
-    const COUNT = 'count';
+    final public const TERM_TAXONOMY_ID = 'term_taxonomy_id';
+    final public const TERM_ID = 'term_id';
+    final public const TAXONOMY = 'taxonomy';
+    final public const DESCRIPTION = 'description';
+    final public const PARENT = 'parent';
+    final public const COUNT = 'count';
 
     /**
-     * @var bool
+     * @inheritDoc
      */
     public $timestamps = false;
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $table = 'term_taxonomy';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $primaryKey = self::TERM_TAXONOMY_ID;
 
     /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $casts = [
         self::COUNT => 'integer',
@@ -56,6 +58,11 @@ class TermTaxonomy extends AbstractModel
      * @var string[]
      */
     protected $fillable = [
-        self::TERM_TAXONOMY_ID, self::TERM_ID, self::TAXONOMY, self::DESCRIPTION, self::PARENT, self::COUNT
+        self::TERM_TAXONOMY_ID,
+        self::TERM_ID,
+        self::TAXONOMY,
+        self::DESCRIPTION,
+        self::PARENT,
+        self::COUNT,
     ];
 }
