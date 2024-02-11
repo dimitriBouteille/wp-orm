@@ -33,7 +33,7 @@ This documentation only covers the specific points of this library, if you want 
 - [Use WordPress core models](doc/wordpress-core-models.md)
 - [Filter data](/doc/filter-data.md)
     - [With findOneBy*](/doc/filter-data.md#with-findoneby)
-    - [With predefined taps](/doc/filter-data.md#with-taps)
+    - [With taps](/doc/filter-data.md#with-taps)
     - [With query builder](/doc/filter-data.md#with-query-builder)
 - [Create custom model](doc/create-model.md)
     - [Generic Model](doc/create-model.md#generic-model)

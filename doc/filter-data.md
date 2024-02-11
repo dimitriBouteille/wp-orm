@@ -2,11 +2,27 @@
 
 You can filter data in several ways:
 
-- With predefined `findOneBy` functions in place on some models
-- With predefined taps
+- With `findOneBy` functions in place on some models
+- With taps
 - With Eloquent query builder. If your model has metas, you can use custom filter methods.
 
 ## With findOneBy
+
+By default, Eloquent does not offer a magic feature [findOneBy*](https://github.com/laravel/ideas/issues/107), however you can use this feature on some models :
+
+**User :**
+
+- `User::findOneByEmail()`
+- `User::findOneByLogin()`
+
+**Option :**
+
+- `Option::findOneByName()`
+
+**Post :**
+
+- `Post::findOneByName()`
+- `Post::findOneByGuid()`
 
 ## With taps
 
@@ -58,3 +74,13 @@ $posts = Post::query()
 > 📘 More information here: [Eloquent query builder](https://laravel.com/docs/10.x/queries).
 
 ### Model with meta relation
+
+For models that may have metas (e.g. `Post`, `User`, ...), you can filter with `addMetaToFilter`, here is an example that speaks for itself:)
+
+```php
+$products = Post::query()
+    ->addMetaToFilter('product_type', 'simple')
+    ->get();
+```
+
+> 📘 You can find all functions usable on models with metas here: 
