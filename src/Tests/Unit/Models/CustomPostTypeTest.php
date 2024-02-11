@@ -20,10 +20,10 @@ class CustomPostTypeTest extends TestCase
 {
     /**
      * @throws \Dbout\WpOrm\Exceptions\NotAllowedException
-     * @return void
+     * @return never
      * @covers ::setPostType
      */
-    public function testSetPostTypeException(): void
+    public function testSetPostTypeException(): never
     {
         $model = new Attachment();
         $this->expectException(CannotOverrideCustomTypeException::class);
