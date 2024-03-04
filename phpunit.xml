@@ -2,7 +2,7 @@
 <phpunit cacheResult="false" stopOnError="true">
     <testsuites>
         <testsuite name="Tests">
-            <directory>src/</directory>
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
