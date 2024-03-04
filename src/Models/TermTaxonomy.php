@@ -55,7 +55,7 @@ class TermTaxonomy extends AbstractModel
     ];
 
     /**
-     * @var string[]
+     * @inheritDoc
      */
     protected $fillable = [
         self::TERM_TAXONOMY_ID,
