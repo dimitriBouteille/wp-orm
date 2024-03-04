@@ -101,7 +101,7 @@ abstract class AbstractModel extends Model
 
         $type = $matchGetter[1];
         $attribute = $matchGetter[2];
-        $attribute = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $attribute));
+        $attribute = strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $attribute));
 
         if ($type === 'get') {
             return $this->getAttribute($attribute);
