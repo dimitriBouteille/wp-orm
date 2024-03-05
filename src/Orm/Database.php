@@ -69,13 +69,12 @@ class Database implements ConnectionInterface
     public function __construct()
     {
         global $wpdb;
+        /**
+         * @todo Check $wpdb instance
+         */
 
-        if ($wpdb) {
+        if ($wpdb instanceof \wpdb) {
             $this->tablePrefix = $wpdb->prefix;
-        }
-
-        if (!$this->tablePrefix && defined('DB_PREFIX')) {
-            $this->tablePrefix = DB_PREFIX;
         }
 
         $this->db = $wpdb;
@@ -108,7 +107,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function table($table, $as = null)
+    public function table($table, $as = null): Builder
     {
         $processor = $this->getPostProcessor();
         $table = $this->getTablePrefix() . $table;
@@ -120,7 +119,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function raw($value)
+    public function raw($value): Expression
     {
         return new Expression($value);
     }
@@ -156,11 +155,11 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function select($query, $bindings = [], $useReadPdo = true)
+    public function select($query, $bindings = [], $useReadPdo = true): array
     {
         $query = $this->bind_params($query, $bindings);
         $result = $this->db->get_results($query);
-        if ($result === false || $this->db->last_error) {
+        if ($result === false || $this->lastRequestHasError()) {
             throw new QueryException($this->getName(), $query, $bindings, new \Exception($this->db->last_error));
         }
 
@@ -234,57 +233,53 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return bool
+     * @inheritDoc
      */
-    public function insert($query, $bindings = [])
+    public function insert($query, $bindings = []): bool
     {
-        return $this->statement($query, $bindings);
+        $newQuery = $this->bind_params($query, $bindings, true);
+        $result = $this->unprepared($newQuery);
+        if ($result === false || $this->lastRequestHasError()) {
+            throw new QueryException($this->getName(), $newQuery, $bindings, new \Exception($this->db->last_error));
+        }
+
+        return $result;
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return int
+     * @inheritDoc
      */
-    public function update($query, $bindings = [])
-    {
-        return $this->affectingStatement($query, $bindings);
-    }
-
-    /**
-     * @param string $query
-     * @param array $bindings
-     * @return int
-     */
-    public function delete($query, $bindings = [])
+    public function update($query, $bindings = []): int
     {
         return $this->affectingStatement($query, $bindings);
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return bool
+     * @inheritDoc
      */
-    public function statement($query, $bindings = [])
+    public function delete($query, $bindings = []): int
+    {
+        return $this->affectingStatement($query, $bindings);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function statement($query, $bindings = []): bool
     {
         $newQuery = $this->bind_params($query, $bindings, true);
         return $this->unprepared($newQuery);
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return int
+     * @inheritDoc
      */
-    public function affectingStatement($query, $bindings = [])
+    public function affectingStatement($query, $bindings = []): int
     {
         $newQuery = $this->bind_params($query, $bindings, true);
         $result = $this->db->query($newQuery);
 
-        if ($result === false || $this->db->last_error) {
+        if ($result === false || $this->lastRequestHasError()) {
             throw new QueryException($this->getName(), $newQuery, $bindings, new \Exception($this->db->last_error));
         }
 
@@ -294,7 +289,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function unprepared($query)
+    public function unprepared($query): bool
     {
         /**
          * @see \wpdb::print_error()
@@ -306,20 +301,15 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function prepareBindings(array $bindings)
+    public function prepareBindings(array $bindings): array
     {
         $grammar = $this->getQueryGrammar();
         foreach ($bindings as $key => $value) {
-
-            // Micro-optimization: check for scalar values before instances
             if (\is_bool($value)) {
                 $bindings[$key] = (int) $value;
             } elseif (is_scalar($value)) {
                 continue;
-            } elseif ($value instanceof \DateTime) {
-                // We need to transform all instances of the DateTime class into an actual
-                // date string. Each query grammar maintains its own date string format
-                // so we'll just ask the grammar for the format to get from the date.
+            } elseif ($value instanceof \DateTimeInterface) {
                 $bindings[$key] = $value->format($grammar->getDateFormat());
             }
         }
@@ -346,7 +336,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function beginTransaction()
+    public function beginTransaction(): void
     {
         $transaction = $this->unprepared("START TRANSACTION;");
         if ($transaction) {
@@ -357,7 +347,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function commit()
+    public function commit(): void
     {
         if ($this->transactionCount < 1) {
             return;
@@ -371,7 +361,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function rollBack()
+    public function rollBack(): void
     {
         if ($this->transactionCount < 1) {
             return;
@@ -385,7 +375,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function transactionLevel()
+    public function transactionLevel(): int
     {
         return $this->transactionCount;
     }
@@ -450,5 +440,13 @@ class Database implements ConnectionInterface
     public function enableQueryLog()
     {
         $this->loggingQueries = true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function lastRequestHasError(): bool
+    {
+        return $this->db->last_error !== null && $this->db->last_error !== '';
     }
 }
