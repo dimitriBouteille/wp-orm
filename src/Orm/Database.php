@@ -296,6 +296,9 @@ class Database implements ConnectionInterface
      */
     public function unprepared($query)
     {
+        /**
+         * @see \wpdb::print_error()
+         */
         $result = $this->db->query($query);
         return ($result === false || $this->db->last_error);
     }
