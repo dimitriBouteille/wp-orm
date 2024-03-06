@@ -129,33 +129,23 @@ class Database implements ConnectionInterface
 
     /**
      * @inheritDoc
-     * @todo Update this
      */
     public function selectOne($query, $bindings = [], $useReadPdo = true)
     {
-        $query = $this->bind_params($query, $bindings);
-        $result = $this->db->get_row($query);
-        if ($result === false || $this->db->last_error) {
-            throw new QueryException($this->getName(), $query, $bindings, new \Exception($this->db->last_error));
-        }
-
-        return $result;
+        return $this->run($query, $bindings, function (string $query, array $bindings) {
+            $query = $this->bind_params($query, $bindings);
+            return $this->db->get_row($query);
+        });
     }
 
     /**
      * @inheritDoc
-     * @todo Update this
      */
     public function select($query, $bindings = [], $useReadPdo = true): array
     {
         return $this->run($query, $bindings, function (string $query, array $bindings) {
             $query = $this->bind_params($query, $bindings);
-            $result = $this->db->get_results($query);
-            if ($result === false || $this->lastRequestHasError()) {
-                throw new QueryException($this->getName(), $query, $bindings, new \Exception($this->db->last_error));
-            }
-
-            return $result;
+            return $this->db->get_results($query);
         });
     }
 
@@ -208,8 +198,8 @@ class Database implements ConnectionInterface
     /**
      * @param string $query
      * @param array $bindings
-     * @return mixed
      * @throws \Exception
+     * @return mixed
      * @deprecated Remove in next version.
      */
     public function bind_and_run($query, $bindings = [])
@@ -258,14 +248,8 @@ class Database implements ConnectionInterface
         return $this->run($query, $bindings, function (string $query, array $bindings) {
             $newQuery = $this->bind_params($query, $bindings, true);
             $result = $this->db->query($newQuery);
-
-            if ($result === false || $this->lastRequestHasError()) {
-                throw new QueryException(
-                    $this->getDatabaseName(),
-                    $newQuery,
-                    $bindings,
-                    new \Exception($this->db->last_error)
-                );
+            if (!is_numeric($result)) {
+                return $result;
             }
 
             return (int) $result;
@@ -465,7 +449,12 @@ class Database implements ConnectionInterface
     protected function runQueryCallback(string $query, array $bindings, \Closure $callback): mixed
     {
         try {
-            return $callback($query, $bindings);
+            $result = $callback($query, $bindings);
+            if ($result === false || $this->lastRequestHasError()) {
+                throw new \Exception($this->db->last_error);
+            }
+
+            return $result;
         } catch (\Exception $exception) {
             throw new QueryException(
                 $this->getName(),

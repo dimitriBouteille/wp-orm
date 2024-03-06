@@ -45,6 +45,7 @@ abstract class AbstractModel extends Model
      */
     public function getConnection()
     {
+        // @phpstan-ignore-next-line
         return Database::getInstance();
     }
 
