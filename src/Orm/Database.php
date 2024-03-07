@@ -75,6 +75,7 @@ class Database implements ConnectionInterface
 
         $this->config = [
             'connection_name' => 'wp-eloquent-mysql2',
+            // @phpstan-ignore-next-line
             'name' => $wpdb->dbname,
         ];
 
@@ -512,10 +513,10 @@ class Database implements ConnectionInterface
     /**
      * Get the elapsed time since a given starting point.
      *
-     * @param  int  $start
+     * @param  float $start
      * @return float
      */
-    protected function getElapsedTime(int $start): float
+    protected function getElapsedTime(float $start): float
     {
         return round((microtime(true) - $start) * 1000, 2);
     }

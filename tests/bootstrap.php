@@ -11,6 +11,7 @@ define('ABSPATH', __DIR__ . '/../web/wordpress/');
 $includeDirectory  = __DIR__ . '/../web/wordpress/wp-includes';
 
 $paths = [
+    '/load.php',
     '/functions.php',
     '/plugin.php',
     '/class-wpdb.php',

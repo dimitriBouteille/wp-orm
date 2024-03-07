@@ -11,6 +11,7 @@ namespace Dbout\WpOrm\Tests\Builders;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Models\Post;
+use Dbout\WpOrm\Tests\WpDatabaseInstanceCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -20,6 +21,8 @@ use PHPUnit\Framework\TestCase;
  */
 class WithMetaBuilderTest extends TestCase
 {
+    use WpDatabaseInstanceCreator;
+
     private PostBuilder $builder;
 
     private Post&MockObject $post;
@@ -31,6 +34,7 @@ class WithMetaBuilderTest extends TestCase
      */
     protected function setUp(): void
     {
+        $this->initWpDatabaseInstance();
         $queryBuilder = new \Illuminate\Database\Query\Builder(
             $this->createMock(\Illuminate\Database\MySqlConnection::class),
             new \Illuminate\Database\Query\Grammars\Grammar(),
@@ -62,21 +66,20 @@ class WithMetaBuilderTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return \Generator
      */
-    public static function providerTestAddMetaToSelect(): array
+    public static function providerTestAddMetaToSelect(): \Generator
     {
-        return [
-            'Without alias' => [
-                'my_meta',
-                null,
-                'select "posts".*, "my_meta"."meta_value" as "my_meta_value" from "posts" inner join "postmeta" as "my_meta" on "my_meta"."meta_key" = "my_meta" and "my_meta"."post_id" = "posts"."ID"',
-            ],
-            'With alias' => [
-                'first_name',
-                'my_custom_alias',
-                'select "posts".*, "first_name"."meta_value" as "my_custom_alias" from "posts" inner join "postmeta" as "first_name" on "first_name"."meta_key" = "first_name" and "first_name"."post_id" = "posts"."ID"',
-            ],
+        yield 'Without alias' => [
+            'my_meta',
+            null,
+            'select "posts".*, "my_meta"."meta_value" as "my_meta_value" from "posts" inner join "postmeta" as "my_meta" on "my_meta"."meta_key" = "my_meta" and "my_meta"."post_id" = "posts"."ID"',
+        ];
+
+        yield 'With alias' => [
+            'first_name',
+            'my_custom_alias',
+            'select "posts".*, "first_name"."meta_value" as "my_custom_alias" from "posts" inner join "postmeta" as "first_name" on "first_name"."meta_key" = "first_name" and "first_name"."post_id" = "posts"."ID"',
         ];
     }
 
@@ -96,32 +99,30 @@ class WithMetaBuilderTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return \Generator
      */
-    public static function providerTestAddMetasToSelect(): array
+    public static function providerTestAddMetasToSelect(): \Generator
     {
-        return [
-            'Without alias' => [
-                [
-                    'firstname',
-                    'lastname',
-                ],
-                'select "posts".*, "firstname"."meta_value" as "firstname_value", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = "firstname" and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+        yield 'Without alias' => [
+            [
+                'firstname',
+                'lastname',
             ],
-            'With alias' => [
-                [
-                    'my_meta' => 'firstname',
-                    'second_meta' => 'lastname',
-                ],
-                'select "posts".*, "firstname"."meta_value" as "my_meta", "lastname"."meta_value" as "second_meta" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = "firstname" and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+            'select "posts".*, "firstname"."meta_value" as "firstname_value", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = "firstname" and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+        ];
+        yield 'With alias' => [
+            [
+                'my_meta' => 'firstname',
+                'second_meta' => 'lastname',
             ],
-            'On meta with alias on another one without alias' => [
-                [
-                    'my_meta' => 'street_1',
-                    'lastname',
-                ],
-                'select "posts".*, "street_1"."meta_value" as "my_meta", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "street_1" on "street_1"."meta_key" = "street_1" and "street_1"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+            'select "posts".*, "firstname"."meta_value" as "my_meta", "lastname"."meta_value" as "second_meta" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = "firstname" and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+        ];
+        yield 'On meta with alias on another one without alias' => [
+            [
+                'my_meta' => 'street_1',
+                'lastname',
             ],
+            'select "posts".*, "street_1"."meta_value" as "my_meta", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "street_1" on "street_1"."meta_key" = "street_1" and "street_1"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
         ];
     }
 

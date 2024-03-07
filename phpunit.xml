@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit cacheResult="false" stopOnError="true" bootstrap="tests/bootstrap.php">
+<phpunit cacheResult="false" stopOnError="true" bootstrap="./tests/bootstrap.php">
+    <php>
+        <const name="WP_DEBUG" value="false"/>
+        <const name="WP_CONTENT_DIR" value="/"/>
+    </php>
     <testsuites>
         <testsuite name="Tests">
             <directory>tests/</directory>
