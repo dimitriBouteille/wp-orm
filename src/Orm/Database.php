@@ -9,6 +9,8 @@
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\DetectsLostConnections;
+use Illuminate\Database\LostConnectionException;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\Processors\Processor;
@@ -20,6 +22,8 @@ use Illuminate\Support\Arr;
  */
 class Database implements ConnectionInterface
 {
+    use DetectsLostConnections;
+
     /**
      * @var \wpdb
      */
@@ -196,13 +200,13 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
+     * @param $query
+     * @param $bindings
      * @throws \Exception
-     * @return mixed
+     * @return never
      * @deprecated Remove in next version.
      */
-    public function bind_and_run($query, $bindings = [])
+    public function bind_and_run($query, $bindings = []): never
     {
         throw new \Exception('This function is no longer usable, it will be removed in a future version.');
     }
@@ -236,8 +240,10 @@ class Database implements ConnectionInterface
      */
     public function statement($query, $bindings = []): bool
     {
-        $newQuery = $this->bind_params($query, $bindings, true);
-        return $this->unprepared($newQuery);
+        return $this->run($query, $bindings, function (string $query, array $bindings) {
+            $query = $this->bind_params($query, $bindings, true);
+            return $this->db->query($query);
+        });
     }
 
     /**
@@ -261,11 +267,9 @@ class Database implements ConnectionInterface
      */
     public function unprepared($query): bool
     {
-        /**
-         * @see \wpdb::print_error()
-         */
-        $result = $this->db->query($query);
-        return ($result === false || $this->db->last_error);
+        return $this->run($query, [], function (string $query) {
+            return $this->db->query($query);
+        });
     }
 
     /**
@@ -405,6 +409,7 @@ class Database implements ConnectionInterface
 
     /**
      * @return bool
+     * @see \wpdb::print_error()
      */
     protected function lastRequestHasError(): bool
     {
@@ -429,9 +434,18 @@ class Database implements ConnectionInterface
     {
         $start = microtime(true);
         try {
-            $result = $this->runQueryCallback($query, $binding, $callback);
+            $result = $this->runQueryCallback(
+                $query,
+                $binding,
+                $callback
+            );
         } catch (QueryException $exception) {
-            dd($exception);
+            $result = $this->handleQueryException(
+                $exception,
+                $query,
+                $binding,
+                $callback
+            );
         }
 
         $this->logQuery($query, $binding, $this->getElapsedTime($start));
@@ -463,6 +477,36 @@ class Database implements ConnectionInterface
                 $exception
             );
         }
+    }
+
+    /**
+     * Handle a query exception.
+     *
+     * @param QueryException $exception
+     * @param string $query
+     * @param array $bindings
+     * @param \Closure $callback
+     * @return mixed
+     */
+    protected function handleQueryException(
+        QueryException $exception,
+        string $query,
+        array $bindings,
+        \Closure $callback
+    ): mixed {
+        if ($this->transactionCount >= 1) {
+            throw $exception;
+        }
+
+        if ($this->causedByLostConnection($exception->getPrevious())) {
+            if (!$this->db->db_connect()) {
+                throw new LostConnectionException('Lost connection.');
+            }
+
+            return $this->runQueryCallback($query, $bindings, $callback);
+        }
+
+        throw $exception;
     }
 
     /**
