@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Orm;
 
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Builder as EloquentBuilder;
 
 class Builder extends EloquentBuilder
@@ -31,9 +32,9 @@ class Builder extends EloquentBuilder
     }
 
     /**
-     * @return Database|\Illuminate\Database\ConnectionInterface
+     * @inheritDoc
      */
-    public function getConnection()
+    public function getConnection(): ConnectionInterface
     {
         return Database::getInstance();
     }

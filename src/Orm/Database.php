@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Orm;
 
+use Dbout\WpOrm\Exceptions\WpOrmException;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\DetectsLostConnections;
 use Illuminate\Database\LostConnectionException;
@@ -313,7 +314,7 @@ class Database implements ConnectionInterface
      */
     public function beginTransaction(): void
     {
-        $transaction = $this->unprepared("START TRANSACTION;");
+        $transaction = $this->unprepared('START TRANSACTION;');
         if ($transaction) {
             $this->transactionCount++;
         }
@@ -327,7 +328,7 @@ class Database implements ConnectionInterface
         if ($this->transactionCount < 1) {
             return;
         }
-        $transaction = $this->unprepared("COMMIT;");
+        $transaction = $this->unprepared('COMMIT;');
         if ($transaction) {
             $this->transactionCount--;
         }
@@ -341,7 +342,7 @@ class Database implements ConnectionInterface
         if ($this->transactionCount < 1) {
             return;
         }
-        $transaction = $this->unprepared("ROLLBACK;");
+        $transaction = $this->unprepared('ROLLBACK;');
         if ($transaction) {
             $this->transactionCount--;
         }
@@ -357,10 +358,11 @@ class Database implements ConnectionInterface
 
     /**
      * @inheritDoc
+     * @throws WpOrmException
      */
-    public function pretend(\Closure $callback)
+    public function pretend(\Closure $callback): array
     {
-        // TODO: Implement pretend() method.
+        throw new WpOrmException('pretend feature not supported.');
     }
 
     /**
