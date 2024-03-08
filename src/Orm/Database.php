@@ -76,8 +76,7 @@ class Database implements ConnectionInterface
 
         $this->config = [
             'connection_name' => 'wp-eloquent-mysql2',
-            // @phpstan-ignore-next-line
-            'name' => $wpdb->dbname,
+            'name' => defined('DB_NAME') ? DB_NAME : '',
         ];
 
         $this->tablePrefix = $wpdb->prefix;
@@ -530,6 +529,7 @@ class Database implements ConnectionInterface
      * @param array $bindings
      * @param float|null $queryDuration
      * @return void
+     * @see \wpdb::log_query
      */
     public function logQuery(string $query, array $bindings, float $queryDuration = null): void
     {
