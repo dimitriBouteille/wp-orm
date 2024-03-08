@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @coversDefaultClass \Dbout\WpOrm\Orm\Database
  */
+
 class DatabaseTest extends TestCase
 {
     use WpDatabaseInstanceCreator;
