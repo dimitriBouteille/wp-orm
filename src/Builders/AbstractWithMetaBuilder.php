@@ -13,6 +13,7 @@ use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Orm\AbstractModel;
+use Dbout\WpOrm\Orm\Database;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -128,7 +129,7 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
             $join->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->columnKey),
                 '=',
-                "$metaKey"
+                Database::getInstance()->raw(sprintf("'%s'", $metaKey))
             )->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->foreignKey),
                 '=',
