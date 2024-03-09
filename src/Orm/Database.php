@@ -138,7 +138,7 @@ class Database implements ConnectionInterface
     public function selectOne($query, $bindings = [], $useReadPdo = true)
     {
         return $this->run($query, $bindings, function (string $query, array $bindings) {
-            $query = $this->bind_params($query, $bindings);
+            $query = $this->bindParams($query, $bindings);
             return $this->db->get_row($query);
         });
     }
@@ -149,7 +149,7 @@ class Database implements ConnectionInterface
     public function select($query, $bindings = [], $useReadPdo = true): array
     {
         return $this->run($query, $bindings, function (string $query, array $bindings) {
-            $query = $this->bind_params($query, $bindings);
+            $query = $this->bindParams($query, $bindings);
             return $this->db->get_results($query);
         });
     }
@@ -166,18 +166,16 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * A hacky way to emulate bind parameters into SQL query
+     * A hacky way to emulate bind parameters into SQL query.
      *
-     * @param $query
-     * @param $bindings
-     *
-     * @return mixed
+     * @param string|null $query
+     * @param array $bindings
+     * @return string
      */
-    private function bind_params($query, $bindings, $update = false)
+    private function bindParams(?string $query, array $bindings): string
     {
-        $query = \str_replace('"', '`', (string) $query);
+        $query = \str_replace('"', '`', (string)$query);
         $bindings = $this->prepareBindings($bindings);
-
         if ($bindings === []) {
             return $query;
         }
@@ -193,7 +191,6 @@ class Database implements ConnectionInterface
         }, $bindings);
 
         $query = \str_replace(['%', '?'], ['%%', '%s'], $query);
-
         return \vsprintf($query, $bindings);
     }
 
@@ -239,7 +236,7 @@ class Database implements ConnectionInterface
     public function statement($query, $bindings = []): bool
     {
         return $this->run($query, $bindings, function (string $query, array $bindings) {
-            $query = $this->bind_params($query, $bindings, true);
+            $query = $this->bindParams($query, $bindings);
             return $this->db->query($query);
         });
     }
@@ -250,7 +247,7 @@ class Database implements ConnectionInterface
     public function affectingStatement($query, $bindings = []): int
     {
         return $this->run($query, $bindings, function (string $query, array $bindings) {
-            $newQuery = $this->bind_params($query, $bindings, true);
+            $newQuery = $this->bindParams($query, $bindings);
             $result = $this->db->query($newQuery);
             if (!is_numeric($result)) {
                 return $result;
@@ -365,6 +362,8 @@ class Database implements ConnectionInterface
     }
 
     /**
+     * Get the query post processor used by the connection.
+     *
      * @return Processor
      */
     public function getPostProcessor(): Processor
@@ -373,6 +372,8 @@ class Database implements ConnectionInterface
     }
 
     /**
+     * Get the query grammar used by the connection.
+     *
      * @return Grammar
      */
     public function getQueryGrammar(): Grammar
@@ -381,7 +382,7 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Return the last insert id
+     * Return the last insert id.
      *
      * @return int|null
      */
@@ -402,18 +403,22 @@ class Database implements ConnectionInterface
     }
 
     /**
+     * Get the current connection.
+     *
      * @return $this
      */
-    public function getPdo()
+    public function getPdo(): static
     {
         return $this;
     }
 
     /**
+     * Returns true if the last query has error.
+     *
      * @return bool
      * @see \wpdb::print_error()
      */
-    protected function lastRequestHasError(): bool
+    public function lastRequestHasError(): bool
     {
         return $this->db->last_error !== null && $this->db->last_error !== '';
     }
@@ -427,6 +432,8 @@ class Database implements ConnectionInterface
     }
 
     /**
+     * Run a SQL statement and log its execution context.
+     *
      * @param string $query
      * @param array $binding
      * @param \Closure $callback
