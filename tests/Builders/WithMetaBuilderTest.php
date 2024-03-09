@@ -62,21 +62,19 @@ class WithMetaBuilderTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return \Generator
      */
-    public static function providerTestAddMetaToSelect(): array
+    public static function providerTestAddMetaToSelect(): \Generator
     {
-        return [
-            'Without alias' => [
-                'my_meta',
-                null,
-                'select "posts".*, "my_meta"."meta_value" as "my_meta_value" from "posts" inner join "postmeta" as "my_meta" on "my_meta"."meta_key" = "my_meta" and "my_meta"."post_id" = "posts"."ID"',
-            ],
-            'With alias' => [
-                'first_name',
-                'my_custom_alias',
-                'select "posts".*, "first_name"."meta_value" as "my_custom_alias" from "posts" inner join "postmeta" as "first_name" on "first_name"."meta_key" = "first_name" and "first_name"."post_id" = "posts"."ID"',
-            ],
+        yield 'Without alias' => [
+            'my_meta',
+            null,
+            'select "posts".*, "my_meta"."meta_value" as "my_meta_value" from "posts" inner join "postmeta" as "my_meta" on "my_meta"."meta_key" = \'my_meta\' and "my_meta"."post_id" = "posts"."ID"',
+        ];
+        yield 'With alias' => [
+            'first_name',
+            'my_custom_alias',
+            'select "posts".*, "first_name"."meta_value" as "my_custom_alias" from "posts" inner join "postmeta" as "first_name" on "first_name"."meta_key" = \'first_name\' and "first_name"."post_id" = "posts"."ID"',
         ];
     }
 
@@ -96,32 +94,30 @@ class WithMetaBuilderTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return \Generator
      */
-    public static function providerTestAddMetasToSelect(): array
+    public static function providerTestAddMetasToSelect(): \Generator
     {
-        return [
-            'Without alias' => [
-                [
-                    'firstname',
-                    'lastname',
-                ],
-                'select "posts".*, "firstname"."meta_value" as "firstname_value", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = "firstname" and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+        yield 'Without alias' => [
+            [
+                'firstname',
+                'lastname',
             ],
-            'With alias' => [
-                [
-                    'my_meta' => 'firstname',
-                    'second_meta' => 'lastname',
-                ],
-                'select "posts".*, "firstname"."meta_value" as "my_meta", "lastname"."meta_value" as "second_meta" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = "firstname" and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+            'select "posts".*, "firstname"."meta_value" as "firstname_value", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = \'firstname\' and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = \'lastname\' and "lastname"."post_id" = "posts"."ID"',
+        ];
+        yield 'With alias' => [
+            [
+                'my_meta' => 'firstname',
+                'second_meta' => 'lastname',
             ],
-            'On meta with alias on another one without alias' => [
-                [
-                    'my_meta' => 'street_1',
-                    'lastname',
-                ],
-                'select "posts".*, "street_1"."meta_value" as "my_meta", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "street_1" on "street_1"."meta_key" = "street_1" and "street_1"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = "lastname" and "lastname"."post_id" = "posts"."ID"',
+            'select "posts".*, "firstname"."meta_value" as "my_meta", "lastname"."meta_value" as "second_meta" from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = \'firstname\' and "firstname"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = \'lastname\' and "lastname"."post_id" = "posts"."ID"',
+        ];
+        yield 'On meta with alias on another one without alias' => [
+            [
+                'my_meta' => 'street_1',
+                'lastname',
             ],
+            'select "posts".*, "street_1"."meta_value" as "my_meta", "lastname"."meta_value" as "lastname_value" from "posts" inner join "postmeta" as "street_1" on "street_1"."meta_key" = \'street_1\' and "street_1"."post_id" = "posts"."ID" inner join "postmeta" as "lastname" on "lastname"."meta_key" = \'lastname\' and "lastname"."post_id" = "posts"."ID"',
         ];
     }
 
@@ -136,7 +132,7 @@ class WithMetaBuilderTest extends TestCase
         $this->builder->joinToMeta('my_meta');
         $query = $this->builder->toSql();
         $this->assertEquals(
-            'select "posts".* from "posts" inner join "postmeta" as "my_meta" on "my_meta"."meta_key" = "my_meta" and "my_meta"."post_id" = "posts"."ID"',
+            'select "posts".* from "posts" inner join "postmeta" as "my_meta" on "my_meta"."meta_key" = \'my_meta\' and "my_meta"."post_id" = "posts"."ID"',
             $query
         );
     }
@@ -152,7 +148,7 @@ class WithMetaBuilderTest extends TestCase
         $query = $this->builder->toSql();
 
         $this->assertEquals(
-            'select "posts".* from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = "firstname" and "firstname"."post_id" = "posts"."ID" where "firstname"."meta_value" = ?',
+            'select "posts".* from "posts" inner join "postmeta" as "firstname" on "firstname"."meta_key" = \'firstname\' and "firstname"."post_id" = "posts"."ID" where "firstname"."meta_value" = ?',
             $query,
         );
 
