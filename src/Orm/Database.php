@@ -155,17 +155,14 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Run a select statement against the database and returns a generator.
-     * TODO: Implement cursor and all the related sub-methods.
-     *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  bool  $useReadPdo
-     * @return \Generator
+     * @inheritDoc
      */
-    public function cursor($query, $bindings = [], $useReadPdo = true)
+    public function cursor($query, $bindings = [], $useReadPdo = true): \Generator
     {
-
+        $results = $this->select($query, $bindings, $useReadPdo);
+        foreach ($results as $result) {
+            yield $result;
+        }
     }
 
     /**
@@ -327,6 +324,7 @@ class Database implements ConnectionInterface
         if ($this->transactionCount < 1) {
             return;
         }
+
         $transaction = $this->unprepared('COMMIT;');
         if ($transaction) {
             $this->transactionCount--;
@@ -341,6 +339,7 @@ class Database implements ConnectionInterface
         if ($this->transactionCount < 1) {
             return;
         }
+
         $transaction = $this->unprepared('ROLLBACK;');
         if ($transaction) {
             $this->transactionCount--;
@@ -358,6 +357,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      * @throws WpOrmException
+     * @see https://laravel.com/docs/10.x/eloquent#pruning-models
      */
     public function pretend(\Closure $callback): array
     {
@@ -465,7 +465,14 @@ class Database implements ConnectionInterface
     protected function runQueryCallback(string $query, array $bindings, \Closure $callback): mixed
     {
         try {
+            // Disable display WP error and save previous state
+            $suppressionError = $this->db->suppress_errors();
+
             $result = $callback($query, $bindings);
+
+            // Restore the state
+            $this->db->suppress_errors($suppressionError);
+
             if ($result === false || $this->lastRequestHasError()) {
                 throw new \Exception($this->db->last_error);
             }
