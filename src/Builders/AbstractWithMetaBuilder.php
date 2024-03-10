@@ -14,6 +14,7 @@ use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Orm\Database;
+use Dbout\WpOrm\Orm\DatabaseV2;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -129,7 +130,7 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
             $join->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->columnKey),
                 '=',
-                Database::getInstance()->raw(sprintf("'%s'", $metaKey))
+                DatabaseV2::getInstance()->raw(sprintf("'%s'", $metaKey))
             )->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->foreignKey),
                 '=',

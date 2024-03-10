@@ -36,6 +36,6 @@ class Builder extends EloquentBuilder
      */
     public function getConnection(): ConnectionInterface
     {
-        return Database::getInstance();
+        return DatabaseV2::getInstance();
     }
 }
