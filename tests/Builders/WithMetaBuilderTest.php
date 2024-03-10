@@ -11,7 +11,6 @@ namespace Dbout\WpOrm\Tests\Builders;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Models\Post;
-use Dbout\WpOrm\Tests\WpDatabaseInstanceCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -21,8 +20,6 @@ use PHPUnit\Framework\TestCase;
  */
 class WithMetaBuilderTest extends TestCase
 {
-    use WpDatabaseInstanceCreator;
-
     private PostBuilder $builder;
 
     private Post&MockObject $post;
@@ -34,7 +31,7 @@ class WithMetaBuilderTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->initWpDatabaseInstance();
+        $this->initDatabase();
         $queryBuilder = new \Illuminate\Database\Query\Builder(
             $this->createMock(\Illuminate\Database\MySqlConnection::class),
             new \Illuminate\Database\Query\Grammars\Grammar(),
@@ -163,5 +160,24 @@ class WithMetaBuilderTest extends TestCase
             ],
             $this->builder->getBindings(),
         );
+    }
+
+    /**
+     * @return void
+     */
+    protected function initDatabase(): void
+    {
+        $mock = $this->getMockBuilder(\wpdb::class)
+            ->onlyMethods(['db_version'])
+            ->setConstructorArgs([
+                'db_user',
+                'db_password',
+                'test_database',
+                '127.0.0.0',
+            ])
+            ->getMock();
+
+        $mock->method('db_version')->willReturn('8.0.0');
+        $GLOBALS['wpdb'] = $mock;
     }
 }
