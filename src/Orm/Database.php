@@ -86,6 +86,9 @@ class Database implements ConnectionInterface
         $this->config = [
             'connection_name' => 'wp-eloquent-mysql2',
             'name' => defined('DB_NAME') ? DB_NAME : '',
+            'charset' => $wpdb->charset,
+            'collate' => $wpdb->collate,
+            'version' => $wpdb->db_version(),
         ];
 
         $this->tablePrefix = $wpdb->prefix;
