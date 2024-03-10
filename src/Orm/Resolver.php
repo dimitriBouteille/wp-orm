@@ -24,7 +24,7 @@ class Resolver implements ConnectionResolverInterface
      */
     public function connection($name = null): ConnectionInterface
     {
-        return DatabaseV2::getInstance();
+        return Database::getInstance();
     }
 
     /**

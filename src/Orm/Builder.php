@@ -21,7 +21,7 @@ class Builder extends EloquentBuilder
      * @param  bool  $not
      * @return $this
      */
-    public function addWhereExistsQuery(EloquentBuilder $query, $boolean = 'and', $not = false)
+    public function addWhereExistsQuery(EloquentBuilder $query, $boolean = 'and', $not = false): self
     {
         $type = $not ? 'NotExists' : 'Exists';
         $this->wheres[] = ['type' => $type, 'query' => $query, 'boolean' => $boolean];
@@ -36,6 +36,6 @@ class Builder extends EloquentBuilder
      */
     public function getConnection(): ConnectionInterface
     {
-        return DatabaseV2::getInstance();
+        return Database::getInstance();
     }
 }
