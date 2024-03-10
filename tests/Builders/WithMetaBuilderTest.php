@@ -11,6 +11,7 @@ namespace Dbout\WpOrm\Tests\Builders;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Models\Post;
+use Dbout\WpOrm\Tests\WpDatabaseInstanceCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -20,6 +21,8 @@ use PHPUnit\Framework\TestCase;
  */
 class WithMetaBuilderTest extends TestCase
 {
+    use WpDatabaseInstanceCreator;
+
     private PostBuilder $builder;
 
     private Post&MockObject $post;
@@ -31,6 +34,7 @@ class WithMetaBuilderTest extends TestCase
      */
     protected function setUp(): void
     {
+        $this->initWpDatabaseInstance();
         $queryBuilder = new \Illuminate\Database\Query\Builder(
             $this->createMock(\Illuminate\Database\MySqlConnection::class),
             new \Illuminate\Database\Query\Grammars\Grammar(),
@@ -71,6 +75,7 @@ class WithMetaBuilderTest extends TestCase
             null,
             'select "posts".*, "my_meta"."meta_value" as "my_meta_value" from "posts" inner join "postmeta" as "my_meta" on "my_meta"."meta_key" = \'my_meta\' and "my_meta"."post_id" = "posts"."ID"',
         ];
+
         yield 'With alias' => [
             'first_name',
             'my_custom_alias',

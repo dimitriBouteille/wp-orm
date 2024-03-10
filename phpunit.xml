@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit cacheResult="false" stopOnError="true">
+<phpunit cacheResult="false" stopOnError="true" bootstrap="./tests/Bootstrap.php" processIsolation="true">
     <testsuites>
         <testsuite name="Tests">
             <directory>tests/</directory>

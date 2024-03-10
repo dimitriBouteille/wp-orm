@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Orm;
 
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\ConnectionResolverInterface;
 
 class Resolver implements ConnectionResolverInterface
@@ -21,7 +22,7 @@ class Resolver implements ConnectionResolverInterface
     /**
      * @inheritDoc
      */
-    public function connection($name = null)
+    public function connection($name = null): ConnectionInterface
     {
         return Database::getInstance();
     }
