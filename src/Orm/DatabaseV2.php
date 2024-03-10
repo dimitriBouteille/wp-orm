@@ -73,6 +73,8 @@ class DatabaseV2 extends Connection
                 'version' => $wpdb->db_version(),
             ]
         );
+
+        $this->db = $wpdb;
     }
 
     /**
@@ -295,7 +297,7 @@ class DatabaseV2 extends Connection
     /**
      * @inheritDoc
      */
-    public function rollBack(): void
+    public function rollBack($toLevel = null): void
     {
         if ($this->transactionCount < 1) {
             return;
