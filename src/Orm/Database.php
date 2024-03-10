@@ -16,6 +16,8 @@ use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
+use Illuminate\Database\Schema\MySqlBuilder;
 use Illuminate\Support\Arr;
 
 /**
@@ -51,6 +53,13 @@ class Database implements ConnectionInterface
      * @var null|Database
      */
     protected static ?self $instance = null;
+
+    /**
+     * The schema grammar implementation.
+     *
+     * @var \Illuminate\Database\Schema\Grammars\Grammar|null
+     */
+    protected ?\Illuminate\Database\Schema\Grammars\Grammar $schemaGrammar = null;
 
     /**
      * @return Database
@@ -551,5 +560,79 @@ class Database implements ConnectionInterface
          * If you want to log queries, you must enable the constant SAVEQUERIES
          * @see https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/#savequeries
          */
+    }
+
+    /**
+     * Set the schema grammar to the default implementation.
+     *
+     * @return void
+     */
+    public function useDefaultSchemaGrammar(): void
+    {
+        $this->schemaGrammar = $this->getDefaultSchemaGrammar();
+    }
+
+    /**
+     * Get the default schema grammar instance.
+     *
+     * @return \Illuminate\Database\Schema\Grammars\Grammar
+     */
+    protected function getDefaultSchemaGrammar(): \Illuminate\Database\Schema\Grammars\Grammar
+    {
+        // @phpstan-ignore-next-line
+        ($grammar = new SchemaGrammar())->setConnection($this);
+
+        /** @var \Illuminate\Database\Schema\Grammars\Grammar $grammar */
+        $grammar = $this->withTablePrefix($grammar);
+        return $grammar;
+    }
+
+    /**
+     * Get a schema builder instance for the connection.
+     *
+     * @return \Illuminate\Database\Schema\Builder
+     */
+    public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
+    {
+        if (!$this->schemaGrammar instanceof \Illuminate\Database\Schema\Grammars\Grammar) {
+            $this->useDefaultSchemaGrammar();
+        }
+
+        // @phpstan-ignore-next-line
+        return new MySqlBuilder($this);
+    }
+
+    /**
+     * Get the schema grammar used by the connection.
+     *
+     * @return \Illuminate\Database\Schema\Grammars\Grammar
+     */
+    public function getSchemaGrammar(): \Illuminate\Database\Schema\Grammars\Grammar
+    {
+        return $this->schemaGrammar;
+    }
+
+    /**
+     * Set the schema grammar used by the connection.
+     *
+     * @param  \Illuminate\Database\Schema\Grammars\Grammar $grammar
+     * @return $this
+     */
+    public function setSchemaGrammar(\Illuminate\Database\Schema\Grammars\Grammar $grammar): self
+    {
+        $this->schemaGrammar = $grammar;
+        return $this;
+    }
+
+    /**
+     * Set the table prefix and return the grammar.
+     *
+     * @param  \Illuminate\Database\Grammar  $grammar
+     * @return \Illuminate\Database\Grammar
+     */
+    public function withTablePrefix(\Illuminate\Database\Grammar $grammar): \Illuminate\Database\Grammar
+    {
+        $grammar->setTablePrefix($this->tablePrefix);
+        return $grammar;
     }
 }
