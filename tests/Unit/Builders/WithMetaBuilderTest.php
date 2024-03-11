@@ -6,12 +6,12 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Tests\Builders;
+namespace Dbout\WpOrm\Tests\Unit\Builders;
 
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Models\Post;
-use Dbout\WpOrm\Tests\WpDatabaseInstanceCreator;
+use Dbout\WpOrm\Tests\Unit\WpDatabaseInstanceCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
