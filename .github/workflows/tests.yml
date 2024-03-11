@@ -5,8 +5,14 @@ on:
 
 jobs:
   wp-test:
-    name: WordPress tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - php_version: "8.1"
+          - php_version: "8.2"
+
+    name: "WordPress tests ${{ matrix.php_version }}"
 
     services:
       mysql:
@@ -24,7 +30,7 @@ jobs:
       - name: "Install PHP 8.1"
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: ${{ matrix.php_version }}
           tools: composer:v2
 
       - name: "Install composer dependencies"
@@ -32,4 +38,7 @@ jobs:
 
       - name: "Install WP"
         shell: bash
-        run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 6.4
+        run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306
+
+      - name: "Run WordPress tests"
+        run: composer test-wp
