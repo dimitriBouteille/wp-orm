@@ -67,7 +67,8 @@
   "scripts": {
     "rector": "vendor/bin/rector process src --dry-run",
     "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
-    "phpunit": "vendor/bin/phpunit",
+    "test:unit": "vendor/bin/phpunit",
+    "test:wordPress": "vendor/bin/phpunit",
     "csFixer": "vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
     "fix:csFixer": "vendor/bin/php-cs-fixer fix"
   }

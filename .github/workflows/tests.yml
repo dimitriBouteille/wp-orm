@@ -12,7 +12,7 @@ jobs:
           - php_version: "8.1"
           - php_version: "8.2"
 
-    name: "WordPress tests ${{ matrix.php_version }}"
+    name: "WordPress tests with PHP ${{ matrix.php_version }}"
 
     services:
       mysql:
@@ -41,4 +41,4 @@ jobs:
         run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306
 
       - name: "Run WordPress tests"
-        run: composer test-wp
+        run: composer test:wordPress
