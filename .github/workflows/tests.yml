@@ -27,7 +27,7 @@ jobs:
       - name: "Checkout repo"
         uses: actions/checkout@v4
 
-      - name: "Install PHP 8.1"
+      - name: "Install PHP"
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_version }}

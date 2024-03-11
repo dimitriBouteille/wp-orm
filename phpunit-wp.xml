@@ -8,11 +8,11 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          forceCoversAnnotation="true"
-         bootstrap="./tests/Unit/Bootstrap.php"
+         bootstrap="./tests/WordPress/Bootstrap.php"
          processIsolation="true">
     <testsuites>
         <testsuite name="Tests">
-            <directory>tests/Unit/</directory>
+            <directory>tests/WordPress</directory>
         </testsuite>
     </testsuites>
 </phpunit>

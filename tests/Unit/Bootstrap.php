@@ -6,7 +6,7 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Tests;
+namespace Dbout\WpOrm\Tests\Unit;
 
 class Bootstrap
 {
