@@ -30,7 +30,7 @@ class Bootstrap
          * Load PHPUnit Polyfills for the WP testing suite.
          * @see https://github.com/WordPress/wordpress-develop/pull/1563/
          */
-        define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', __DIR__ . '/../../vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php' );
+        define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', __DIR__ . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php');
 
         /**
          * Load the WP testing environment.
