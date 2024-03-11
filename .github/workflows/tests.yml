@@ -18,10 +18,10 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
 
     steps:
-      - name: Checkout repo
+      - name: "Checkout repo"
         uses: actions/checkout@v4
 
-      - name: Install PHP 8.1
+      - name: "Install PHP 8.1"
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.1
@@ -30,6 +30,6 @@ jobs:
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
 
-      - name: Install WP
+      - name: "Install WP"
         shell: bash
         run: config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 6.4
