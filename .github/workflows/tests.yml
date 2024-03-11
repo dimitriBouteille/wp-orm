@@ -4,26 +4,6 @@ on:
   pull_request:
 
 jobs:
-  test:
-    name: Tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Configure PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.1
-          tools: composer:v2
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: Running unit test
-        run: composer phpunit
-
   wp-test:
     name: WordPress tests
     runs-on: ubuntu-latest
@@ -52,4 +32,4 @@ jobs:
 
       - name: Install WP
         shell: bash
-        run: config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306
+        run: config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 6.4
