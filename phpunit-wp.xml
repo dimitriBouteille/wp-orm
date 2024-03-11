@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit cacheResult="false"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         cacheResult="false"
          backupGlobals="false"
-         backupStaticAttributes="false"
          stopOnError="false"
-         convertDeprecationsToExceptions="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         forceCoversAnnotation="true"
-         bootstrap="./tests/WordPress/Bootstrap.php"
-         processIsolation="true">
+         bootstrap="./tests/Unit/Bootstrap.php"
+         processIsolation="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false"
+         requireCoverageMetadata="true">
     <testsuites>
         <testsuite name="Tests">
             <directory>tests/WordPress</directory>
