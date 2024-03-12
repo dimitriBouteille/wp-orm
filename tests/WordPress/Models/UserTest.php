@@ -3,11 +3,12 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Models\User
  */
-class UserTest extends \WP_UnitTestCase
+class UserTest extends TestCase
 {
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
@@ -29,11 +30,21 @@ class UserTest extends \WP_UnitTestCase
      * @return void
      * @covers ::findOneByEmail
      */
-    public function testFindOneByEmail(): void
+    public function testFindOneByEmailWithExistingUser(): void
     {
         $user = User::findOneByEmail(self::USER_EMAIL);
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
+    }
+
+    /**
+     * @return void
+     * @covers ::findOneByEmail
+     */
+    public function testFindOneByEmailWithInvalidUser(): void
+    {
+        $user = User::findOneByEmail('fake-user@wp-orm.fr');
+        $this->assertNull($user);
     }
 }
