@@ -31,20 +31,8 @@ class UserTest extends \WP_UnitTestCase
      */
     public function testFindOneByEmailWithExistingUser(): void
     {
-        global $wpdb;
         $user = User::findOneByEmail(self::USER_EMAIL);
-        $this->returnUserTests($user);
-        var_dump($wpdb->last_query);
-    }
-
-    /**
-     * @return void
-     * @covers ::findOneByEmail
-     */
-    public function testFindOneByEmailWithInvalidUser(): void
-    {
-        $user = User::findOneByEmail('fake-user@wp-orm.fr');
-        $this->assertNull($user);
+        $this->returnUserTests($user, 'user_email', self::USER_EMAIL);
     }
 
     /**
@@ -54,17 +42,30 @@ class UserTest extends \WP_UnitTestCase
     public function testFindOneByLoginWithExistingUser(): void
     {
         $user = User::findOneByLogin(self::USER_LOGIN);
-        $this->returnUserTests($user);
+        $this->returnUserTests($user, 'user_login', self::USER_LOGIN);
     }
 
     /**
      * @param User|null $user
+     * @param string $whereColumn
+     * @param string $whereValue
      * @return void
      */
-    private function returnUserTests(?User $user): void
+    private function returnUserTests(?User $user, string $whereColumn, string $whereValue): void
     {
+        global $wpdb;
+
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
+
+        $this->assertEquals(
+            sprintf(
+                "select `wptests_users`.* from `wptests_users` where `%s` = '%s' limit 1",
+                $whereColumn,
+                $whereValue
+            ),
+            $wpdb->last_query
+        );
     }
 }
