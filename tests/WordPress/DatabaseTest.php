@@ -17,7 +17,7 @@ class DatabaseTest extends \WP_UnitTestCase
     public function test_first()
     {
         global $wpdb;
-        $result = $wpdb->get_results('SELECT * FROM options');
-        $this->assertEmpty($result, 'The result should be empty.');
+        $this->assertEquals($wpdb->db_version(), 5.5);
+        $this->assertEquals($wpdb->prefix, 'test');
     }
 }
