@@ -46,6 +46,26 @@ class UserTest extends \WP_UnitTestCase
     }
 
     /**
+     * @return void
+     * @covers ::comments
+     */
+    public function testComments(): void
+    {
+        $commentIds = [
+            self::factory()->comment->create([
+                'user_id' => self::$testingUserId,
+            ]),
+            self::factory()->comment->create([
+                'user_id' => self::$testingUserId,
+            ])
+        ];
+
+        var_dump($commentIds);
+        $user = User::find(self::$testingUserId);
+        $this->assertCount(2, $user->comments);
+    }
+
+    /**
      * @param User|null $user
      * @param string $whereColumn
      * @param string $whereValue
