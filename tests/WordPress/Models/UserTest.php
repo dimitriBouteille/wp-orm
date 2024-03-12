@@ -27,7 +27,7 @@ class UserTest extends \WP_UnitTestCase
     /**
      * @return void
      */
-    public static function setUpBeforeClass(): void
+    public static function __setUpBeforeClass(): void
     {
         self::$testingUserId = wp_insert_user([
             'user_login' => self::USER_LOGIN,
