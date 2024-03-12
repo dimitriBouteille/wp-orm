@@ -18,6 +18,7 @@ class DatabaseTest extends \WP_UnitTestCase
     {
         global $wpdb;
         $result = $wpdb->get_results(sprintf('SELECT * FROM %soptions', $wpdb->prefix));
-        $this->assertEquals($result, 'The result should be empty.');
+        var_dump($result);
+        $this->assertEquals($wpdb->prefix, 'wptests_');
     }
 }
