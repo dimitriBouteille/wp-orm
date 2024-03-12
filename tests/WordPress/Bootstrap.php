@@ -101,7 +101,7 @@ class Bootstrap
          * @see https://github.com/WordPress/wordpress-develop/pull/1563/
          * @todo Maybe check if composer installed
          */
-        require_once __DIR__ . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
+        //require_once __DIR__ . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
 
         /**
          * We can safely load the bootstrap - already verifies it exists.
