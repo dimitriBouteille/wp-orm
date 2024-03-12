@@ -5,8 +5,8 @@ on:
 
 jobs:
   unit-test:
-    runs-on: ubuntu-latest
     name: "Unit tests"
+    runs-on: ubuntu-latest
 
     steps:
       - name: "Checkout repo"
@@ -22,17 +22,17 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: "Run unit tests"
-        run: test:unit
+        run: composer test:unit
 
   wp-test:
+    name: "WordPress tests with PHP ${{ matrix.php_version }}"
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         include:
           - php_version: "8.1"
           - php_version: "8.2"
-
-    name: "WordPress tests with PHP ${{ matrix.php_version }}"
 
     services:
       mysql:
