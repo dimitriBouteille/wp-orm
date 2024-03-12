@@ -11,14 +11,14 @@ class UserTest extends \WP_UnitTestCase
 {
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
-    private ?int $testingUserId = null;
+    private static ?int $testingUserId = null;
 
     /**
      * @return void
      */
-    public function setUpBeforeClass(): void
+    public static function setUpBeforeClass(): void
     {
-        $this->testingUserId = wp_insert_user([
+        self::$testingUserId = wp_insert_user([
             'user_login' => self::USER_LOGIN,
             'user_pass'  => 'testing',
             'user_email' => self::USER_EMAIL
@@ -33,6 +33,7 @@ class UserTest extends \WP_UnitTestCase
     {
         $user = User::findOneByEmail(self::USER_EMAIL);
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals($this->testingUserId, $user->getId());
+        $this->assertEquals(self::$testingUserId, $user->getId());
+        $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
     }
 }
