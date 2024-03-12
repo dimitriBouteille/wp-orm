@@ -57,13 +57,13 @@ class DatabaseTest extends \WP_UnitTestCase
 
     /**
      * @param string $table
-     * @param string $alias
+     * @param string|null $alias
      * @param string $expectedQuery
      * @return void
      * @covers ::table
      * @dataProvider providerTestTable
      */
-    public function testTable(string $table, string $alias, string $expectedQuery): void
+    public function testTable(string $table, ?string $alias, string $expectedQuery): void
     {
         $builder = $this->database->table($table, $alias);
         $this->assertEquals($expectedQuery, $builder->toSql());
