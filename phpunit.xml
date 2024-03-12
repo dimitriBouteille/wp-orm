@@ -6,7 +6,7 @@
          bootstrap="./tests/Unit/Bootstrap.php"
          processIsolation="true"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
-         cacheDirectory=".phpunit.cache"
+         cacheDirectory="var/cache/phpunit/unit"
          backupStaticProperties="false"
          requireCoverageMetadata="true">
   <testsuites>

@@ -26,11 +26,11 @@ WP_TESTS_DIR=${WP_TESTS_DIR-$TMPDIR/wordpress-tests-lib}
 WP_CORE_DIR=${WP_CORE_DIR-$TMPDIR/wordpress}
 
 download() {
-    if [ `which curl` ]; then
-        curl -s "$1" > "$2";
-    elif [ `which wget` ]; then
-        wget -nv -O "$2" "$1"
-    fi
+	if [ `which curl` ]; then
+		curl -s "$1" > "$2";
+	elif [ `which wget` ]; then
+		wget -nv -O "$2" "$1"
+	fi
 }
 
 if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\-(beta|RC)[0-9]+$ ]]; then

@@ -3,10 +3,10 @@
          cacheResult="false"
          backupGlobals="false"
          stopOnError="false"
-         bootstrap="./tests/Unit/Bootstrap.php"
+         bootstrap="./tests/WordPress/Bootstrap.php"
          processIsolation="true"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
-         cacheDirectory=".phpunit.cache"
+         cacheDirectory="var/cache/phpunit/wordPress"
          backupStaticProperties="false"
          requireCoverageMetadata="true">
     <testsuites>
