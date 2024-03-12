@@ -10,6 +10,10 @@ namespace Dbout\WpOrm\Tests\WordPress;
 
 class DatabaseTest extends \WP_UnitTestCase
 {
+    /**
+     * @return void
+     * @covers \Dbout\WpOrm\Orm\Database::query
+     */
     public function test_first()
     {
         global $wpdb;
