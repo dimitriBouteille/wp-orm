@@ -6,10 +6,20 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Tests\WordPress;
+namespace Dbout\WpOrm\Tests\WordPress\Orm;
+
+use Dbout\WpOrm\Orm\Database;
 
 class DatabaseTest extends \WP_UnitTestCase
 {
+    private Database $database;
+
+    public function set_up(): void
+    {
+        parent::set_up();
+        $this->database = Database::getInstance();
+    }
+
     /**
      * @return void
      * @covers \Dbout\WpOrm\Orm\Database::query
