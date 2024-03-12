@@ -10,25 +10,37 @@ namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Orm\Database;
 
+/**
+ * @coversDefaultClass \Dbout\WpOrm\Orm\Database
+ */
 class DatabaseTest extends \WP_UnitTestCase
 {
     private Database $database;
 
-    public function set_up(): void
+    /**
+     * @return void
+     */
+    public function setUp(): void
     {
-        parent::set_up();
+        parent::setUp();
         $this->database = Database::getInstance();
     }
 
     /**
      * @return void
-     * @covers \Dbout\WpOrm\Orm\Database::query
+     * @covers ::getTablePrefix
      */
-    public function test_first()
+    public function testGetTablePrefix(): void
     {
-        global $wpdb;
-        $result = $wpdb->get_results(sprintf('SELECT * FROM %soptions', $wpdb->prefix));
-        var_dump($result);
-        $this->assertEquals($wpdb->prefix, 'wptests_');
+        $this->assertEquals('wptests_', $this->database->getTablePrefix());
+    }
+
+    /**
+     * @return void
+     * @covers ::getDatabaseName
+     */
+    public function testGetDatabaseName(): void
+    {
+        $this->assertEquals('wptests_', $this->database->getDatabaseName());
     }
 }
