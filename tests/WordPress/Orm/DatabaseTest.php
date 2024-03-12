@@ -38,9 +38,52 @@ class DatabaseTest extends \WP_UnitTestCase
     /**
      * @return void
      * @covers ::getDatabaseName
+     * @covers ::getConfig
      */
     public function testGetDatabaseName(): void
     {
-        $this->assertEquals('wptests_', $this->database->getDatabaseName());
+        $this->assertEquals('wordpress_test', $this->database->getDatabaseName());
+    }
+
+    /**
+     * @return void
+     * @covers ::getName
+     * @covers ::getConfig
+     */
+    public function testGetName(): void
+    {
+        $this->assertEquals('wp-eloquent-mysql2', $this->database->getName());
+    }
+
+    /**
+     * @param string $table
+     * @param string $alias
+     * @param string $expectedQuery
+     * @return void
+     * @covers ::table
+     * @dataProvider providerTestTable
+     */
+    public function testTable(string $table, string $alias, string $expectedQuery): void
+    {
+        $builder = $this->database->table($table, $alias);
+        $this->assertEquals($expectedQuery, $builder->toSql());
+    }
+
+    /**
+     * @return \Generator
+     */
+    protected function providerTestTable(): \Generator
+    {
+        yield 'Without alias' => [
+            'options',
+            null,
+            'select * from "wptests_options"',
+        ];
+
+        yield 'With alias' => [
+            'options',
+            'opts',
+            'select * from "wptests_options" as "opts"',
+        ];
     }
 }
