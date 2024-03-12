@@ -10,9 +10,10 @@ namespace Dbout\WpOrm\Tests\WordPress;
 
 class DatabaseTest extends \WP_UnitTestCase
 {
-    public function set_up()
+    public function test_first()
     {
         global $wpdb;
-        var_dump($wpdb);
+        $result = $wpdb->get_results('SELECT * FROM options');
+        $this->assertEmpty($result, 'The result should be empty.');
     }
 }
