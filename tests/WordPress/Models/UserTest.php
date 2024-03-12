@@ -3,12 +3,11 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Models\User
  */
-class UserTest extends TestCase
+class UserTest extends \WP_UnitTestCase
 {
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
@@ -32,10 +31,10 @@ class UserTest extends TestCase
      */
     public function testFindOneByEmailWithExistingUser(): void
     {
+        global $wpdb;
         $user = User::findOneByEmail(self::USER_EMAIL);
-        $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals(self::$testingUserId, $user->getId());
-        $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
+        $this->returnUserTests($user);
+        var_dump($wpdb->last_query);
     }
 
     /**
@@ -46,5 +45,26 @@ class UserTest extends TestCase
     {
         $user = User::findOneByEmail('fake-user@wp-orm.fr');
         $this->assertNull($user);
+    }
+
+    /**
+     * @return void
+     * @covers ::findOneByLogin
+     */
+    public function testFindOneByLoginWithExistingUser(): void
+    {
+        $user = User::findOneByLogin(self::USER_LOGIN);
+        $this->returnUserTests($user);
+    }
+
+    /**
+     * @param User|null $user
+     * @return void
+     */
+    private function returnUserTests(?User $user): void
+    {
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals(self::$testingUserId, $user->getId());
+        $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
     }
 }
