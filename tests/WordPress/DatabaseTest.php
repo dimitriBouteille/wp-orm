@@ -17,7 +17,7 @@ class DatabaseTest extends \WP_UnitTestCase
     public function test_first()
     {
         global $wpdb;
-        $this->assertEquals($wpdb->db_version(), 5.5);
         $this->assertEquals($wpdb->prefix, 'test');
+        $this->assertEquals($wpdb->db_version(), '8.0.36');
     }
 }
