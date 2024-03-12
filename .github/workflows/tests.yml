@@ -4,6 +4,26 @@ on:
   pull_request:
 
 jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    name: "Unit tests"
+
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v4
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          tools: composer:v2
+
+      - name: "Install composer dependencies"
+        run: composer install --prefer-dist --no-progress
+
+      - name: "Run unit tests"
+        run: test:unit
+
   wp-test:
     runs-on: ubuntu-latest
     strategy:
