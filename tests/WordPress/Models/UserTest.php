@@ -32,7 +32,7 @@ class UserTest extends \WP_UnitTestCase
     public function testFindOneByEmailWithExistingUser(): void
     {
         $user = User::findOneByEmail(self::USER_EMAIL);
-        $this->returnUserTests($user, 'user_email', self::USER_EMAIL);
+        $this->checkFindOneResult($user, 'user_email', self::USER_EMAIL);
     }
 
     /**
@@ -42,7 +42,7 @@ class UserTest extends \WP_UnitTestCase
     public function testFindOneByLoginWithExistingUser(): void
     {
         $user = User::findOneByLogin(self::USER_LOGIN);
-        $this->returnUserTests($user, 'user_login', self::USER_LOGIN);
+        $this->checkFindOneResult($user, 'user_login', self::USER_LOGIN);
     }
 
     /**
@@ -51,13 +51,14 @@ class UserTest extends \WP_UnitTestCase
      * @param string $whereValue
      * @return void
      */
-    private function returnUserTests(?User $user, string $whereColumn, string $whereValue): void
+    private function checkFindOneResult(?User $user, string $whereColumn, string $whereValue): void
     {
         global $wpdb;
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
+        $this->assertEquals(self::USER_EMAIL, $user->getUserEmail());
 
         $this->assertEquals(
             sprintf(
