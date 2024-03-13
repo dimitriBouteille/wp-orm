@@ -81,9 +81,7 @@ class UserTest extends \WP_UnitTestCase
         ]);
 
         $values = $this->getTestingUser()?->comments;
-        $ids = $values->pluck('id');
-
-        var_dump($values);
+        $ids = $values->pluck('comment_ID');
 
         $this->assertCount(2, $values->toArray());
         $this->assertEqualsCanonicalizing($selfComments, $ids->toArray());
