@@ -15,7 +15,7 @@ trait WithHasManyRelation
     /**
      * @param Collection|null $resultCollection
      * @param string $relationProperty
-     * @param array $expectedIds
+     * @param callable $expectedIdsCallback
      * @return void
      */
     protected function checkHasManyRelationResult(
@@ -27,6 +27,8 @@ trait WithHasManyRelation
         $ids = $resultCollection->pluck($relationProperty);
 
         $expectedIds = $expectedIdsCallback();
+
+        var_dump($expectedIds);
 
         $this->assertCount(count($expectedIds), $values->toArray());
         $this->assertEqualsCanonicalizing($expectedIds, $ids->toArray());
