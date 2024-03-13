@@ -25,7 +25,7 @@ jobs:
         run: composer test:unit
 
   wp-test:
-    name: "WordPress tests with WordPress ${{ matrix.wp_version }}"
+    name: "WordPress tests with WP ${{ matrix.wp_version }}"
     runs-on: ubuntu-latest
 
     strategy:
