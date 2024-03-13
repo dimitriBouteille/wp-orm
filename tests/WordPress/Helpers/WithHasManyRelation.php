@@ -26,6 +26,7 @@ trait WithHasManyRelation
         $ids = $resultCollection->pluck($relationProperty);
         $expectedIds = $expectedIdsCallback();
 
+        var_dump($expectedIds, $ids->toArray());
         $this->assertCount(count($expectedIds), $resultCollection->toArray());
         $this->assertEqualsCanonicalizing($expectedIds, $ids->toArray());
     }
