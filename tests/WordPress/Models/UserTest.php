@@ -86,7 +86,7 @@ class UserTest extends \WP_UnitTestCase
         $comments = $this->getTestingUser()?->comments;
 
         $this->assertCount(2, $comments);
-        $this->assertEqualsCanonicalizing($selfComments, Arr::pluck($comments, 'id'));
+        $this->assertEqualsCanonicalizing($selfComments, Arr::pluck($comments, 'getId'));
     }
 
     /**
