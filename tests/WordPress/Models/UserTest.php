@@ -80,9 +80,10 @@ class UserTest extends \WP_UnitTestCase
             'user_id' => 15050,
         ]);
 
-        /** @var Collection $values */
         $values = $this->getTestingUser()?->comments;
         $ids = $values->pluck('id');
+
+        var_dump($ids);
 
         $this->assertCount(2, $values->toArray());
         $this->assertEqualsCanonicalizing($selfComments, $ids->toArray());
