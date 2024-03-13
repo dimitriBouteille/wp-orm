@@ -23,14 +23,10 @@ trait WithHasManyRelation
         string $relationProperty,
         callable $expectedIdsCallback
     ): void {
-        $values = $this->getTestingUser()?->posts;
         $ids = $resultCollection->pluck($relationProperty);
-
         $expectedIds = $expectedIdsCallback();
 
-        var_dump($expectedIds);
-
-        $this->assertCount(count($expectedIds), $values->toArray());
+        $this->assertCount(count($expectedIds), $resultCollection->toArray());
         $this->assertEqualsCanonicalizing($expectedIds, $ids->toArray());
     }
 }
