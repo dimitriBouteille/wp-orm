@@ -22,7 +22,6 @@ class DatabaseTest extends \WP_UnitTestCase
      */
     public function setUp(): void
     {
-        parent::setUp();
         $this->database = Database::getInstance();
     }
 
@@ -32,7 +31,8 @@ class DatabaseTest extends \WP_UnitTestCase
      */
     public function testGetTablePrefix(): void
     {
-        $this->assertEquals('wptests_', $this->database->getTablePrefix());
+        global $wpdb;
+        $this->assertEquals($wpdb->prefix, $this->database->getTablePrefix());
     }
 
     /**
@@ -74,16 +74,18 @@ class DatabaseTest extends \WP_UnitTestCase
      */
     protected function providerTestTable(): \Generator
     {
+        global $wpdb;
+        $table = sprintf('%soptions', $wpdb->prefix);
         yield 'Without alias' => [
             'options',
             null,
-            'select * from "wptests_options"',
+            sprintf('select * from "%s"', $table),
         ];
 
         yield 'With alias' => [
             'options',
             'opts',
-            'select * from "wptests_options" as "opts"',
+            sprintf('select * from "%s" as "opts"', $table),
         ];
     }
 }
