@@ -25,14 +25,15 @@ jobs:
         run: composer test:unit
 
   wp-test:
-    name: "WordPress tests with PHP ${{ matrix.php_version }}"
+    name: "WordPress tests with WordPress ${{ matrix.wp_version }}"
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         include:
-          - php_version: "8.1"
-          - php_version: "8.2"
+          - wp_version: "6.3"
+          - wp_version: "6.4"
+          - wp_version: "latest"
 
     services:
       mysql:
@@ -50,7 +51,7 @@ jobs:
       - name: "Install PHP"
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php_version }}
+          php-version: 8.1
           tools: composer:v2
 
       - name: "Install composer dependencies"
@@ -58,7 +59,7 @@ jobs:
 
       - name: "Install WP"
         shell: bash
-        run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306
+        run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 ${{ matrix.wp_version }}
 
       - name: "Run WordPress tests"
         run: composer test:wordPress

@@ -9,7 +9,6 @@
 namespace Dbout\WpOrm\Tests\Unit\Orm;
 
 use Dbout\WpOrm\Orm\Database;
-use Dbout\WpOrm\Tests\Unit\WpDatabaseInstanceCreator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,8 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    use WpDatabaseInstanceCreator;
-
     /**
      * @return void
      * @covers ::getInstance
