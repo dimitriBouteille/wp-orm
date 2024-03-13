@@ -11,11 +11,12 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 use Dbout\WpOrm\Models\User;
 use Dbout\WpOrm\Tests\WordPress\Helpers\WithFindOneBy;
 use Dbout\WpOrm\Tests\WordPress\Helpers\WithHasManyRelation;
+use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Models\User
  */
-class UserTest extends \WP_UnitTestCase
+class UserTest extends TestCase
 {
     use WithFindOneBy;
     use WithHasManyRelation;

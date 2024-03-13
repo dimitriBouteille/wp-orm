@@ -18,18 +18,15 @@ trait WithFindOneBy
      */
     protected function checkFindOneByQuery(string $table, string $whereColumn, string $whereValue): void
     {
-        global $wpdb;
-        $table = $wpdb->prefix . $table;
-
-        $this->assertEquals(
+        $table = $this->getTable($table);
+        $this->assertLastQueryEqual(
             sprintf(
                 "select `%s`.* from `%s` where `%s` = '%s' limit 1",
                 $table,
                 $table,
                 $whereColumn,
                 $whereValue
-            ),
-            $wpdb->last_query
+            )
         );
     }
 }

@@ -9,11 +9,12 @@
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Orm\Database;
+use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Orm\Database
  */
-class DatabaseTest extends \WP_UnitTestCase
+class DatabaseTest extends TestCase
 {
     private Database $database;
 
@@ -74,18 +75,16 @@ class DatabaseTest extends \WP_UnitTestCase
      */
     protected function providerTestTable(): \Generator
     {
-        global $wpdb;
-        $table = sprintf('%soptions', $wpdb->prefix);
         yield 'Without alias' => [
             'options',
             null,
-            sprintf('select * from "%s"', $table),
+            sprintf('select * from "%s"', $this->getTable('options')),
         ];
 
         yield 'With alias' => [
             'options',
             'opts',
-            sprintf('select * from "%s" as "opts"', $table),
+            sprintf('select * from "%s" as "opts"', $this->getTable('options')),
         ];
     }
 }
