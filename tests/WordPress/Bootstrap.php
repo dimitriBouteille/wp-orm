@@ -20,7 +20,17 @@ class Bootstrap
     public function __construct()
     {
         $this->wpTestsDir = $this->getPathToWpTestDir();
+
+        /**
+         * Load WordPress
+         */
         $this->initBoostrap();
+
+        /**
+         * This function has to be called _last_, after the WP test bootstrap to make sure it registers
+         * itself in FRONT of the Composer autoload (which also prepends itself to the autoload queue).
+         */
+        $this->loadComposerAutoloader();
     }
 
     /**
@@ -87,6 +97,25 @@ class Bootstrap
     }
 
     /**
+     * Load the Composer autoload file.
+     *
+     * @return void
+     */
+    protected function loadComposerAutoloader(): void
+    {
+        $path = __DIR__ . '/../../vendor/autoload.php';
+        if (!@file_exists($path)) {
+            echo \PHP_EOL, 'ERROR: Run `composer install` or `composer update -W` to install the dependencies',
+            ' and generate the autoload files before running the unit tests.', \PHP_EOL;
+            exit(1);
+        }
+
+        require_once $path;
+    }
+
+    /**
+     * Loads the WordPress native test bootstrap file to set up the environment.
+     *
      * @return void
      */
     protected function initBoostrap(): void
@@ -111,6 +140,8 @@ class Bootstrap
     }
 
     /**
+     * Loads the WP native integration test bootstrap and register a custom autoloader.
+     *
      * @return self
      */
     public static function run(): self

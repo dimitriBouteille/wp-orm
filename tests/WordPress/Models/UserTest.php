@@ -95,10 +95,10 @@ class UserTest extends \WP_UnitTestCase
     {
         $selfPosts = [
             self::factory()->post->create([
-                'user_id' => self::$testingUserId,
+                'post_author' => self::$testingUserId,
             ]),
             self::factory()->post->create([
-                'user_id' => self::$testingUserId,
+                'post_author' => self::$testingUserId,
             ]),
         ];
 
