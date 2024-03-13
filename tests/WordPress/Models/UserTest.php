@@ -1,14 +1,24 @@
 <?php
+/**
+ * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * See LICENSE.txt for license details.
+ *
+ * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
+ */
 
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
+use Dbout\WpOrm\Tests\WordPress\Helpers\WithFindOneBy;
+use Illuminate\Support\Arr;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Models\User
  */
 class UserTest extends \WP_UnitTestCase
 {
+    use WithFindOneBy;
+
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
     private static ?int $testingUserId = null;
@@ -21,7 +31,7 @@ class UserTest extends \WP_UnitTestCase
         self::$testingUserId = self::factory()->user->create([
             'user_login' => self::USER_LOGIN,
             'user_pass'  => 'testing',
-            'user_email' => self::USER_EMAIL
+            'user_email' => self::USER_EMAIL,
         ]);
     }
 
@@ -31,8 +41,11 @@ class UserTest extends \WP_UnitTestCase
      */
     public function testFindOneByEmailWithExistingUser(): void
     {
-        $user = User::findOneByEmail(self::USER_EMAIL);
-        $this->checkFindOneResult($user, 'user_email', self::USER_EMAIL);
+        $this->checkFindOneResult(
+            User::findOneByEmail(self::USER_EMAIL),
+            'user_email',
+            self::USER_EMAIL
+        );
     }
 
     /**
@@ -41,8 +54,11 @@ class UserTest extends \WP_UnitTestCase
      */
     public function testFindOneByLoginWithExistingUser(): void
     {
-        $user = User::findOneByLogin(self::USER_LOGIN);
-        $this->checkFindOneResult($user, 'user_login', self::USER_LOGIN);
+        $this->checkFindOneResult(
+            User::findOneByLogin(self::USER_LOGIN),
+            'user_login',
+            self::USER_LOGIN
+        );
     }
 
     /**
@@ -51,18 +67,51 @@ class UserTest extends \WP_UnitTestCase
      */
     public function testComments(): void
     {
-        $commentIds = [
+        $selfComments = [
             self::factory()->comment->create([
                 'user_id' => self::$testingUserId,
             ]),
             self::factory()->comment->create([
                 'user_id' => self::$testingUserId,
-            ])
+            ]),
         ];
 
-        var_dump($commentIds);
-        $user = User::find(self::$testingUserId);
-        $this->assertCount(2, $user->comments);
+        /**
+         * Created a comment that is not associated with this user
+         */
+        self::factory()->comment->create([
+            'user_id' => 15050,
+        ]);
+
+        $comments = $this->getTestingUser()?->comments;
+
+        $this->assertCount(2, $comments);
+        $this->assertEqualsCanonicalizing($selfComments, Arr::pluck($comments, 'id'));
+    }
+
+    /**
+     * @return void
+     * @covers ::posts
+     */
+    public function testPosts(): void
+    {
+        $selfPosts = [
+            self::factory()->post->create([
+                'user_id' => self::$testingUserId,
+            ]),
+            self::factory()->post->create([
+                'user_id' => self::$testingUserId,
+            ]),
+        ];
+
+        self::factory()->post->create([
+            'user_id' => 15050,
+        ]);
+
+        $posts = $this->getTestingUser()?->posts;
+
+        $this->assertCount(2, $posts);
+        $this->assertEqualsCanonicalizing($selfPosts, Arr::pluck($posts, 'id'));
     }
 
     /**
@@ -73,20 +122,19 @@ class UserTest extends \WP_UnitTestCase
      */
     private function checkFindOneResult(?User $user, string $whereColumn, string $whereValue): void
     {
-        global $wpdb;
+        $this->checkFindOneByModel($user, User::class);
+        $this->checkFindOnyByQuery('users', $whereColumn, $whereValue);
 
-        $this->assertInstanceOf(User::class, $user);
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
         $this->assertEquals(self::USER_EMAIL, $user->getUserEmail());
+    }
 
-        $this->assertEquals(
-            sprintf(
-                "select `wptests_users`.* from `wptests_users` where `%s` = '%s' limit 1",
-                $whereColumn,
-                $whereValue
-            ),
-            $wpdb->last_query
-        );
+    /**
+     * @return User|null
+     */
+    private function getTestingUser(): ?User
+    {
+        return User::find(self::$testingUserId);
     }
 }
