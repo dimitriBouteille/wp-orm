@@ -108,7 +108,7 @@ class UserTest extends \WP_UnitTestCase
 
         /** @var Collection $values */
         $values = $this->getTestingUser()?->posts;
-        $ids = $values->pluck('id');
+        $ids = $values->pluck('ID');
 
         $this->assertCount(2, $values->toArray());
         $this->assertEqualsCanonicalizing($selfPosts, $ids->toArray());
