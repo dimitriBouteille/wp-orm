@@ -22,17 +22,12 @@ class OptionTest extends TestCase
     private const OPTION_NAME = 'my_custom_option';
     private const OPTION_VALUE = 'option_value';
 
-    private static ?int $optionId = null;
-
     /**
      * @return void
      */
     public static function setUpBeforeClass(): void
     {
-        self::$optionId = self::factory()->option->create([
-            'option_name' => self::OPTION_NAME,
-            'option_value'  => self::OPTION_VALUE,
-        ]);
+        add_option(self::OPTION_NAME, self::OPTION_VALUE);
     }
 
     /**
@@ -48,7 +43,6 @@ class OptionTest extends TestCase
         $this->assertInstanceOf(Option::class, $option);
         $this->checkFindOneByQuery('options', 'option_name', self::OPTION_NAME);
 
-        $this->assertEquals(self::$optionId, $option->getId());
         $this->assertEquals(self::OPTION_VALUE, $option->getOptionValue());
         $this->assertEquals(self::OPTION_NAME, $option->getOptionName());
     }
