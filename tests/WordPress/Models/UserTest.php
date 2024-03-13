@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
+use Dbout\WpOrm\Tests\WordPress\Helpers\WithFindOneBy;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class UserTest extends \WP_UnitTestCase
 {
+    use WithFindOneBy;
+
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
     private static ?int $testingUserId = null;
@@ -122,8 +125,8 @@ class UserTest extends \WP_UnitTestCase
      */
     private function checkFindOneResult(?User $user, string $whereColumn, string $whereValue): void
     {
-        //$this->checkFindOneByModel($user, User::class);
-        //$this->checkFindOnyByQuery('users', $whereColumn, $whereValue);
+        $this->checkFindOneByModel($user, User::class);
+        $this->checkFindOnyByQuery('users', $whereColumn, $whereValue);
 
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
