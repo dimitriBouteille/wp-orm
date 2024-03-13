@@ -8,25 +8,23 @@
 
 namespace Dbout\WpOrm\Tests\WordPress\Helpers;
 
-use Illuminate\Support\Collection;
-
 trait WithHasManyRelation
 {
     /**
-     * @param Collection|null $resultCollection
+     * @param callable $resultCollectionCallback
      * @param string $relationProperty
      * @param callable $expectedIdsCallback
      * @return void
      */
     protected function checkHasManyRelationResult(
-        ?Collection $resultCollection,
+        callable $resultCollectionCallback,
         string $relationProperty,
         callable $expectedIdsCallback
     ): void {
-        $ids = $resultCollection->pluck($relationProperty);
         $expectedIds = $expectedIdsCallback();
+        $resultCollection = $resultCollectionCallback();
+        $ids = $resultCollection->pluck($relationProperty);
 
-        var_dump($expectedIds, $ids->toArray());
         $this->assertCount(count($expectedIds), $resultCollection->toArray());
         $this->assertEqualsCanonicalizing($expectedIds, $ids->toArray());
     }

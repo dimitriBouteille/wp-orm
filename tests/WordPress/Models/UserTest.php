@@ -85,7 +85,7 @@ class UserTest extends \WP_UnitTestCase
         ]);
 
         $this->checkHasManyRelationResult(
-            resultCollection: $this->getTestingUser()?->comments,
+            resultCollectionCallback: fn () => $this->getTestingUser()?->comments,
             relationProperty:  'comment_ID',
             expectedIdsCallback: function () {
                 return [
@@ -114,7 +114,7 @@ class UserTest extends \WP_UnitTestCase
         ]);
 
         $this->checkHasManyRelationResult(
-            resultCollection: $this->getTestingUser()?->posts,
+            resultCollectionCallback: fn () => $this->getTestingUser()?->posts,
             relationProperty: 'ID',
             expectedIdsCallback: function () {
                 return [
