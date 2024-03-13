@@ -17,6 +17,7 @@ use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 /**
  * @method Post setPostDate($date)
@@ -61,9 +62,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static PostBuilder query()
  *
  * @property-read User|null $author
- * @property-read PostMeta[] $metas
+ * @property-read Collection<PostMeta> $metas
  * @property-read static|null $parent
- * @property-read Comment[] $comments
+ * @property-read Collection<Comment> $comments
  */
 class Post extends AbstractModel implements WithMetaModelInterface
 {
