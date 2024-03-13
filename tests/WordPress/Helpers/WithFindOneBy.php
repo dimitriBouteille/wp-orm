@@ -8,8 +8,6 @@
 
 namespace Dbout\WpOrm\Tests\WordPress\Helpers;
 
-use Dbout\WpOrm\Orm\AbstractModel;
-
 trait WithFindOneBy
 {
     /**
@@ -33,15 +31,5 @@ trait WithFindOneBy
             ),
             $wpdb->last_query
         );
-    }
-
-    /**
-     * @param AbstractModel|null $model
-     * @param string $expectedClass
-     * @return void
-     */
-    protected function checkFindOneByModel(?AbstractModel $model, string $expectedClass): void
-    {
-        $this->assertInstanceOf($expectedClass, $model);
     }
 }

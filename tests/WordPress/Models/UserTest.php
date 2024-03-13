@@ -10,7 +10,7 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
 use Dbout\WpOrm\Tests\WordPress\Helpers\WithFindOneBy;
-use Illuminate\Database\Eloquent\Collection;
+use Dbout\WpOrm\Tests\WordPress\Helpers\WithHasManyRelation;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Models\User
@@ -18,10 +18,18 @@ use Illuminate\Database\Eloquent\Collection;
 class UserTest extends \WP_UnitTestCase
 {
     use WithFindOneBy;
+    use WithHasManyRelation;
 
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
     private static ?int $testingUserId = null;
+
+    /**
+     * User created just to simulate a database with multiple users.
+     *
+     * @var int|null
+     */
+    private static ?int $fakeUserId = null;
 
     /**
      * @return void
@@ -33,6 +41,8 @@ class UserTest extends \WP_UnitTestCase
             'user_pass'  => 'testing',
             'user_email' => self::USER_EMAIL,
         ]);
+
+        self::$fakeUserId = self::factory()->user->create();
     }
 
     /**
@@ -67,27 +77,27 @@ class UserTest extends \WP_UnitTestCase
      */
     public function testComments(): void
     {
-        $selfComments = [
-            self::factory()->comment->create([
-                'user_id' => self::$testingUserId,
-            ]),
-            self::factory()->comment->create([
-                'user_id' => self::$testingUserId,
-            ]),
-        ];
-
         /**
-         * Created a comment that is not associated with this user
+         * Create fake comment with any relation with user
          */
         self::factory()->comment->create([
-            'user_id' => 15050,
+            'user_id' => self::$fakeUserId,
         ]);
 
-        $values = $this->getTestingUser()?->comments;
-        $ids = $values->pluck('comment_ID');
-
-        $this->assertCount(2, $values->toArray());
-        $this->assertEqualsCanonicalizing($selfComments, $ids->toArray());
+        $this->checkHasManyRelationResult(
+            resultCollection: $this->getTestingUser()?->comments,
+            relationProperty:  'comment_ID',
+            expectedIdsCallback: function () {
+                return [
+                    self::factory()->comment->create([
+                        'user_id' => self::$testingUserId,
+                    ]),
+                    self::factory()->comment->create([
+                        'user_id' => self::$testingUserId,
+                    ]),
+                ];
+            }
+        );
     }
 
     /**
@@ -96,25 +106,27 @@ class UserTest extends \WP_UnitTestCase
      */
     public function testPosts(): void
     {
-        $selfPosts = [
-            self::factory()->post->create([
-                'post_author' => self::$testingUserId,
-            ]),
-            self::factory()->post->create([
-                'post_author' => self::$testingUserId,
-            ]),
-        ];
-
+        /**
+         * Create fake post with any relation with user
+         */
         self::factory()->post->create([
-            'user_id' => 15050,
+            'user_id' => self::$fakeUserId,
         ]);
 
-        /** @var Collection $values */
-        $values = $this->getTestingUser()?->posts;
-        $ids = $values->pluck('ID');
-
-        $this->assertCount(2, $values->toArray());
-        $this->assertEqualsCanonicalizing($selfPosts, $ids->toArray());
+        $this->checkHasManyRelationResult(
+            resultCollection: $this->getTestingUser()?->posts,
+            relationProperty: 'ID',
+            expectedIdsCallback: function () {
+                return [
+                    self::factory()->post->create([
+                        'post_author' => self::$testingUserId,
+                    ]),
+                    self::factory()->post->create([
+                        'post_author' => self::$testingUserId,
+                    ]),
+                ];
+            }
+        );
     }
 
     /**
@@ -125,7 +137,7 @@ class UserTest extends \WP_UnitTestCase
      */
     private function checkFindOneResult(?User $user, string $whereColumn, string $whereValue): void
     {
-        $this->checkFindOneByModel($user, User::class);
+        $this->assertInstanceOf(User::class, $user);
         $this->checkFindOneByQuery('users', $whereColumn, $whereValue);
 
         $this->assertEquals(self::$testingUserId, $user->getId());
