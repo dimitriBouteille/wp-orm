@@ -9,8 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
-use Dbout\WpOrm\Orm\AbstractModel;
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Models\User
@@ -81,10 +80,11 @@ class UserTest extends \WP_UnitTestCase
             'user_id' => 15050,
         ]);
 
-        $comments = $this->getTestingUser()?->comments;
-        $ids = array_map(fn (AbstractModel $comment) => $comment->getId(), $comments);
+        /** @var Collection $values */
+        $values = $this->getTestingUser()?->comments;
+        $ids = $values->pluck('id');
 
-        $this->assertCount(2, $comments);
+        $this->assertCount(2, $values);
         $this->assertEqualsCanonicalizing($selfComments, $ids);
     }
 
@@ -107,10 +107,12 @@ class UserTest extends \WP_UnitTestCase
             'user_id' => 15050,
         ]);
 
-        $posts = $this->getTestingUser()?->posts;
+        /** @var Collection $values */
+        $values = $this->getTestingUser()?->posts;
+        $ids = $values->pluck('id');
 
-        $this->assertCount(2, $posts);
-        $this->assertEqualsCanonicalizing($selfPosts, Arr::pluck($posts, 'id'));
+        $this->assertCount(2, $values);
+        $this->assertEqualsCanonicalizing($selfPosts, $ids);
     }
 
     /**
