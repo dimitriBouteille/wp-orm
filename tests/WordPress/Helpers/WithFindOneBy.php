@@ -25,7 +25,9 @@ trait WithFindOneBy
 
         $this->assertEquals(
             sprintf(
-                "select `${$table}`.* from `${$table}` where `%s` = '%s' limit 1",
+                "select `%s`.* from `%s` where `%s` = '%s' limit 1",
+                $table,
+                $table,
                 $whereColumn,
                 $whereValue
             ),

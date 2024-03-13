@@ -10,12 +10,14 @@ namespace Dbout\WpOrm\Tests\WordPress;
 
 class Bootstrap
 {
+    private const VENDOR_DIR = __DIR__ . '/../../vendor';
     private static ?self $instance = null;
 
     /**
      * @var string|null
      */
     protected ?string $wpTestsDir = null;
+
 
     public function __construct()
     {
@@ -97,20 +99,31 @@ class Bootstrap
     }
 
     /**
+     * Verifies whether the Composer autoload file exists.
+     *
+     * @return void
+     */
+    protected function checkComposerInstalled(): void
+    {
+        $path = sprintf('%s/autoload.php', self::VENDOR_DIR);
+        if (!@file_exists($path)) {
+            echo \PHP_EOL, 'ERROR: Run `composer install` or `composer update -W` to install the dependencies',
+            ' and generate the autoload files before running the unit tests.', \PHP_EOL;
+            exit(1);
+        }
+    }
+
+    /**
      * Load the Composer autoload file.
      *
      * @return void
      */
     protected function loadComposerAutoloader(): void
     {
+        $this->checkComposerInstalled();
         $path = __DIR__ . '/../../vendor/autoload.php';
-        if (!@file_exists($path)) {
-            echo \PHP_EOL, 'ERROR: Run `composer install` or `composer update -W` to install the dependencies',
-            ' and generate the autoload files before running the unit tests.', \PHP_EOL;
-            exit(1);
-        }
 
-        require_once $path;
+        require_once sprintf('%s/autoload.php', self::VENDOR_DIR);
     }
 
     /**
@@ -125,12 +138,13 @@ class Bootstrap
             exit(1);
         }
 
+        $this->checkComposerInstalled();
+
         /**
          * Load PHPUnit Polyfills for the WP testing suite.
          * @see https://github.com/WordPress/wordpress-develop/pull/1563/
-         * @todo Maybe check if composer installed
          */
-        //require_once __DIR__ . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
+        require_once sprintf('%s/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php', self::VENDOR_DIR);
 
         /**
          * We can safely load the bootstrap - already verifies it exists.
