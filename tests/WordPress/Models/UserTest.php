@@ -126,7 +126,7 @@ class UserTest extends \WP_UnitTestCase
     private function checkFindOneResult(?User $user, string $whereColumn, string $whereValue): void
     {
         $this->checkFindOneByModel($user, User::class);
-        $this->checkFindOnyByQuery('users', $whereColumn, $whereValue);
+        $this->checkFindOneByQuery('users', $whereColumn, $whereValue);
 
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
