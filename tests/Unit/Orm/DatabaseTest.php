@@ -6,10 +6,9 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Tests\Orm;
+namespace Dbout\WpOrm\Tests\Unit\Orm;
 
 use Dbout\WpOrm\Orm\Database;
-use Dbout\WpOrm\Tests\WpDatabaseInstanceCreator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,8 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    use WpDatabaseInstanceCreator;
-
     /**
      * @return void
      * @covers ::getInstance

@@ -4,22 +4,62 @@ on:
   pull_request:
 
 jobs:
-  test:
-    name: Tests
+  unit-test:
+    name: "Unit tests"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: "Checkout repo"
         uses: actions/checkout@v4
 
-      - name: Configure PHP
+      - name: "Install PHP"
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.1
           tools: composer:v2
 
-      - name: Install dependencies
+      - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
 
-      - name: Running unit test
-        run: composer phpunit
+      - name: "Run unit tests"
+        run: composer test:unit
+
+  wp-test:
+    name: "WordPress tests with WP ${{ matrix.wp_version }}"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - wp_version: "6.3"
+          - wp_version: "6.4"
+          - wp_version: "latest"
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
+
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v4
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          tools: composer:v2
+
+      - name: "Install composer dependencies"
+        run: composer install --prefer-dist --no-progress
+
+      - name: "Install WP"
+        shell: bash
+        run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 ${{ matrix.wp_version }}
+
+      - name: "Run WordPress tests"
+        run: composer test:wordPress
