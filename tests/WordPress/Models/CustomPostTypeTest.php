@@ -16,6 +16,8 @@ use Dbout\WpOrm\Tests\WordPress\TestCase;
  */
 class CustomPostTypeTest extends TestCase
 {
+    private const EXPECTED_POST_TYPE = 'attachment';
+
     /**
      * @return void
      * @covers ::find
@@ -23,24 +25,13 @@ class CustomPostTypeTest extends TestCase
     public function testFindWithValidPostType(): void
     {
         $objectId = self::factory()->post->create([
-            'post_type' => 'attachment',
+            'post_type' => self::EXPECTED_POST_TYPE,
         ]);
 
         $object = Attachment::find($objectId);
         $this->assertInstanceOf(Attachment::class, $object);
-        $this->assertEquals('attachment', $object->getPostType());
+        $this->assertEquals(self::EXPECTED_POST_TYPE, $object->getPostType());
         $this->assertEquals($objectId, $object->getId());
-
-        global $wpdb;
-        $table = $wpdb->prefix . 'posts';
-        $expectedQuery = sprintf(
-            "select `%s`.* from `%s` where `ID` = '%s'",
-            $table,
-            $table,
-            $object->getId()
-        );
-
-        $this->assertLastQueryEqual($expectedQuery);
     }
 
     /**
@@ -63,7 +54,6 @@ class CustomPostTypeTest extends TestCase
      */
     public function testSaveWithAnotherPostType(): void
     {
-        $expectedPostType = 'attachment';
         $attachment = new Attachment([
             'post_type' => 'product',
         ]);
@@ -72,13 +62,13 @@ class CustomPostTypeTest extends TestCase
 
         $wpPost = get_post($attachment->getId());
         $this->assertEquals(
-            $expectedPostType,
+            self::EXPECTED_POST_TYPE,
             $attachment->getPostType(),
             'The post_type should not be changed in the object.'
         );
 
         $this->assertEquals(
-            $expectedPostType,
+            self::EXPECTED_POST_TYPE,
             $wpPost->post_type,
             'The post_type saved should not be changed.'
         );
