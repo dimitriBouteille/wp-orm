@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
+use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Orm\Database;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
@@ -86,5 +87,18 @@ class DatabaseTest extends TestCase
             'opts',
             sprintf('select * from "%s" as "opts"', $this->getTable('options')),
         ];
+    }
+
+    /**
+     * @return void
+     * @covers ::lastInsertId
+     */
+    public function testLastInsertId(): void
+    {
+        $post = new Post();
+        $post->setPostType('product');
+
+        $post->save();
+        $this->assertEquals(Database::getInstance()->lastInsertId(), $post->getId());
     }
 }
