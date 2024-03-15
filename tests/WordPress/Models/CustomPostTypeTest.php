@@ -30,6 +30,17 @@ class CustomPostTypeTest extends TestCase
         $this->assertInstanceOf(Attachment::class, $object);
         $this->assertEquals('attachment', $object->getPostType());
         $this->assertEquals($objectId, $object->getId());
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'posts';
+        $expectedQuery = sprintf(
+            "select `%s`.* from `%s` where `ID` = '%s'",
+            $table,
+            $table,
+            $object->getId()
+        );
+
+        $this->assertLastQueryEqual($expectedQuery);
     }
 
     /**
