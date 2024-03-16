@@ -8,7 +8,6 @@
 
 namespace Dbout\WpOrm\Orm;
 
-use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractModel extends Model
@@ -52,14 +51,6 @@ abstract class AbstractModel extends Model
             $connection->getQueryGrammar(),
             $connection->getPostProcessor()
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getConnection(): Connection
-    {
-        return Database::getInstance();
     }
 
     /**

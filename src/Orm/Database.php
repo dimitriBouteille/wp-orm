@@ -460,6 +460,14 @@ class Database extends Connection
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function getDefaultPostProcessor(): Processor
+    {
+        return new Processor();
+    }
+
+    /**
      * Get a schema builder instance for the connection.
      *
      * @return \Illuminate\Database\Schema\Builder
