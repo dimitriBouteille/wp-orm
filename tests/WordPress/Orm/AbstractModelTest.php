@@ -88,4 +88,24 @@ class AbstractModelTest extends TestCase
         $post = Post::find($postId);
         $this->assertNull($post, 'The post was not deleted correctly.');
     }
+
+    /**
+     * @return void
+     * @covers ::fill
+     */
+    public function testFill(): void
+    {
+        $request = [
+            'post_type' => 'product',
+            'post_name' => 'my-filled-post',
+            'post_content' => 'The post content',
+        ];
+
+        $post = new Post();
+        $post->fill($request);
+
+        $this->assertEquals('product', $post->getPostType());
+        $this->assertEquals('my-filled-post', $post->getPostName());
+        $this->assertEquals('The post content', $post->getPostContent());
+    }
 }
