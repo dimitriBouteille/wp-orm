@@ -90,22 +90,52 @@ class AbstractModelTest extends TestCase
     }
 
     /**
+     * Test if all attributes have been overridden.
+     *
      * @return void
      * @covers ::fill
+     * @covers ::guard
      */
-    public function testFill(): void
+    public function testFillWithEmptyGuarded(): void
     {
-        $request = [
+        $post = new Post();
+        $post->setPostType('article');
+        $post->setPostName('the-article');
+        $post->setPostContent('the article content');
+        $post->guard([]);
+        $post->fill([
             'post_type' => 'product',
             'post_name' => 'my-filled-post',
             'post_content' => 'The post content',
-        ];
-
-        $post = new Post();
-        $post->fill($request);
+        ]);
 
         $this->assertEquals('product', $post->getPostType());
         $this->assertEquals('my-filled-post', $post->getPostName());
         $this->assertEquals('The post content', $post->getPostContent());
+    }
+
+    /**
+     * @return void
+     * @covers ::fill
+     * @covers ::guard
+     */
+    public function testFillWithGuardedAttributes(): void
+    {
+        $post = new Post();
+        $post->setPostType('article');
+        $post->setPostName('the-article');
+        $post->setPostContent('the article content.');
+        $post->guard(['post_type']);
+        $post->fill([
+            'post_type' => 'product',
+            'post_name' => 'my-filled-post',
+            'post_content' => 'The post content',
+            'test' => 'custom test colum',
+        ]);
+
+        $this->assertEquals('article', $post->getPostType(), 'This attribute should not be changed because it is protected.');
+        $this->assertEquals('my-filled-post', $post->getPostName());
+        $this->assertEquals('The post content', $post->getPostContent());
+        $this->assertNull($post->getAttribute('test'), 'This attribute must be empty because it does not exist in the posts table.');
     }
 }
