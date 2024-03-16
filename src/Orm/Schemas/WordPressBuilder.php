@@ -9,10 +9,16 @@
 namespace Dbout\WpOrm\Orm\Schemas;
 
 use Dbout\WpOrm\Orm\AbstractModel;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar;
 use Illuminate\Database\Schema\MySqlBuilder;
 
 class WordPressBuilder extends MySqlBuilder
 {
+    /**
+     * @var MySqlGrammar
+     */
+    protected $grammar;
+
     /**
      * @inheritDoc
      */
