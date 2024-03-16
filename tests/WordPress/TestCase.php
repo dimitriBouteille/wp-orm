@@ -16,7 +16,7 @@ abstract class TestCase extends \WP_UnitTestCase
      * @param string $query
      * @return void
      */
-    public static function assertLastQueryEqual(string $query): void
+    public function assertLastQueryEqual(string $query): void
     {
         global $wpdb;
         self::assertEquals($query, $wpdb->last_query);
@@ -27,7 +27,7 @@ abstract class TestCase extends \WP_UnitTestCase
      * @param \WP_Post|null $wpPost
      * @return void
      */
-    public static function assertPostEqualToWpObject(?Post $model, ?\WP_Post $wpPost): void
+    public function assertPostEqualToWpObject(?Post $model, ?\WP_Post $wpPost): void
     {
         self::assertInstanceOf(\WP_Post::class, $wpPost);
 
@@ -42,9 +42,9 @@ abstract class TestCase extends \WP_UnitTestCase
      * @param string $columnName
      * @return void
      */
-    public static function expectExceptionUnknownColumn(string $columnName): void
+    public function expectExceptionUnknownColumn(string $columnName): void
     {
-        self::expectExceptionMessageMatches(sprintf("/^Unknown column '%s' in 'field list'/", $columnName));
+        $this->expectExceptionMessageMatches(sprintf("/^Unknown column '%s' in 'field list'/", $columnName));
     }
 
     /**
