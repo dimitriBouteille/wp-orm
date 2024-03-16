@@ -133,7 +133,7 @@ class AbstractModelTest extends TestCase
             'test' => 'custom test colum',
         ]);
 
-        $this->assertEquals('product', $post->getPostType(), 'This attribute should not be changed because it is protected.');
+        $this->assertEquals('article', $post->getPostType(), 'This attribute should not be changed because it is protected.');
         $this->assertEquals('my-filled-post', $post->getPostName());
         $this->assertEquals('The post content', $post->getPostContent());
         $this->assertNull($post->getAttribute('test'), 'This attribute must be empty because it does not exist in the posts table.');
