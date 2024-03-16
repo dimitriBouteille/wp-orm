@@ -9,7 +9,6 @@
 namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 abstract class AbstractModel extends Model
 {
@@ -30,7 +29,21 @@ abstract class AbstractModel extends Model
     /**
      * @inheritDoc
      */
-    protected function newBaseQueryBuilder()
+    public function getTable(): string
+    {
+        $prefix = $this->getConnection()->getTablePrefix();
+        if ($this->table !== null && $this->table !== '') {
+            return str_starts_with($this->table, $prefix) ? $this->table : $prefix . $this->table;
+        }
+
+        // Add WordPress table prefix
+        return $prefix . parent::getTable();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function newBaseQueryBuilder(): Builder
     {
         $connection = $this->getConnection();
         return new Builder(
@@ -38,33 +51,6 @@ abstract class AbstractModel extends Model
             $connection->getQueryGrammar(),
             $connection->getPostProcessor()
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getConnection()
-    {
-        // @phpstan-ignore-next-line
-        return Database::getInstance();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTable(): string
-    {
-        $prefix = $this->getConnection()->getTablePrefix();
-
-        if (!empty($this->table)) {
-            return str_starts_with($this->table, $prefix) ? $this->table : $prefix . $this->table;
-        }
-
-        $table = \substr(\strrchr(\get_class($this), "\\"), 1);
-        $table = Str::snake(Str::plural($table));
-
-        // Add WordPress table prefix
-        return $prefix . $table;
     }
 
     /**

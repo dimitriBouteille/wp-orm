@@ -4,4 +4,4 @@ parameters:
         - src
         - tests
     excludePaths:
-        - src/Orm/Database.php
+        - tests/WordPress

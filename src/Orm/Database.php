@@ -8,46 +8,33 @@
 
 namespace Dbout\WpOrm\Orm;
 
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\Query\Expression;
-use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Database\Query\Processors\Processor;
+use Dbout\WpOrm\Exceptions\WpOrmException;
+use Dbout\WpOrm\Orm\Processors\WordPressProcessor;
+use Dbout\WpOrm\Orm\Schemas\WordPressBuilder;
+use Illuminate\Database\Connection;
+use Illuminate\Database\LostConnectionException;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Arr;
+use Illuminate\Database\Schema\Grammars\Grammar;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
 
-class Database implements ConnectionInterface
+/**
+ * @see https://developer.wordpress.org/reference/classes/wpdb/
+ */
+class Database extends Connection
 {
-    /**
-     * @var bool
-     */
-    public $loggingQueries;
-
     /**
      * @var \wpdb
      */
-    public $db;
+    protected \wpdb $db;
 
     /**
-     * Count of active transactions
+     * Count of active transactions.
      * @var int
      */
     public int $transactionCount = 0;
 
     /**
-     * The database connection configuration options.
-     * @var array
-     */
-    protected array $config = [
-        'name' => 'wp-eloquent-mysql2',
-    ];
-
-    /**
-     * @var string|null
-     */
-    protected ?string $tablePrefix = '';
-
-    /**
-     * @var null|Database
+     * @var Database|null
      */
     protected static ?self $instance = null;
 
@@ -64,19 +51,30 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Database constructor.
+     * @throws \Exception
      */
     public function __construct()
     {
         global $wpdb;
-
-        if ($wpdb) {
-            $this->tablePrefix = $wpdb->prefix;
+        if (!$wpdb instanceof \wpdb) {
+            throw new \Exception('The global variable $wpdb must be instance of \wpdb.');
         }
 
-        if (!$this->tablePrefix && defined('DB_PREFIX')) {
-            $this->tablePrefix = DB_PREFIX;
-        }
+        $pdo = function (): never {
+            throw new \Exception('PDO property can\'t be used.');
+        };
+
+        parent::__construct(
+            $pdo,
+            defined('DB_NAME') ? DB_NAME : '',
+            $wpdb->prefix,
+            [
+                'name' => 'wp-eloquent-mysql2',
+                'charset' => $wpdb->charset,
+                'collate' => $wpdb->collate,
+                'version' => $wpdb->db_version(),
+            ]
+        );
 
         $this->db = $wpdb;
     }
@@ -84,53 +82,16 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function getDatabaseName()
+    public function table($table, $as = null): Builder
     {
-        return $this->getConfig('name');
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getName()
-    {
-        return $this->getDatabaseName();
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTablePrefix(): ?string
-    {
-        return $this->tablePrefix;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function table($table, $as = null)
-    {
-        $processor = $this->getPostProcessor();
         $table = $this->getTablePrefix() . $table;
-        $query = new Builder($this, $this->getQueryGrammar(), $processor);
-
-        return $query->from($table);
+        return $this->query()->from($table, $as);
     }
 
     /**
-     * @inheritDoc
+     * @return Builder
      */
-    public function raw($value)
-    {
-        return new Expression($value);
-    }
-
-    /**
-     * Get a new query builder instance.
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function query()
+    public function query(): Builder
     {
         return new Builder(
             $this,
@@ -144,56 +105,45 @@ class Database implements ConnectionInterface
      */
     public function selectOne($query, $bindings = [], $useReadPdo = true)
     {
-        $query = $this->bind_params($query, $bindings);
-        $result = $this->db->get_row($query);
-        if ($result === false || $this->db->last_error) {
-            throw new QueryException($this->getName(), $query, $bindings, new \Exception($this->db->last_error));
-        }
-
-        return $result;
+        return $this->run($query, $bindings, function (string $query, array $bindings) {
+            $query = $this->bindParams($query, $bindings);
+            return $this->db->get_row($query);
+        });
     }
 
     /**
      * @inheritDoc
      */
-    public function select($query, $bindings = [], $useReadPdo = true)
+    public function select($query, $bindings = [], $useReadPdo = true): array
     {
-        $query = $this->bind_params($query, $bindings);
-        $result = $this->db->get_results($query);
-        if ($result === false || $this->db->last_error) {
-            throw new QueryException($this->getName(), $query, $bindings, new \Exception($this->db->last_error));
+        return $this->run($query, $bindings, function (string $query, array $bindings) {
+            $query = $this->bindParams($query, $bindings);
+            return $this->db->get_results($query);
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function cursor($query, $bindings = [], $useReadPdo = true): \Generator
+    {
+        $results = $this->select($query, $bindings, $useReadPdo);
+        foreach ($results as $result) {
+            yield $result;
         }
-
-        return $result;
     }
 
     /**
-     * Run a select statement against the database and returns a generator.
-     * TODO: Implement cursor and all the related sub-methods.
+     * A hacky way to emulate bind parameters into SQL query.
      *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  bool  $useReadPdo
-     * @return \Generator
+     * @param string|null $query
+     * @param array $bindings
+     * @return string
      */
-    public function cursor($query, $bindings = [], $useReadPdo = true)
+    private function bindParams(?string $query, array $bindings): string
     {
-
-    }
-
-    /**
-     * A hacky way to emulate bind parameters into SQL query
-     *
-     * @param $query
-     * @param $bindings
-     *
-     * @return mixed
-     */
-    private function bind_params($query, $bindings, $update = false)
-    {
-        $query = \str_replace('"', '`', (string) $query);
+        $query = \str_replace('"', '`', (string)$query);
         $bindings = $this->prepareBindings($bindings);
-
         if ($bindings === []) {
             return $query;
         }
@@ -209,114 +159,94 @@ class Database implements ConnectionInterface
         }, $bindings);
 
         $query = \str_replace(['%', '?'], ['%%', '%s'], $query);
-
         return \vsprintf($query, $bindings);
     }
 
     /**
-     * Bind and run the query
-     *
-     * @param  string $query
-     * @param  array $bindings
-     * @throws QueryException
-     *
-     * @return array
+     * @param $query
+     * @param $bindings
+     * @throws \Exception
+     * @return never
+     * @deprecated Remove in next version.
      */
-    public function bind_and_run($query, $bindings = [])
+    public function bind_and_run($query, $bindings = []): never
     {
-        $new_query = $this->bind_params($query, $bindings);
-        $result = $this->db->query($new_query);
-        if ($result === false || $this->db->last_error) {
-            throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
-        }
-
-        return (array) $result;
+        throw new \Exception('This function is no longer usable, it will be removed in a future version.');
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return bool
+     * @inheritDoc
      */
-    public function insert($query, $bindings = [])
+    public function insert($query, $bindings = []): bool
     {
         return $this->statement($query, $bindings);
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return int
+     * @inheritDoc
      */
-    public function update($query, $bindings = [])
+    public function update($query, $bindings = []): int
     {
         return $this->affectingStatement($query, $bindings);
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return int
+     * @inheritDoc
      */
-    public function delete($query, $bindings = [])
+    public function delete($query, $bindings = []): int
     {
         return $this->affectingStatement($query, $bindings);
     }
 
     /**
-     * @param string $query
-     * @param array $bindings
-     * @return bool
+     * @inheritDoc
      */
-    public function statement($query, $bindings = [])
+    public function statement($query, $bindings = []): bool
     {
-        $newQuery = $this->bind_params($query, $bindings, true);
-        return $this->unprepared($newQuery);
-    }
-
-    /**
-     * @param string $query
-     * @param array $bindings
-     * @return int
-     */
-    public function affectingStatement($query, $bindings = [])
-    {
-        $newQuery = $this->bind_params($query, $bindings, true);
-        $result = $this->db->query($newQuery);
-
-        if ($result === false || $this->db->last_error) {
-            throw new QueryException($this->getName(), $newQuery, $bindings, new \Exception($this->db->last_error));
-        }
-
-        return (int) $result;
+        return $this->run($query, $bindings, function (string $query, array $bindings) {
+            $query = $this->bindParams($query, $bindings);
+            return $this->db->query($query);
+        });
     }
 
     /**
      * @inheritDoc
      */
-    public function unprepared($query)
+    public function affectingStatement($query, $bindings = []): int
     {
-        $result = $this->db->query($query);
-        return ($result === false || $this->db->last_error);
+        return $this->run($query, $bindings, function (string $query, array $bindings) {
+            $newQuery = $this->bindParams($query, $bindings);
+            $result = $this->db->query($newQuery);
+            if (!is_numeric($result)) {
+                return $result;
+            }
+
+            return (int) $result;
+        });
     }
 
     /**
      * @inheritDoc
      */
-    public function prepareBindings(array $bindings)
+    public function unprepared($query): bool
+    {
+        return $this->run($query, [], function (string $query) {
+            return $this->db->query($query);
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function prepareBindings(array $bindings): array
     {
         $grammar = $this->getQueryGrammar();
         foreach ($bindings as $key => $value) {
-
-            // Micro-optimization: check for scalar values before instances
-            if (\is_bool($value)) {
+            if (is_bool($value)) {
                 $bindings[$key] = (int) $value;
             } elseif (is_scalar($value)) {
                 continue;
-            } elseif ($value instanceof \DateTime) {
-                // We need to transform all instances of the DateTime class into an actual
-                // date string. Each query grammar maintains its own date string format
-                // so we'll just ask the grammar for the format to get from the date.
+            } elseif ($value instanceof \DateTimeInterface) {
                 $bindings[$key] = $value->format($grammar->getDateFormat());
             }
         }
@@ -343,9 +273,9 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function beginTransaction()
+    public function beginTransaction(): void
     {
-        $transaction = $this->unprepared("START TRANSACTION;");
+        $transaction = $this->unprepared('START TRANSACTION;');
         if ($transaction) {
             $this->transactionCount++;
         }
@@ -354,12 +284,13 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function commit()
+    public function commit(): void
     {
         if ($this->transactionCount < 1) {
             return;
         }
-        $transaction = $this->unprepared("COMMIT;");
+
+        $transaction = $this->unprepared('COMMIT;');
         if ($transaction) {
             $this->transactionCount--;
         }
@@ -368,12 +299,13 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function rollBack()
+    public function rollBack($toLevel = null): void
     {
         if ($this->transactionCount < 1) {
             return;
         }
-        $transaction = $this->unprepared("ROLLBACK;");
+
+        $transaction = $this->unprepared('ROLLBACK;');
         if ($transaction) {
             $this->transactionCount--;
         }
@@ -382,70 +314,169 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function transactionLevel()
+    public function transactionLevel(): int
     {
         return $this->transactionCount;
     }
 
     /**
      * @inheritDoc
+     * @throws WpOrmException
+     * @see https://laravel.com/docs/10.x/eloquent#pruning-models
      */
-    public function pretend(\Closure $callback)
+    public function pretend(\Closure $callback): array
     {
-        // TODO: Implement pretend() method.
-    }
-
-    public function getPostProcessor()
-    {
-        return new Processor();
-    }
-
-    public function getQueryGrammar()
-    {
-        return new Grammar();
+        throw new WpOrmException('pretend feature not supported.');
     }
 
     /**
-     * Return the last insert id
+     * Return the last insert id.
      *
-     * @param $args
-     * @return int
+     * @return int|null
      */
-    public function lastInsertId($args)
+    public function lastInsertId(): ?int
     {
         return $this->db->insert_id;
     }
 
     /**
-     * Get an option from the configuration options.
+     * Returns true if the last query has error.
      *
-     * @param  string|null  $option
+     * @return bool
+     * @see \wpdb::print_error()
+     */
+    public function lastRequestHasError(): bool
+    {
+        return $this->db->last_error !== null && $this->db->last_error !== '';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function run($query, $bindings, \Closure $callback): mixed
+    {
+        $start = microtime(true);
+        try {
+            $result = $this->runQueryCallback(
+                $query,
+                $bindings,
+                $callback
+            );
+        } catch (QueryException $exception) {
+            $result = $this->handleQueryException(
+                $exception,
+                $query,
+                $bindings,
+                $callback
+            );
+        }
+
+        $this->logQuery($query, $bindings, $this->getElapsedTime((int)$start));
+        return $result;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function runQueryCallback($query, $bindings, \Closure $callback): mixed
+    {
+        try {
+            // Disable display WP error and save previous state
+            $suppressionError = $this->db->suppress_errors();
+
+            $result = $callback($query, $bindings);
+
+            // Restore the state
+            $this->db->suppress_errors($suppressionError);
+
+            if ($result === false || $this->lastRequestHasError()) {
+                throw new \Exception($this->db->last_error);
+            }
+
+            return $result;
+        } catch (\Exception $exception) {
+            throw new QueryException(
+                $this->getName(),
+                $query,
+                $this->prepareBindings($bindings),
+                $exception
+            );
+        }
+    }
+
+    /**
+     * Handle a query exception.
+     *
+     * @param QueryException $e
+     * @param string $query
+     * @param array $bindings
+     * @param \Closure $callback
      * @return mixed
      */
-    public function getConfig($option = null)
-    {
-        return Arr::get($this->config, $option);
-    }
+    protected function handleQueryException(
+        QueryException $e,
+        $query,
+        $bindings,
+        \Closure $callback
+    ): mixed {
+        if ($this->transactionCount >= 1) {
+            throw $e;
+        }
 
-    protected function exception($exception)
-    {
+        if ($this->causedByLostConnection($e->getPrevious())) {
+            if (!$this->db->db_connect()) {
+                throw new LostConnectionException('Lost connection.');
+            }
+
+            return $this->runQueryCallback($query, $bindings, $callback);
+        }
+
+        throw $e;
     }
 
     /**
-     * @return $this
+     * @inheritDoc
+     * @see \wpdb::log_query
      */
-    public function getPdo()
+    public function logQuery($query, $bindings, $time = null): void
     {
-        return $this;
+        /**
+         * If you want to log queries, you must enable the constant SAVEQUERIES
+         * @see https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/#savequeries
+         */
     }
 
     /**
-     * Enable the query log on the connection.
+     * Get the default schema grammar instance.
      *
-     * @return void
+     * @return Grammar
      */
-    public function enableQueryLog()
+    protected function getDefaultSchemaGrammar(): Grammar
     {
-        $this->loggingQueries = true;
+        ($grammar = new SchemaGrammar())->setConnection($this);
+
+        /** @var Grammar $grammar */
+        $grammar = $this->withTablePrefix($grammar);
+        return $grammar;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultPostProcessor(): WordPressProcessor
+    {
+        return new WordPressProcessor();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
+    {
+        if (!$this->schemaGrammar instanceof Grammar) {
+            $this->useDefaultSchemaGrammar();
+        }
+
+        return new WordPressBuilder($this);
     }
 }
