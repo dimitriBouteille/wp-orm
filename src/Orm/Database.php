@@ -9,12 +9,13 @@
 namespace Dbout\WpOrm\Orm;
 
 use Dbout\WpOrm\Exceptions\WpOrmException;
+use Dbout\WpOrm\Orm\Processors\WordPressProcessor;
+use Dbout\WpOrm\Orm\Schemas\WordPressBuilder;
 use Illuminate\Database\Connection;
 use Illuminate\Database\LostConnectionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Grammars\Grammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
-use Illuminate\Database\Schema\MySqlBuilder;
 
 /**
  * @see https://developer.wordpress.org/reference/classes/wpdb/
@@ -462,15 +463,13 @@ class Database extends Connection
     /**
      * @inheritDoc
      */
-    protected function getDefaultPostProcessor(): Processor
+    protected function getDefaultPostProcessor(): WordPressProcessor
     {
-        return new Processor();
+        return new WordPressProcessor();
     }
 
     /**
-     * Get a schema builder instance for the connection.
-     *
-     * @return \Illuminate\Database\Schema\Builder
+     * @inheritDoc
      */
     public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
     {
@@ -478,6 +477,6 @@ class Database extends Connection
             $this->useDefaultSchemaGrammar();
         }
 
-        return new MySqlBuilder($this);
+        return new WordPressBuilder($this);
     }
 }

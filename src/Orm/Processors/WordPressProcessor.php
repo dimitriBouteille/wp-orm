@@ -6,11 +6,13 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Orm;
+namespace Dbout\WpOrm\Orm\Processors;
 
+use Dbout\WpOrm\Orm\Database;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Processors\Processor;
 
-class Processor extends \Illuminate\Database\Query\Processors\Processor
+class WordPressProcessor extends Processor
 {
     /**
      * @inheritDoc
