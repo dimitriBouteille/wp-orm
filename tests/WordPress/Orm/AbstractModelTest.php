@@ -31,8 +31,8 @@ class AbstractModelTest extends TestCase
         $model->setPostName('hello-world');
         $model->setPostContent('My hello world content');
         $model->setPostTitle('Hello world');
-        $model->$saveMethod();
 
+        $this->assertTrue($model->$saveMethod());
         $expectedId = $model->getId();
         $this->assertIsNumeric($expectedId);
 
