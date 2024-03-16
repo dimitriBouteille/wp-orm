@@ -39,6 +39,16 @@ abstract class TestCase extends \WP_UnitTestCase
     }
 
     /**
+     * @param int|null $id
+     * @return void
+     */
+    public function assertEqualLastInsertId(?int $id): void
+    {
+        global $wpdb;
+        self::assertEquals($wpdb->insert_id, $id);
+    }
+
+    /**
      * @param string $columnName
      * @return void
      */

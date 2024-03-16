@@ -37,6 +37,7 @@ class AbstractModelTest extends TestCase
         $this->assertIsNumeric($expectedId);
 
         $this->assertPostEqualToWpObject($model, get_post($expectedId));
+        $this->assertEqualLastInsertId($expectedId);
     }
 
     /**
