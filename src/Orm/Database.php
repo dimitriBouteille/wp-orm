@@ -9,46 +9,32 @@
 namespace Dbout\WpOrm\Orm;
 
 use Dbout\WpOrm\Exceptions\WpOrmException;
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\DetectsLostConnections;
+use Dbout\WpOrm\Orm\Processors\WordPressProcessor;
+use Dbout\WpOrm\Orm\Schemas\WordPressBuilder;
+use Illuminate\Database\Connection;
 use Illuminate\Database\LostConnectionException;
-use Illuminate\Database\Query\Expression;
-use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Arr;
+use Illuminate\Database\Schema\Grammars\Grammar;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
 
 /**
  * @see https://developer.wordpress.org/reference/classes/wpdb/
  */
-class Database implements ConnectionInterface
+class Database extends Connection
 {
-    use DetectsLostConnections;
-
     /**
      * @var \wpdb
      */
     protected \wpdb $db;
 
     /**
-     * Count of active transactions
+     * Count of active transactions.
      * @var int
      */
     public int $transactionCount = 0;
 
     /**
-     * The database connection configuration options.
-     * @var array
-     */
-    protected array $config = [];
-
-    /**
-     * @var string|null
-     */
-    protected ?string $tablePrefix = '';
-
-    /**
-     * @var null|Database
+     * @var Database|null
      */
     protected static ?self $instance = null;
 
@@ -74,41 +60,23 @@ class Database implements ConnectionInterface
             throw new \Exception('The global variable $wpdb must be instance of \wpdb.');
         }
 
-        $this->config = [
-            'connection_name' => 'wp-eloquent-mysql2',
-            'name' => defined('DB_NAME') ? DB_NAME : '',
-        ];
+        $pdo = function (): never {
+            throw new \Exception('PDO property can\'t be used.');
+        };
 
-        $this->tablePrefix = $wpdb->prefix;
+        parent::__construct(
+            $pdo,
+            defined('DB_NAME') ? DB_NAME : '',
+            $wpdb->prefix,
+            [
+                'name' => 'wp-eloquent-mysql2',
+                'charset' => $wpdb->charset,
+                'collate' => $wpdb->collate,
+                'version' => $wpdb->db_version(),
+            ]
+        );
+
         $this->db = $wpdb;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getDatabaseName(): string
-    {
-        return $this->getConfig('name');
-    }
-
-    /**
-     * Get the database connection name.
-     *
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->getConfig('connection_name');
-    }
-
-    /**
-     * Get the table prefix for the connection.
-     *
-     * @return string|null
-     */
-    public function getTablePrefix(): ?string
-    {
-        return $this->tablePrefix;
     }
 
     /**
@@ -331,7 +299,7 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function rollBack(): void
+    public function rollBack($toLevel = null): void
     {
         if ($this->transactionCount < 1) {
             return;
@@ -362,26 +330,6 @@ class Database implements ConnectionInterface
     }
 
     /**
-     * Get the query post processor used by the connection.
-     *
-     * @return Processor
-     */
-    public function getPostProcessor(): Processor
-    {
-        return new Processor();
-    }
-
-    /**
-     * Get the query grammar used by the connection.
-     *
-     * @return Grammar
-     */
-    public function getQueryGrammar(): Grammar
-    {
-        return new Grammar();
-    }
-
-    /**
      * Return the last insert id.
      *
      * @return int|null
@@ -389,27 +337,6 @@ class Database implements ConnectionInterface
     public function lastInsertId(): ?int
     {
         return $this->db->insert_id;
-    }
-
-    /**
-     * Get an option from the configuration options.
-     *
-     * @param  string $option
-     * @return mixed
-     */
-    public function getConfig(string $option): mixed
-    {
-        return Arr::get($this->config, $option);
-    }
-
-    /**
-     * Get the current connection.
-     *
-     * @return $this
-     */
-    public function getPdo(): static
-    {
-        return $this;
     }
 
     /**
@@ -426,50 +353,32 @@ class Database implements ConnectionInterface
     /**
      * @inheritDoc
      */
-    public function raw($value): Expression
-    {
-        return new Expression($value);
-    }
-
-    /**
-     * Run a SQL statement and log its execution context.
-     *
-     * @param string $query
-     * @param array $binding
-     * @param \Closure $callback
-     * @return mixed
-     */
-    protected function run(string $query, array $binding, \Closure $callback): mixed
+    protected function run($query, $bindings, \Closure $callback): mixed
     {
         $start = microtime(true);
         try {
             $result = $this->runQueryCallback(
                 $query,
-                $binding,
+                $bindings,
                 $callback
             );
         } catch (QueryException $exception) {
             $result = $this->handleQueryException(
                 $exception,
                 $query,
-                $binding,
+                $bindings,
                 $callback
             );
         }
 
-        $this->logQuery($query, $binding, $this->getElapsedTime($start));
+        $this->logQuery($query, $bindings, $this->getElapsedTime((int)$start));
         return $result;
     }
 
     /**
-     * Run a SQL statement.
-     *
-     * @param string $query
-     * @param array $bindings
-     * @param \Closure $callback
-     * @return mixed
+     * @inheritDoc
      */
-    protected function runQueryCallback(string $query, array $bindings, \Closure $callback): mixed
+    protected function runQueryCallback($query, $bindings, \Closure $callback): mixed
     {
         try {
             // Disable display WP error and save previous state
@@ -498,23 +407,23 @@ class Database implements ConnectionInterface
     /**
      * Handle a query exception.
      *
-     * @param QueryException $exception
+     * @param QueryException $e
      * @param string $query
      * @param array $bindings
      * @param \Closure $callback
      * @return mixed
      */
     protected function handleQueryException(
-        QueryException $exception,
-        string $query,
-        array $bindings,
+        QueryException $e,
+        $query,
+        $bindings,
         \Closure $callback
     ): mixed {
         if ($this->transactionCount >= 1) {
-            throw $exception;
+            throw $e;
         }
 
-        if ($this->causedByLostConnection($exception->getPrevious())) {
+        if ($this->causedByLostConnection($e->getPrevious())) {
             if (!$this->db->db_connect()) {
                 throw new LostConnectionException('Lost connection.');
             }
@@ -522,34 +431,52 @@ class Database implements ConnectionInterface
             return $this->runQueryCallback($query, $bindings, $callback);
         }
 
-        throw $exception;
+        throw $e;
     }
 
     /**
-     * Get the elapsed time since a given starting point.
-     *
-     * @param  float $start
-     * @return float
-     */
-    protected function getElapsedTime(float $start): float
-    {
-        return round((microtime(true) - $start) * 1000, 2);
-    }
-
-    /**
-     * Log a query in the connection's query log.
-     *
-     * @param string $query
-     * @param array $bindings
-     * @param float|null $queryDuration
-     * @return void
+     * @inheritDoc
      * @see \wpdb::log_query
      */
-    public function logQuery(string $query, array $bindings, float $queryDuration = null): void
+    public function logQuery($query, $bindings, $time = null): void
     {
         /**
          * If you want to log queries, you must enable the constant SAVEQUERIES
          * @see https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/#savequeries
          */
+    }
+
+    /**
+     * Get the default schema grammar instance.
+     *
+     * @return Grammar
+     */
+    protected function getDefaultSchemaGrammar(): Grammar
+    {
+        ($grammar = new SchemaGrammar())->setConnection($this);
+
+        /** @var Grammar $grammar */
+        $grammar = $this->withTablePrefix($grammar);
+        return $grammar;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultPostProcessor(): WordPressProcessor
+    {
+        return new WordPressProcessor();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
+    {
+        if (!$this->schemaGrammar instanceof Grammar) {
+            $this->useDefaultSchemaGrammar();
+        }
+
+        return new WordPressBuilder($this);
     }
 }
