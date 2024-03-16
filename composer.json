@@ -43,12 +43,13 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.28",
     "phpstan/phpstan": ">=1.10.59",
-    "phpunit/phpunit": "^10.5",
     "phpstan/phpstan-phpunit": "^1.3",
     "phpstan/extension-installer": "^1.3",
     "roots/wordpress": "6.4.3",
     "rector/rector": "1.0.2",
-    "szepeviktor/phpstan-wordpress": "^1.3"
+    "szepeviktor/phpstan-wordpress": "^1.3",
+    "phpunit/phpunit": "9.6.17",
+    "yoast/phpunit-polyfills": "^1.1.0"
   },
   "config": {
     "allow-plugins": {
@@ -67,7 +68,8 @@
   "scripts": {
     "rector": "vendor/bin/rector process src --dry-run",
     "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
-    "phpunit": "vendor/bin/phpunit",
+    "test:unit": "vendor/bin/phpunit --no-coverage",
+    "test:wordPress": "vendor/bin/phpunit -c phpunit-wp.xml --no-coverage",
     "csFixer": "vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
     "fix:csFixer": "vendor/bin/php-cs-fixer fix"
   }

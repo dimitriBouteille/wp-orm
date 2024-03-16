@@ -5,27 +5,27 @@ on:
 
 jobs:
   codingStyle:
-    name: Coding Style
+    name: "Coding Style"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: "Checkout repo"
         uses: actions/checkout@v4
 
-      - name: Configure PHP
+      - name: "Configure PHP"
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.1
           tools: composer:v2
 
-      - name: Install dependencies
+      - name: "Install dependencies"
         run: composer install --prefer-dist --no-progress
 
-      - name: PHPCsFixer
+      - name: "PHPCsFixer"
         run: composer csFixer
 
       #- name: Rector
       #  run: composer rector
 
-      - name: PHPStan Analyse
+      - name: "PHPStan Analyse"
         run: composer phpstan

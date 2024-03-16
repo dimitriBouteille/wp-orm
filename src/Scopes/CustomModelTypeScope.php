@@ -23,7 +23,7 @@ class CustomModelTypeScope implements Scope
      * @inheritDoc
      * @throws WpOrmException
      */
-    public function apply(Builder $builder, Model $model)
+    public function apply(Builder $builder, Model $model): void
     {
         if (!$model instanceof CustomModelTypeInterface) {
             throw new WpOrmException(sprintf(

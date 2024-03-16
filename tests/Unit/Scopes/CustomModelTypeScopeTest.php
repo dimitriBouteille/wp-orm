@@ -6,7 +6,7 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Tests\Scopes;
+namespace Dbout\WpOrm\Tests\Unit\Scopes;
 
 use Dbout\WpOrm\Builders\OptionBuilder;
 use Dbout\WpOrm\Builders\PostBuilder;

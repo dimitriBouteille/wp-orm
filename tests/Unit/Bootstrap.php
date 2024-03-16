@@ -6,7 +6,7 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Tests;
+namespace Dbout\WpOrm\Tests\Unit;
 
 class Bootstrap
 {
@@ -16,7 +16,7 @@ class Bootstrap
 
     public function __construct()
     {
-        $this->wpDirectory = __DIR__ . '/../web/wordpress';
+        $this->wpDirectory = __DIR__ . '/../../web/wordpress';
         $this->initConstants();
         $this->loadFiles();
     }

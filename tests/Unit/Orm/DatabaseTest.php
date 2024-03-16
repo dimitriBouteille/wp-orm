@@ -6,7 +6,7 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Tests\Orm;
+namespace Dbout\WpOrm\Tests\Unit\Orm;
 
 use Dbout\WpOrm\Orm\Database;
 use PHPUnit\Framework\TestCase;

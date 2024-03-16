@@ -16,6 +16,7 @@ use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * @method string|null getUserLogin()
@@ -39,9 +40,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static static|null find($userId)
  * @method static UserBuilder query()
  *
- * @property-read UserMeta[] $metas
- * @property-read Comment[] $comments
- * @property-read Post[] $posts
+ * @property-read Collection<UserMeta> $metas
+ * @property-read Collection<Comment> $comments
+ * @property-read Collection<Post> $posts
  */
 class User extends AbstractModel implements WithMetaModelInterface
 {
