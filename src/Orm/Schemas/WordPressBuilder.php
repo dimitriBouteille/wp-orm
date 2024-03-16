@@ -22,8 +22,10 @@ class WordPressBuilder extends MySqlBuilder
          * Never add prefix table because the model::getTable contain the prefix
          * @see AbstractModel::getTable()
          */
-        return $this->connection->getPostProcessor()->processColumns(
-            $this->connection->selectFromWriteConnection($this->grammar->compileColumns($table))
+        $results = $this->connection->selectFromWriteConnection(
+            $this->grammar->compileColumns($this->connection->getDatabaseName(), $table)
         );
+
+        return $this->connection->getPostProcessor()->processColumns($results);
     }
 }
