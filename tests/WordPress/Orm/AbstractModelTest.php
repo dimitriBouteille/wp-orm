@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Models\Article;
+use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\QueryException;
 
@@ -22,19 +23,20 @@ class AbstractModelTest extends TestCase
      * @return void
      * @covers ::save
      * @covers ::saveOrFail
-     * @dataProvider providerTestSave
+     * @dataProvider providerTestSaveNewObject
      */
-    public function testSuccessSave(string $saveMethod): void
+    public function testSuccessNSaveNewObject(string $saveMethod): void
     {
         $model = new Article();
+        $model->setPostName('hello-world');
+        $model->setPostContent('My hello world content');
+        $model->setPostTitle('Hello world');
         $model->$saveMethod();
 
         $expectedId = $model->getId();
         $this->assertIsNumeric($expectedId);
 
-        $expectedModel = get_post($expectedId);
-        $this->assertInstanceOf(\WP_Post::class, $expectedModel);
-        $this->assertEquals($expectedId, $expectedModel->ID);
+        $this->assertPostEqualToWpObject($model, get_post($expectedId));
     }
 
     /**
@@ -42,24 +44,24 @@ class AbstractModelTest extends TestCase
      * @return void
      * @covers ::save
      * @covers ::saveOrFail
-     * @dataProvider providerTestSave
+     * @dataProvider providerTestSaveNewObject
      */
     public function testSaveWithInvalidProperty(string $saveMethod): void
     {
+        $fakeColumn = 'custom_column';
         $model = new Article([
-            'custom_column' => '15',
+            $fakeColumn => '15',
         ]);
 
-        // Maybe more strict ?
-        // Check this message: Unknown column 'custom_column' in 'field list'
         $this->expectException(QueryException::class);
+        $this->expectExceptionUnknownColumn($fakeColumn);
         $model->$saveMethod();
     }
 
     /**
      * @return \Generator
      */
-    protected function providerTestSave(): \Generator
+    protected function providerTestSaveNewObject(): \Generator
     {
         yield 'With save function' => [
             'save',
@@ -68,5 +70,21 @@ class AbstractModelTest extends TestCase
         yield 'With saveOrFail function' => [
             'saveOrFail',
         ];
+    }
+
+    /**
+     * @return void
+     * @covers ::delete
+     */
+    public function testDelete(): void
+    {
+        $postId = self::factory()->post->create();
+        $post = Post::find($postId);
+
+        $this->assertInstanceOf(Post::class, $post);
+        $this->assertTrue($post->delete());
+
+        $post = Post::find($postId);
+        $this->assertNull($post, 'The post was not deleted correctly.');
     }
 }

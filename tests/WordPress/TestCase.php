@@ -8,6 +8,8 @@
 
 namespace Dbout\WpOrm\Tests\WordPress;
 
+use Dbout\WpOrm\Models\Post;
+
 abstract class TestCase extends \WP_UnitTestCase
 {
     /**
@@ -18,6 +20,31 @@ abstract class TestCase extends \WP_UnitTestCase
     {
         global $wpdb;
         self::assertEquals($query, $wpdb->last_query);
+    }
+
+    /**
+     * @param Post|null $model
+     * @param \WP_Post|null $wpPost
+     * @return void
+     */
+    public static function assertPostEqualToWpObject(?Post $model, ?\WP_Post $wpPost): void
+    {
+        self::assertInstanceOf(\WP_Post::class, $wpPost);
+
+        self::assertEquals($wpPost->ID, $model->getId());
+        self::assertEquals($wpPost->post_type, $model->getPostType());
+        self::assertEquals($wpPost->post_content, $model->getPostContent());
+        self::assertEquals($wpPost->post_title, $model->getPostTitle());
+        self::assertEquals($wpPost->post_name, $model->getPostName());
+    }
+
+    /**
+     * @param string $columnName
+     * @return void
+     */
+    public static function expectExceptionUnknownColumn(string $columnName): void
+    {
+        self::expectExceptionMessageMatches(sprintf("/^Unknown column '%s' in 'field list'/", $columnName));
     }
 
     /**
