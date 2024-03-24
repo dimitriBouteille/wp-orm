@@ -35,7 +35,7 @@ return $config
         'trim_array_spaces' => true,
         'phpdoc_order' => true,
         'ordered_imports' => true,
-        'new_with_braces' => true,
+        'new_with_parentheses' => true,
         'method_chaining_indentation' => true,
         'no_unused_imports' => true,
         'align_multiline_comment' => true,
