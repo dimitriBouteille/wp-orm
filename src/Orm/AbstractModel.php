@@ -54,9 +54,9 @@ abstract class AbstractModel extends Model
     }
 
     /**
-     * @return int|null
+     * @return int|string|null
      */
-    public function getId(): ?int
+    public function getId(): null|int|string
     {
         return $this->{$this->primaryKey};
     }
