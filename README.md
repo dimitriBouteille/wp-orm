@@ -2,7 +2,7 @@
 
 ![GitHub Release](https://img.shields.io/github/v/release/dimitriBouteille/wp-orm) [![tests](https://img.shields.io/github/actions/workflow/status/dimitriBouteille/wp-orm/tests.yml?label=tests)](https://github.com/dimitriBouteille/wp-orm/actions/workflows/tests.yml) [![Packagist Downloads](https://img.shields.io/packagist/dt/dbout/wp-orm?color=yellow)](https://packagist.org/packages/dbout/wp-orm) ![Eloquent version](https://img.shields.io/packagist/dependency-v/dbout/wp-orm/illuminate%2Fdatabase?color=orange)
 
-WordPress ORM wih Eloquent is a small library that adds a basic ORM into WordPress, which is easily extendable and includes models for core WordPress models such as posts, post metas, users, comments and more.
+WordPress ORM with Eloquent is a small library that adds a basic ORM into WordPress, which is easily extendable and includes models for core WordPress models such as posts, post metas, users, comments and more.
 The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses the WordPress connection (`wpdb` class).
 
 The ORM also offers a system to simply manage database migrations based on [Phinx](https://phinx.org/).

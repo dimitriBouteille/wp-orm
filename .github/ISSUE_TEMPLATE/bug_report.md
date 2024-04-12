@@ -22,7 +22,7 @@ A clear and concise description of what you expected to happen.
 
 ### Your setup
 
-- Wordpress Version: [e.g. 6.4.2]
+- WordPress Version: [e.g. 6.4.2]
 - Module version: [e.g. 3.0.0]
 - Are you using framework ?: [e.g. Bedrock, Wordplate, ... - If yes, Please specify the framework and version]
 
