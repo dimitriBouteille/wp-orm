@@ -31,9 +31,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - wp_version: "6.3"
-          - wp_version: "6.4"
-          - wp_version: "latest"
+          - wp_version: ["6.3", "6.4", "6.5", "latest"]
 
     services:
       mysql:
