@@ -25,7 +25,7 @@ If you are using the [Bedrock](https://roots.io/bedrock/) framework, please crea
 ~~~php
 <?php
 
-// Your Wordpress directory
+// Your WordPress directory
 $wpDirectory = 'web/web';
 
 /**

@@ -26,7 +26,7 @@ class Bootstrap
         /**
          * Load WordPress
          */
-        $this->initBoostrap();
+        $this->initBootstrap();
 
         /**
          * This function has to be called _last_, after the WP test bootstrap to make sure it registers
@@ -131,7 +131,7 @@ class Bootstrap
      *
      * @return void
      */
-    protected function initBoostrap(): void
+    protected function initBootstrap(): void
     {
         if ($this->wpTestsDir === null) {
             echo \PHP_EOL, 'ERROR: The WordPress native unit test bootstrap file could not be found. Please set either the WP_TESTS_DIR or the WP_DEVELOP_DIR environment variable, either in your OS or in a custom phpunit.xml file.', \PHP_EOL;
