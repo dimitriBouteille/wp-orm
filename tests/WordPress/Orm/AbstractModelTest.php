@@ -130,7 +130,7 @@ class AbstractModelTest extends TestCase
             'post_type' => 'product',
             'post_name' => 'my-filled-post',
             'post_content' => 'The post content',
-            'test' => 'custom test colum',
+            'test' => 'custom test column',
         ]);
 
         $this->assertEquals('article', $post->getPostType(), 'This attribute should not be changed because it is protected.');
