@@ -8,6 +8,10 @@
 
 namespace Dbout\WpOrm\Migration;
 
+/**
+ * @deprecated Remove in future version
+ * @see https://github.com/dimitriBouteille/wp-orm/issues/27
+ */
 class Config
 {
     /**
