@@ -91,7 +91,7 @@ trait HasMeta
         /** @var AbstractMeta $instance */
         $instance = $this->metas()
             ->firstOrNew([
-                $this->getMetaConfigMapping()->foreignKey => $metaKey,
+                $this->getMetaConfigMapping()->columnKey => $metaKey,
             ]);
 
         $instance->fill([
