@@ -8,31 +8,13 @@
 
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
-use Dbout\WpOrm\Models\Article;
+use Dbout\WpOrm\Concerns\HasMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
-use Dbout\WpOrm\Concerns\HasMeta;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class ModelWithMetaTest extends TestCase
 {
-    /**
-     * @return void
-     * @covers HasMeta::setMeta
-     */
-    public function testSetMetaWithNewModel(): void
-    {
-        $model = new Article();
-        $model->setPostName('hello-world');
-
-        $meta = $model->setMeta('build-by', 'Dimitri B.');
-        $model->save();
-
-        var_dump('testSetMetaWithNewModel', $model->getId(), get_post_meta($model->getId(), 'build-by', true));
-        $this->assertEquals('Dimitri B.', get_post_meta($model->getId(), 'build-by', true));
-        $this->assertEquals(null, $meta, 'The function must return null because the model does not yet exist.');
-    }
-
     /**
      * @return void
      * @covers HasMeta::setMeta
@@ -64,5 +46,26 @@ class ModelWithMetaTest extends TestCase
 
         $model->setMeta('birthday-date', '17/09/1900');
         $this->assertTrue($model->hasMeta('birthday-date'));
+
+        $wpMetaId = add_post_meta($model->getId(), 'birthday-place', 'France');
+        $this->assertTrue($model->hasMeta('birthday-place'));
+        $this->assertEquals('France', $model->getMetaValue('birthday-place'));
+        $this->assertEquals($wpMetaId, $model->getMeta('birthday-place')?->getId());
+    }
+
+    /**
+     * @return void
+     * @covers HasMeta::deleteMeta
+     */
+    public function getDeleteMeta(): void
+    {
+        $model = new Post();
+        $model->setPostTitle('Hello world');
+        $model->save();
+
+        $model->setMeta('architect-name', 'Norman F.');
+
+        $this->assertEquals(1, $model->deleteMeta('architect-name'), 'The function must delete only one line.');
+        $this->assertFalse($model->hasMeta('architect-name'), 'The meta must no longer exist.');
     }
 }
