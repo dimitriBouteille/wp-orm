@@ -20,7 +20,7 @@ class ModelWithMetaTest extends TestCase
      * @return void
      * @covers HasMeta::setMeta
      */
-    public function _testSetMetaWithNewModel(): void
+    public function testSetMetaWithNewModel(): void
     {
         $model = new Article();
         $model->setPostName('hello-world');
@@ -28,7 +28,7 @@ class ModelWithMetaTest extends TestCase
         $meta = $model->setMeta('build-by', 'Dimitri B.');
         $model->save();
 
-        var_dump('__testSetMetaWithNewModel', $model->getId(), get_post_meta($model->getId(), 'build-by', true));
+        var_dump('testSetMetaWithNewModel', $model->getId(), get_post_meta($model->getId(), 'build-by', true));
         $this->assertEquals('Dimitri B.', get_post_meta($model->getId(), 'build-by', true));
         $this->assertEquals(null, $meta, 'The function must return null because the model does not yet exist.');
     }
@@ -44,8 +44,6 @@ class ModelWithMetaTest extends TestCase
 
         $model->save();
         $meta = $model->setMeta('build-by', 'John D.');
-
-        var_dump('__testSetMetaWithExistingModel', $model->getId(), get_post_meta($model->getId(), 'build-by', true));
 
         $this->assertEquals('John D.', get_post_meta($model->getId(), 'build-by', true));
         $this->assertInstanceOf(PostMeta::class, $meta);
