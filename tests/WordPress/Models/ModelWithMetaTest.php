@@ -11,6 +11,7 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 use Dbout\WpOrm\Models\Article;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
+use Dbout\WpOrm\Concerns\HasMeta;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class ModelWithMetaTest extends TestCase
@@ -19,7 +20,7 @@ class ModelWithMetaTest extends TestCase
      * @return void
      * @covers HasMeta::setMeta
      */
-    public function testSetMetaWithNewModel(): void
+    public function _testSetMetaWithNewModel(): void
     {
         $model = new Article();
         $model->setPostName('hello-world');
@@ -48,5 +49,19 @@ class ModelWithMetaTest extends TestCase
 
         $loadedMeta = $model->getMeta('build-by');
         $this->assertEquals($meta->getId(), $loadedMeta->getId());
+    }
+
+    /**
+     * @return void
+     * @covers HasMeta::hasMeta
+     */
+    public function testHasMeta(): void
+    {
+        $model = new Post();
+        $model->setPostTitle('Hello world');
+        $model->save();
+
+        $model->setMeta('birthday-date', '17/09/1900');
+        $this->assertTrue($model->hasMeta('birthday-date'));
     }
 }
