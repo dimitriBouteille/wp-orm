@@ -27,7 +27,7 @@ class ModelWithMetaTest extends TestCase
         $meta = $model->setMeta('build-by', 'Dimitri B.');
         $model->save();
 
-        $this->assertEquals('Dimitri B.', get_post_meta($model->getId(), 'build-by'));
+        $this->assertEquals('Dimitri B.', get_post_meta($model->getId(), 'build-by', true));
         $this->assertEquals(null, $meta, 'The function must return null because the model does not yet exist.');
     }
 
@@ -43,7 +43,7 @@ class ModelWithMetaTest extends TestCase
         $model->save();
         $meta = $model->setMeta('build-by', 'John D.');
 
-        $this->assertEquals('John D.', get_post_meta($model->getId(), 'build-by'));
+        $this->assertEquals('John D.', get_post_meta($model->getId(), 'build-by', true));
         $this->assertInstanceOf(PostMeta::class, $meta);
 
         $loadedMeta = $model->getMeta('build-by');
