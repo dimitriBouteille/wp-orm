@@ -6,7 +6,7 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Orm\Processors;
+namespace Dbout\WpOrm\Orm\Query\Processors;
 
 use Dbout\WpOrm\Orm\Database;
 use Illuminate\Database\Query\Builder;

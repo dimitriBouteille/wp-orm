@@ -9,7 +9,8 @@
 namespace Dbout\WpOrm\Orm;
 
 use Dbout\WpOrm\Exceptions\WpOrmException;
-use Dbout\WpOrm\Orm\Processors\WordPressProcessor;
+use Dbout\WpOrm\Orm\Query\Grammars\WordPressGrammar;
+use Dbout\WpOrm\Orm\Query\Processors\WordPressProcessor;
 use Dbout\WpOrm\Orm\Schemas\WordPressBuilder;
 use Illuminate\Database\Connection;
 use Illuminate\Database\LostConnectionException;
@@ -447,9 +448,7 @@ class Database extends Connection
     }
 
     /**
-     * Get the default schema grammar instance.
-     *
-     * @return Grammar
+     * @inheritDoc
      */
     protected function getDefaultSchemaGrammar(): Grammar
     {
@@ -478,5 +477,15 @@ class Database extends Connection
         }
 
         return new WordPressBuilder($this);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultQueryGrammar(): WordPressGrammar
+    {
+        ($grammar = new WordPressGrammar())->setConnection($this);
+
+        return $grammar;
     }
 }
