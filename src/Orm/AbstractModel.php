@@ -10,6 +10,9 @@ namespace Dbout\WpOrm\Orm;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static \int upsert(array $values, array|string $uniqueBy, array|null $update = null) Insert new records or update the existing ones.
+ */
 abstract class AbstractModel extends Model
 {
     /**
