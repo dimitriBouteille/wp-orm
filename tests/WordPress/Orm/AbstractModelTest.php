@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Models\Article;
+use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\QueryException;
@@ -137,5 +138,30 @@ class AbstractModelTest extends TestCase
         $this->assertEquals('my-filled-post', $post->getPostName());
         $this->assertEquals('The post content', $post->getPostContent());
         $this->assertNull($post->getAttribute('test'), 'This attribute must be empty because it does not exist in the posts table.');
+    }
+
+    /**
+     * @return void
+     * @covers ::upsert
+     */
+    public function testUpsertWithOneNewObject(): void
+    {
+        $result = Option::upsert(
+            [
+                'option_name' => '_upsert_new_data',
+                'option_value' => 'John D.',
+            ],
+            ['option_name']
+        );
+
+        $option = Option::findOneByName('_upsert_new_data');
+        $this->assertInstanceOf(Option::class, $option);
+        $this->assertEquals('John D.', $option->getOptionValue());
+        $this->assertEquals(1, $result, 'One row must be saved in a database');
+    }
+
+    public function _testUpsertWithExistingObject(): void
+    {
+
     }
 }
