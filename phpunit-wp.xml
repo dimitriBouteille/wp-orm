@@ -17,6 +17,9 @@
          stopOnIncomplete="false"
          stopOnSkipped="false"
          verbose="true">
+    <php>
+        <env name="WP_CACHE" value="false" />
+    </php>
     <testsuites>
         <testsuite name="Tests">
             <directory>tests/WordPress</directory>
