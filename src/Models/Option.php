@@ -19,7 +19,6 @@ use Dbout\WpOrm\Orm\AbstractModel;
  * @method mixed getOptionValue()
  * @method Option setAutoload(string|YesNo $autoload)
  * @method string getAutoload()
- * @method static static|null find($optionId)
  * @method static OptionBuilder query()
  */
 class Option extends AbstractModel
