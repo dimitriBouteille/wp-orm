@@ -8,10 +8,6 @@
 
 namespace Dbout\WpOrm\Tests\WordPress;
 
-if (!\defined('WP_CACHE')) {
-    \define('WP_CACHE', false);
-}
-
 class Bootstrap
 {
     private const VENDOR_DIR = __DIR__ . '/../../vendor';
