@@ -154,14 +154,50 @@ class AbstractModelTest extends TestCase
             ['option_name']
         );
 
-        $option = Option::findOneByName('_upsert_new_data');
-        $this->assertInstanceOf(Option::class, $option);
-        $this->assertEquals('John D.', $option->getOptionValue());
         $this->assertEquals(1, $result, 'One row must be saved in a database');
+        $this->checkUpsertOption('_upsert_new_data', 'John D.');
+    }
+
+    /**
+     * @return void
+     * @covers ::upsert
+     */
+    public function testUpsertWithMultipleNewObjects(): void
+    {
+        $result = Option::upsert(
+            [
+                'option_name' => '_upsert_architect_1',
+                'option_value' => 'Zaha H.',
+            ],
+            [
+                'option_name' => '_upsert_architect_2',
+                'option_value' => 'Norman F.',
+            ],
+            ['option_name']
+        );
+
+        $this->assertEquals(2, $result, 'Twos rows must be saved in a database');
+        $this->checkUpsertOption('_upsert_architect_1', 'Zaha H.');
+        $this->checkUpsertOption('_upsert_architect_2', 'Norman F.');
     }
 
     public function _testUpsertWithExistingObject(): void
     {
 
+    }
+
+    /**
+     * @param string $optionName
+     * @param string $expectedValue
+     * @return void
+     */
+    private function checkUpsertOption(string $optionName, string $expectedValue): void
+    {
+        $option = Option::findOneByName($optionName);
+        $this->assertInstanceOf(Option::class, $option);
+        $this->assertEquals($expectedValue, $option->getOptionValue());
+
+        $wpOpt = get_option($optionName);
+        $this->assertEquals($expectedValue, $wpOpt);
     }
 }
