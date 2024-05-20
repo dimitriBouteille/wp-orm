@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Models\Article;
+use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\QueryException;
@@ -25,7 +26,7 @@ class AbstractModelTest extends TestCase
      * @covers ::saveOrFail
      * @dataProvider providerTestSaveNewObject
      */
-    public function testSuccessNSaveNewObject(string $saveMethod): void
+    public function testSuccessSaveNewObject(string $saveMethod): void
     {
         $model = new Article();
         $model->setPostName('hello-world');
@@ -137,5 +138,107 @@ class AbstractModelTest extends TestCase
         $this->assertEquals('my-filled-post', $post->getPostName());
         $this->assertEquals('The post content', $post->getPostContent());
         $this->assertNull($post->getAttribute('test'), 'This attribute must be empty because it does not exist in the posts table.');
+    }
+
+    /**
+     * @return void
+     * @covers ::upsert
+     */
+    public function testUpsertWithOneNewObjects(): void
+    {
+        Option::upsert(
+            [
+                [
+                    'option_name' => '_upsert_architect_0',
+                    'option_value' => 'John D.',
+                ],
+                [
+                    'option_name' => '_upsert_architect_1',
+                    'option_value' => 'Zaha H.',
+                ],
+            ],
+            ['option_name']
+        );
+
+        $this->checkUpsertOption('_upsert_architect_0', 'John D.');
+        $this->checkUpsertOption('_upsert_architect_1', 'Zaha H.');
+    }
+
+    /**
+     * @return void
+     * @covers ::upsert
+     */
+    public function testUpsertWithExistingObjects(): void
+    {
+        add_option('store_phone', '15 15 15');
+        add_option('store_email', 'boutique@test.fr');
+        add_option('store_address', 'Road test');
+
+        Option::upsert(
+            [
+                [
+                    'option_name' => 'store_phone',
+                    'option_value' => '15 15 15',
+                ],
+                [
+                    'option_name' => 'store_email',
+                    'option_value' => 'boutique@test.fr',
+                ],
+                [
+                    'option_name' => 'store_address',
+                    'option_value' => 'Road of paris',
+                ],
+            ],
+            ['option_name']
+        );
+
+        $this->checkUpsertOption('store_phone', '15 15 15');
+        $this->checkUpsertOption('store_email', 'boutique@test.fr');
+
+        // Check if value is updated
+        $this->checkUpsertOption('store_address', 'Road of paris');
+    }
+
+    /**
+     * @return void
+     * @covers ::upsert
+     */
+    public function testUpsertWithUpdateKey(): void
+    {
+        add_option('store_latitude', 75.652, autoload: 'yes');
+
+        Option::upsert(
+            [
+                [
+                    'option_name' => 'store_latitude',
+                    'option_value' => 40.111,
+                    'autoload' => 'no',
+                ],
+            ],
+            ['option_name'],
+            ['autoload']
+        );
+
+        // Check if value is not update updated
+        $option = $this->checkUpsertOption('store_latitude', 75.652);
+        $this->assertEquals('no', $option?->getAutoload());
+    }
+
+    /**
+     * @param string $optionName
+     * @param string $expectedValue
+     * @return Option|null
+     */
+    private function checkUpsertOption(string $optionName, string $expectedValue): ?Option
+    {
+        $option = Option::findOneByName($optionName);
+        $this->assertInstanceOf(Option::class, $option);
+        $this->assertEquals($expectedValue, $option->getOptionValue());
+
+        \wp_cache_delete('alloptions', 'options');
+        $wpOpt = \get_option($optionName);
+        $this->assertEquals($expectedValue, $wpOpt);
+
+        return $option;
     }
 }
