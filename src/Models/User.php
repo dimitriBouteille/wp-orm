@@ -37,7 +37,6 @@ use Illuminate\Support\Collection;
  * @method User setUserStatus(int $status)
  * @method string|null getDisplayName()
  * @method User setDisplayName(?string $name)
- * @method static static|null find($userId)
  * @method static UserBuilder query()
  *
  * @property-read Collection<UserMeta> $metas
