@@ -199,6 +199,8 @@ class AbstractModelTest extends TestCase
 
         $this->checkUpsertOption('store_phone', '15 15 15');
         $this->checkUpsertOption('store_email', 'boutique@test.fr');
+
+        // Check if value is updated
         $this->checkUpsertOption('store_address', 'Road of paris');
     }
 
@@ -213,6 +215,10 @@ class AbstractModelTest extends TestCase
         $this->assertInstanceOf(Option::class, $option);
         $this->assertEquals($expectedValue, $option->getOptionValue());
 
+        /**
+         * @see https://wordpress.stackexchange.com/questions/100040/can-i-force-get-option-to-go-back-to-the-db-instead-of-cache
+         */
+        $GLOBALS['wp_object_cache']->delete($optionName, 'options');
         $wpOpt = get_option($optionName);
         $this->assertEquals($expectedValue, $wpOpt);
     }
