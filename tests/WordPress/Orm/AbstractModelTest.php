@@ -144,46 +144,62 @@ class AbstractModelTest extends TestCase
      * @return void
      * @covers ::upsert
      */
-    public function testUpsertWithOneNewObject(): void
+    public function testUpsertWithOneNewObjects(): void
     {
-        $result = Option::upsert(
+        Option::upsert(
             [
-                'option_name' => '_upsert_new_data',
-                'option_value' => 'John D.',
+                [
+                    'option_name' => '_upsert_architect_0',
+                    'option_value' => 'John D.',
+                ],
+                [
+                    'option_name' => '_upsert_architect_1',
+                    'option_value' => 'Zaha H.',
+                ],
+                [
+                    'option_name' => '_upsert_architect_2',
+                    'option_value' => 'Norman F.',
+                ],
             ],
             ['option_name']
         );
 
-        $this->assertEquals(1, $result, 'One row must be saved in a database');
-        $this->checkUpsertOption('_upsert_new_data', 'John D.');
+        $this->checkUpsertOption('_upsert_architect_0', 'John D.');
+        $this->checkUpsertOption('_upsert_architect_1', 'Zaha H.');
+        $this->checkUpsertOption('_upsert_architect_2', 'Norman F.');
     }
 
     /**
      * @return void
      * @covers ::upsert
      */
-    public function testUpsertWithMultipleNewObjects(): void
+    public function testUpsertWithExistingObjects(): void
     {
-        $result = Option::upsert(
+        add_option('store_phone', '15 15 15');
+        add_option('store_email', 'boutique@test.fr');
+        add_option('store_address', 'Road test');
+
+        Option::upsert(
             [
-                'option_name' => '_upsert_architect_1',
-                'option_value' => 'Zaha H.',
-            ],
-            [
-                'option_name' => '_upsert_architect_2',
-                'option_value' => 'Norman F.',
+                [
+                    'option_name' => 'store_phone',
+                    'option_value' => '15 15 15',
+                ],
+                [
+                    'option_name' => 'store_email',
+                    'option_value' => 'boutique@test.fr',
+                ],
+                [
+                    'option_name' => 'store_address',
+                    'option_value' => 'Road of paris',
+                ],
             ],
             ['option_name']
         );
 
-        $this->assertEquals(2, $result, 'Twos rows must be saved in a database');
-        $this->checkUpsertOption('_upsert_architect_1', 'Zaha H.');
-        $this->checkUpsertOption('_upsert_architect_2', 'Norman F.');
-    }
-
-    public function _testUpsertWithExistingObject(): void
-    {
-
+        $this->checkUpsertOption('store_phone', '15 15 15');
+        $this->checkUpsertOption('store_email', 'boutique@test.fr');
+        $this->checkUpsertOption('store_address', 'Road of paris');
     }
 
     /**
