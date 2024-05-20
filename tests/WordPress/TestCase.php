@@ -30,6 +30,7 @@ abstract class TestCase extends \WP_UnitTestCase
     public function assertPostEqualToWpObject(?Post $model, ?\WP_Post $wpPost): void
     {
         self::assertInstanceOf(\WP_Post::class, $wpPost);
+        self::assertInstanceOf(Post::class, $wpPost);
 
         self::assertEquals($wpPost->ID, $model->getId());
         self::assertEquals($wpPost->post_type, $model->getPostType());

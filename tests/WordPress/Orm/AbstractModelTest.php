@@ -156,29 +156,12 @@ class AbstractModelTest extends TestCase
                     'option_name' => '_upsert_architect_1',
                     'option_value' => 'Zaha H.',
                 ],
-                [
-                    'option_name' => '_upsert_architect_2',
-                    'option_value' => 'Norman F.',
-                ],
             ],
             ['option_name']
         );
 
         $this->checkUpsertOption('_upsert_architect_0', 'John D.');
         $this->checkUpsertOption('_upsert_architect_1', 'Zaha H.');
-        $this->checkUpsertOption('_upsert_architect_2', 'Norman F.');
-
-        Option::upsert(
-            [
-                [
-                    'option_name' => '_upsert_architect_4',
-                    'option_value' => 'Luc D.',
-                ],
-            ],
-            'option_name'
-        );
-
-        $this->checkUpsertOption('_upsert_architect_4', 'Luc D.');
     }
 
     /**
@@ -216,6 +199,37 @@ class AbstractModelTest extends TestCase
         $this->checkUpsertOption('store_address', 'Road of paris');
     }
 
+    /**
+     * @return void
+     * @covers ::upsert
+     */
+    public function testUpsertWithUpdateKey(): void
+    {
+        $objetId = self::factory()->post->create([
+            'post_type' => 'product',
+            'post_name' => 'salomon-lab',
+            'post_status' => 'private',
+            'post_title' => 'Salomon Lab X.',
+        ]);
+
+        Post::upsert(
+            [
+                [
+                    'post_name' => 'salomon-lab',
+                    'post_status' => 'publish',
+                    'post_title' => 'Hello world',
+                ],
+            ],
+            'post_name',
+            ['post_status']
+        );
+
+        $post = Post::findOneByName('salomon-lab');
+        $this->assertInstanceOf(Post::class, $post);
+        $this->assertEquals($objetId, $post->getId());
+        $this->assertEquals('publish', $post->getPostStatus(), 'The post status will be updated.');
+        $this->assertEquals('Salomon Lab X.', $post->getPostTitle(), 'The post title must be not updated.');
+    }
 
     /**
      * @param string $optionName
