@@ -228,7 +228,7 @@ class AbstractModelTest extends TestCase
         $this->assertInstanceOf(Option::class, $option);
         $this->assertEquals($expectedValue, $option->getOptionValue());
 
-        \wp_cache_delete($optionName, 'options');
+        \wp_cache_delete('alloptions', 'options');
         $wpOpt = \get_option($optionName);
         $this->assertEquals($expectedValue, $wpOpt);
     }
