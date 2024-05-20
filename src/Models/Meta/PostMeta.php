@@ -12,7 +12,6 @@ use Dbout\WpOrm\Models\Post;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @method static PostMeta find(int $metaId);
  * @property-read Post|null $post
  */
 class PostMeta extends AbstractMeta

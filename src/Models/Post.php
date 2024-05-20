@@ -58,7 +58,6 @@ use Illuminate\Support\Collection;
  * @method int|null getMenuOrder()
  * @method Post setPostContentFiltered($content)
  * @method string|null getPostContentFiltered()
- * @method static static find(int $postId)
  * @method static PostBuilder query()
  *
  * @property-read User|null $author

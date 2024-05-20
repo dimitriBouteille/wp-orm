@@ -21,7 +21,6 @@ use Dbout\WpOrm\Orm\AbstractModel;
  * @method TermTaxonomy setParent($parent)
  * @method int|null getCount()
  * @method TermTaxonomy setCount(int $count)
- * @method static static|null find(int $id)
  */
 class TermTaxonomy extends AbstractModel
 {

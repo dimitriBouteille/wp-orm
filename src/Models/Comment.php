@@ -38,7 +38,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method Carbon|null getCommentDate()
  * @method Comment setCommentDateGmt(mixed $date)
  * @method Carbon|null getCommentDateGmt()
- * @method static static|null find(int $commentId)
  * @method static CommentBuilder query()
  *
  * @property-read User|null $user

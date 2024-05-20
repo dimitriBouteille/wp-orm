@@ -12,7 +12,6 @@ use Dbout\WpOrm\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @method static UserMeta find(int $metaId);
  * @property-read User|null $user
  */
 class UserMeta extends AbstractMeta
