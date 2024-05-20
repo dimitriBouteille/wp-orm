@@ -26,7 +26,7 @@ class AbstractModelTest extends TestCase
      * @covers ::saveOrFail
      * @dataProvider providerTestSaveNewObject
      */
-    public function testSuccessNSaveNewObject(string $saveMethod): void
+    public function testSuccessSaveNewObject(string $saveMethod): void
     {
         $model = new Article();
         $model->setPostName('hello-world');
@@ -205,38 +205,31 @@ class AbstractModelTest extends TestCase
      */
     public function testUpsertWithUpdateKey(): void
     {
-        $objetId = self::factory()->post->create([
-            'post_type' => 'product',
-            'post_name' => 'salomon-lab',
-            'post_status' => 'private',
-            'post_title' => 'Salomon Lab X.',
-        ]);
+        add_option('store_latitude', 75.652, autoload: 'yes');
 
-        Post::upsert(
+        Option::upsert(
             [
                 [
-                    'post_name' => 'salomon-lab',
-                    'post_status' => 'publish',
-                    'post_title' => 'Hello world',
+                    'option_name' => 'store_latitude',
+                    'option_value' => 40.111,
+                    'autoload' => 'no',
                 ],
             ],
-            'post_name',
-            ['post_status']
+            ['option_name'],
+            ['autoload']
         );
 
-        $post = Post::findOneByName('salomon-lab');
-        $this->assertInstanceOf(Post::class, $post);
-        $this->assertEquals($objetId, $post->getId());
-        $this->assertEquals('publish', $post->getPostStatus(), 'The post status will be updated.');
-        $this->assertEquals('Salomon Lab X.', $post->getPostTitle(), 'The post title must be not updated.');
+        // Check if value is not update updated
+        $option = $this->checkUpsertOption('store_latitude', 75.652);
+        $this->assertEquals('no', $option?->getAutoload());
     }
 
     /**
      * @param string $optionName
      * @param string $expectedValue
-     * @return void
+     * @return Option|null
      */
-    private function checkUpsertOption(string $optionName, string $expectedValue): void
+    private function checkUpsertOption(string $optionName, string $expectedValue): ?Option
     {
         $option = Option::findOneByName($optionName);
         $this->assertInstanceOf(Option::class, $option);
@@ -245,5 +238,7 @@ class AbstractModelTest extends TestCase
         \wp_cache_delete('alloptions', 'options');
         $wpOpt = \get_option($optionName);
         $this->assertEquals($expectedValue, $wpOpt);
+
+        return $option;
     }
 }
