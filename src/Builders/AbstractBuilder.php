@@ -32,9 +32,9 @@ abstract class AbstractBuilder extends Builder
     protected function _whereOrIn(string $columns, array $value): self
     {
         $first = reset($value);
-        if(is_array($first)) {
+        if (is_array($first)) {
             $this->whereIn($columns, $first);
-        } elseif(count($value) == 1) {
+        } elseif (count($value) == 1) {
             $this->where($columns, reset($value));
         } else {
             $this->whereIn($columns, $value);
@@ -51,7 +51,7 @@ abstract class AbstractBuilder extends Builder
     protected function joined($query, $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if($joins == null) {
+        if ($joins == null) {
             return false;
         }
 
