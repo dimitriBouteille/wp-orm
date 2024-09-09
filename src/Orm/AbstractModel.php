@@ -33,7 +33,7 @@ abstract class AbstractModel extends Model
     /**
      * @inheritDoc
      */
-    public function getTable(): string
+    public function getTable()
     {
         $prefix = $this->getConnection()->getTablePrefix();
         if ($this->table !== null && $this->table !== '') {
