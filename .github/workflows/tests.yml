@@ -30,7 +30,7 @@ jobs:
 
     strategy:
       matrix:
-        wp_version: ["6.3", "6.4", "6.5", "6.6" "latest"]
+        wp_version: ["6.3", "6.4", "6.5", "6.6", "latest"]
 
     services:
       mysql:
