@@ -35,6 +35,7 @@ This documentation only covers the specific points of this library, if you want 
     - [With findOneBy*](/doc/filter-data.md#with-findoneby)
     - [With taps](/doc/filter-data.md#with-taps)
     - [With query builder](/doc/filter-data.md#with-query-builder)
+- [Events](/doc/events.md)
 - [Create custom model](doc/create-model.md)
     - [Generic Model](doc/create-model.md#generic-model)
     - [Custom Post Type Model](doc/create-model.md#custom-post-type-model)
