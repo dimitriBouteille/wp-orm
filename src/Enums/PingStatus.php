@@ -13,6 +13,6 @@ namespace Dbout\WpOrm\Enums;
  */
 enum PingStatus: string
 {
-    case  Closed = 'closed';
+    case Closed = 'closed';
     case Open = 'open';
 }
