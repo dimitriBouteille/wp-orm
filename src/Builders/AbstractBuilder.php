@@ -51,7 +51,7 @@ abstract class AbstractBuilder extends Builder
     protected function joined($query, $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if($joins == null) {
+        if ($joins == null) {
             return false;
         }
 
