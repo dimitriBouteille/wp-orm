@@ -14,23 +14,6 @@ use Illuminate\Database\Eloquent\Collection;
 class PostBuilder extends AbstractWithMetaBuilder
 {
     /**
-     * @param string|null $name
-     * @return Post|null
-     * @deprecated Remove in next version
-     * @see Post::findOneByName()
-     */
-    public function findOneByName(?string $name): ?Post
-    {
-        if (!$name) {
-            return null;
-        }
-
-        /** @var Post|null $model */
-        $model = $this->firstWhere(Post::POST_NAME, $name);
-        return $model;
-    }
-
-    /**
      * @param string $type
      * @return Collection
      */

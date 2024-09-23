@@ -164,18 +164,6 @@ class Database extends Connection
     }
 
     /**
-     * @param $query
-     * @param $bindings
-     * @throws \Exception
-     * @return never
-     * @deprecated Remove in next version.
-     */
-    public function bind_and_run($query, $bindings = []): never
-    {
-        throw new \Exception('This function is no longer usable, it will be removed in a future version.');
-    }
-
-    /**
      * @inheritDoc
      */
     public function insert($query, $bindings = []): bool
