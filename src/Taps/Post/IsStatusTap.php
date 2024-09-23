@@ -12,16 +12,13 @@ use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Enums\PostStatus;
 use Dbout\WpOrm\Models\Post;
 
-/**
- * @since 3.0.0
- */
-class IsStatusTap
+readonly class IsStatusTap
 {
     /**
      * @param string|PostStatus $status
      */
     public function __construct(
-        protected readonly string|PostStatus $status
+        protected string|PostStatus $status
     ) {
     }
 

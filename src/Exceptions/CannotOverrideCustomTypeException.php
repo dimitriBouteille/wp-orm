@@ -8,9 +8,6 @@
 
 namespace Dbout\WpOrm\Exceptions;
 
-/**
- * @since 3.0.0
- */
 class CannotOverrideCustomTypeException extends NotAllowedException
 {
     /**

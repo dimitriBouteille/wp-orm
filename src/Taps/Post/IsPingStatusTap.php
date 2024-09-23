@@ -12,16 +12,13 @@ use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Enums\PingStatus;
 use Dbout\WpOrm\Models\Post;
 
-/**
- * @since 3.0.0
- */
-class IsPingStatusTap
+readonly class IsPingStatusTap
 {
     /**
      * @param string|PingStatus $status
      */
     public function __construct(
-        protected readonly string|PingStatus $status
+        protected string|PingStatus $status
     ) {
     }
 

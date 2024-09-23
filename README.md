@@ -47,7 +47,7 @@ This documentation only covers the specific points of this library, if you want 
 
 The server requirements are basically the same as for [WordPress](https://wordpress.org/about/requirements/) with the addition of a few ones :
 
-- PHP >= 8.1
+- PHP >= 8.2
 - [Composer](https://getcomposer.org/)
 
 **Installation**

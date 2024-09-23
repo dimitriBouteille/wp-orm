@@ -11,16 +11,13 @@ namespace Dbout\WpOrm\Taps\Post;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Models\Post;
 
-/**
- * @since 3.0.0
- */
-class IsPostTypeTap
+readonly class IsPostTypeTap
 {
     /**
      * @param string $postType
      */
     public function __construct(
-        protected readonly string $postType
+        protected string $postType
     ) {
     }
 
