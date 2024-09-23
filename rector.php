@@ -22,5 +22,5 @@ return RectorConfig::configure()
         codeQuality: true,
     )
     ->withSets([
-        SetList::PHP_82,
+        SetList::PHP_81,
     ]);

@@ -11,13 +11,16 @@ namespace Dbout\WpOrm\Taps\Comment;
 use Dbout\WpOrm\Builders\CommentBuilder;
 use Dbout\WpOrm\Models\Comment;
 
-readonly class IsCommentTypeTap
+/**
+ * @since 3.0.0
+ */
+class IsCommentTypeTap
 {
     /**
      * @param string $commentType
      */
     public function __construct(
-        protected string $commentType
+        protected readonly string $commentType
     ) {
     }
 

@@ -10,6 +10,9 @@ namespace Dbout\WpOrm\Api;
 
 use Dbout\WpOrm\MetaMappingConfig;
 
+/**
+ * @since 3.0.0
+ */
 interface WithMetaModelInterface
 {
     /**

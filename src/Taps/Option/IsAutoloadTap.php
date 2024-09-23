@@ -12,10 +12,13 @@ use Dbout\WpOrm\Builders\OptionBuilder;
 use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Models\Option;
 
-readonly class IsAutoloadTap
+/**
+ * @since 3.0.0
+ */
+class IsAutoloadTap
 {
     public function __construct(
-        protected bool|YesNo $autoload = YesNo::Yes
+        protected readonly bool|YesNo $autoload = YesNo::Yes
     ) {
     }
 

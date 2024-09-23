@@ -11,13 +11,16 @@ namespace Dbout\WpOrm\Taps\Attachment;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Models\Post;
 
-readonly class IsMimeTypeTap
+/**
+ * @since 3.0.0
+ */
+class IsMimeTypeTap
 {
     /**
      * @param string $mimeType
      */
     public function __construct(
-        protected string $mimeType
+        protected readonly string $mimeType
     ) {
     }
 
