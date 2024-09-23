@@ -1,6 +1,6 @@
 {
   "name": "dbout/wp-orm",
-  "description": "WordPress ORM with Eloquent and Phinx.",
+  "description": "WordPress ORM with Eloquent.",
   "type": "package",
   "license": "MIT",
   "authors": [
@@ -11,7 +11,7 @@
       "role": "Developer"
     }
   ],
-  "keywords": ["wordpress", "wp", "orm", "database", "eloquent", "db", "sql", "migration", "phinx"],
+  "keywords": ["wordpress", "wp", "orm", "database", "eloquent", "db", "sql", "migration"],
   "homepage": "https://github.com/dimitriBouteille/wp-orm",
   "support": {
     "issues": "https://github.com/dimitriBouteille/wp-orm/issues",
@@ -21,17 +21,13 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.2",
-    "robmorgan/phinx": "^0.12.5",
-    "illuminate/database": "^11.0",
-    "laravel/serializable-closure": "^1.3"
+    "laravel/serializable-closure": "^1.3",
+    "illuminate/database": "^11.0"
   },
   "suggest": {
     "illuminate/events": "Add events to your models"
   },
   "autoload": {
-    "files": [
-      "src/includes/migrations.php"
-    ],
     "psr-4": {
       "Dbout\\WpOrm\\": "src/"
     }
