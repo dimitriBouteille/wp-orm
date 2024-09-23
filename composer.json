@@ -22,7 +22,8 @@
   "require": {
     "php": ">=8.2",
     "robmorgan/phinx": "^0.12.5",
-    "illuminate/database": "^11.0"
+    "illuminate/database": "^11.0",
+    "laravel/serializable-closure": "^1.3"
   },
   "suggest": {
     "illuminate/events": "Add events to your models"
