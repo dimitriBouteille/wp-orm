@@ -12,16 +12,13 @@ use Dbout\WpOrm\Builders\CommentBuilder;
 use Dbout\WpOrm\Models\Comment;
 use Dbout\WpOrm\Models\User;
 
-/**
- * @since 3.0.0
- */
-class IsUserTap
+readonly class IsUserTap
 {
     /**
      * @param int|User $user
      */
     public function __construct(
-        protected readonly int|User $user
+        protected int|User $user
     ) {
     }
 

@@ -14,9 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-/**
- * @since 3.0.0
- */
 class CustomModelTypeScope implements Scope
 {
     /**

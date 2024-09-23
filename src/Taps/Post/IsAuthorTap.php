@@ -12,10 +12,7 @@ use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Models\User;
 
-/**
- * @since 3.0.0
- */
-class IsAuthorTap
+readonly class IsAuthorTap
 {
     /**
      * @param int|User $author
