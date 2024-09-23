@@ -65,16 +65,6 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
     }
 
     /**
-     * @return string|null
-     * @deprecated Remove in next version - Use constant
-     */
-    public static function type(): ?string
-    {
-        // @phpstan-ignore-next-line
-        return (new static())->getPostType();
-    }
-
-    /**
      * @inheritDoc
      */
     protected static function booted()

@@ -14,32 +14,6 @@ class UserBuilder extends AbstractWithMetaBuilder
 {
     /**
      * @param string $email
-     * @return User|null
-     * @deprecated Remove in next version
-     * @see User::findOneByEmail()
-     */
-    public function findOneByEmail(string $email): ?User
-    {
-        /** @var User|null $model */
-        $model = $this->firstWhere(User::EMAIL, $email);
-        return $model;
-    }
-
-    /**
-     * @param string $login
-     * @return User|null
-     * @deprecated Remove in next version
-     * @see User::findOneByLogin()
-     */
-    public function findOneByLogin(string $login): ?User
-    {
-        /** @var User|null $model */
-        $model = $this->firstWhere(User::LOGIN, $login);
-        return $model;
-    }
-
-    /**
-     * @param string $email
      * @return $this
      */
     public function whereEmail(string $email): self
