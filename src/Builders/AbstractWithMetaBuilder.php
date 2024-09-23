@@ -16,9 +16,6 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Orm\Database;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @since 3.0.0
- */
 abstract class AbstractWithMetaBuilder extends AbstractBuilder
 {
     /**

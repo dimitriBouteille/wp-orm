@@ -8,9 +8,6 @@
 
 namespace Dbout\WpOrm\Enums;
 
-/**
- * @since 3.0.0
- */
 enum YesNo: string
 {
     case Yes = 'yes';
