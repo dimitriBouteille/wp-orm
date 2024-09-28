@@ -137,7 +137,7 @@ class HasMetasTest extends TestCase
         $model->save();
         $model->setMeta('active', 'yes');
 
-        /** @var YesNo|null $value */
+        /** @var YesNo $value */
         $value = $model->getMetaValue('active');
 
         $this->assertInstanceOf(YesNo::class, $value);
@@ -163,15 +163,15 @@ class HasMetasTest extends TestCase
         $model->setMeta('created_at', '2022-09-08 07:30:05');
         $model->setMeta('uploaded_at', '2024-10-08 10:25:35');
 
-        /** @var Carbon|null $date */
+        /** @var Carbon $date */
         $date = $model->getMetaValue('created_at');
         $this->assertInstanceOf(Carbon::class, $date);
         $this->assertEquals('2022-09-08 07:30:05', $date->format('Y-m-d H:i:s'));
 
-        /** @var Carbon|null $date */
+        /** @var Carbon $date */
         $date = $model->getMetaValue('uploaded_at');
         $this->assertInstanceOf(Carbon::class, $date);
-        $this->assertEquals('2022-09-08 00:00:00', $date->format('Y-m-d H:i:s'));
+        $this->assertEquals('2024-10-08 00:00:00', $date->format('Y-m-d H:i:s'), 'The time must be reset to 00:00:00.');
     }
 
     /**
