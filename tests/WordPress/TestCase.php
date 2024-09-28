@@ -10,6 +10,14 @@ namespace Dbout\WpOrm\Tests\WordPress;
 
 use Dbout\WpOrm\Models\Post;
 
+/**
+ * @method static|$this assertEquals(mixed $expectedValue, mixed $checkValue, string $reason = null)
+ * @method static|$this assertInstanceOf(string $className, mixed $object, string $reason = null)
+ * @method static|$this expectExceptionMessageRegExp(string $pattern)
+ * @method static|$this assertTrue(mixed $value, string $reason = null)
+ * @method static|$this assertFalse(mixed $value, string $reason = null)
+ * @method static|$this assertNull(mixed $value, string $reason = null)
+ */
 abstract class TestCase extends \WP_UnitTestCase
 {
     /**
@@ -54,7 +62,7 @@ abstract class TestCase extends \WP_UnitTestCase
      */
     public function expectExceptionUnknownColumn(string $columnName): void
     {
-        $this->expectExceptionMessageMatches(sprintf("/^Unknown column '%s' in 'field list'/", $columnName));
+        $this->expectExceptionMessageRegExp(sprintf("/^Unknown column '%s' in 'field list'/", $columnName));
     }
 
     /**

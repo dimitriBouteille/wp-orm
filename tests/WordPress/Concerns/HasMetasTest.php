@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
 use Dbout\WpOrm\Concerns\HasMetas;
+use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
 
@@ -18,10 +19,20 @@ class HasMetasTest extends TestCase
 {
     /**
      * @return void
+     * @covers HasMetas::getMeta
      */
     public function testGetMeta(): void
     {
+        $model = new Post();
+        $model->setPostTitle('Hello world');
+        $model->save();
+        $createMeta = $model->setMeta('author', 'Norman FOSTER');
 
+        $meta = $model->getMeta('author');
+        $this->assertInstanceOf(AbstractMeta::class, $meta);
+        $this->assertEquals($createMeta->getId(), $meta->getId());
+        $this->assertEquals($createMeta->getValue(), $meta->getValue());
+        $this->assertEquals('author', $meta->getValue());
     }
 
     /**
@@ -32,7 +43,6 @@ class HasMetasTest extends TestCase
     {
         $model = new Post();
         $model->setPostTitle('Hello world');
-
         $model->save();
         $meta = $model->setMeta('build-by', 'John D.');
 
@@ -45,7 +55,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
-     * @covers ::hasMeta
+     * @covers HasMetas::hasMeta
      */
     public function testHasMeta(): void
     {
@@ -64,6 +74,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::getMetaValue
      */
     public function testGetMetaValueWithoutCast(): void
     {
@@ -73,7 +84,37 @@ class HasMetasTest extends TestCase
         $model->save();
         $model->setMeta('build-by', 'John D.');
 
-        $this->assertEquals('John D.', $model->getMetaValue('build-by'));
+        add_post_meta($model->getId(), 'place', 'Lyon, France');
+        $this->assertEquals('Lyon, France', $model->getMetaValue('place'));
+    }
+
+    /**
+     * @return void
+     * @covers HasMetas::getMetaValue
+     */
+    public function testGetMetaValueWithGenericCasts(): void
+    {
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'age' => 'int',
+                'year' => 'integer',
+                'is_active' => 'bool',
+                'subscribed' => 'boolean',
+            ];
+        };
+
+        $model = new $object();
+        $model->setPostTitle('Hello world');
+        $model->save();
+        $model->setMeta('age', '18');
+        $model->setMeta('year', '2024');
+        $model->setMeta('is_active', '1');
+        $model->setMeta('subscribed', '0');
+
+        $this->assertEquals(18, $model->getMetaValue('age'));
+        $this->assertEquals(2024, $model->getMetaValue('year'));
+        $this->assertTrue($model->getMetaValue('is_active'));
+        $this->assertFalse($model->getMetaValue('subscribed'));
     }
 
     /**
@@ -90,13 +131,5 @@ class HasMetasTest extends TestCase
 
         $this->assertEquals(1, $model->deleteMeta('architect-name'), 'The function must delete only one line.');
         $this->assertFalse($model->hasMeta('architect-name'), 'The meta must no longer exist.');
-    }
-
-    /**
-     * @return void
-     */
-    public function testMeta(): void
-    {
-
     }
 }

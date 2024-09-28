@@ -93,7 +93,7 @@ trait HasMetas
      */
     public function getMeta(string $metaKey): ?AbstractMeta
     {
-        /** @var ?AbstractMeta $value */
+        /** @var AbstractMeta $value */
         // @phpstan-ignore-next-line
         $value =  $this->metas()->firstWhere($this->getMetaConfigMapping()->columnKey, $metaKey);
         return $value;
@@ -201,9 +201,9 @@ trait HasMetas
      *
      * @return array
      */
-    protected function getMetaCasts(): array
+    public function getMetaCasts(): array
     {
-        return $this->casts;
+        return $this->metaCasts;
     }
 
     /**
@@ -249,7 +249,7 @@ trait HasMetas
             case 'object':
                 return $this->fromJson($value, true);
             case 'collection':
-                return new BaseCollection(Caster::toJson($value));
+                return new BaseCollection($this->fromJson($value));
             case 'date':
                 return $this->asDate($value);
             case 'datetime':
@@ -320,7 +320,7 @@ trait HasMetas
      * @param string|null $types
      * @return bool
      */
-    protected function metaHasCast(string $key, string $types = null): bool
+    public function metaHasCast(string $key, string $types = null): bool
     {
         if (array_key_exists($key, $this->getMetaCasts())) {
             return !$types || in_array($this->getMetaCastType($key), (array)$types, true);
