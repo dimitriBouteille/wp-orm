@@ -26,7 +26,7 @@ class HasMetasTest extends TestCase
     public function testGetMeta(): void
     {
         $model = new Post();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
         $model->save();
         $createMeta = $model->setMeta('author', 'Norman FOSTER');
 
@@ -45,7 +45,7 @@ class HasMetasTest extends TestCase
     public function testSetMeta(): void
     {
         $model = new Post();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
         $model->save();
         $meta = $model->setMeta('build-by', 'John D.');
 
@@ -63,7 +63,7 @@ class HasMetasTest extends TestCase
     public function testHasMeta(): void
     {
         $model = new Post();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
         $model->save();
 
         $model->setMeta('birthday-date', '17/09/1900');
@@ -82,7 +82,7 @@ class HasMetasTest extends TestCase
     public function testGetMetaValueWithoutCast(): void
     {
         $model = new Post();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
 
         $model->save();
         $model->setMeta('build-by', 'John D.');
@@ -107,7 +107,7 @@ class HasMetasTest extends TestCase
         };
 
         $model = new $object();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
         $model->save();
         $model->setMeta('age', '18');
         $model->setMeta('year', '2024');
@@ -133,7 +133,7 @@ class HasMetasTest extends TestCase
         };
 
         $model = new $object();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
         $model->save();
         $model->setMeta('active', 'yes');
 
@@ -158,7 +158,7 @@ class HasMetasTest extends TestCase
         };
 
         $model = new $object();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
         $model->save();
         $model->setMeta('created_at', '2022-09-08 07:30:05');
         $model->setMeta('uploaded_at', '2024-10-08 10:25:35');
@@ -176,17 +176,52 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::getMetaValue
+     */
+    public function testGetMetaValueWithInvalidCasts(): void
+    {
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'my_meta' => 'boolean_',
+            ];
+        };
+
+        $model = new $object();
+        $model->setPostTitle(__FUNCTION__);
+        $model->save();
+        $model->setMeta('my_meta', 'yes');
+
+        $this->assertEquals('yes', $model->getMetaValue('my_meta'));
+    }
+
+    /**
+     * @return void
      * @covers HasMetas::deleteMeta
      */
     public function testDeleteMeta(): void
     {
         $model = new Post();
-        $model->setPostTitle('Hello world');
+        $model->setPostTitle(__FUNCTION__);
         $model->save();
 
         $model->setMeta('architect-name', 'Norman F.');
 
         $this->assertEquals(1, $model->deleteMeta('architect-name'), 'The function must delete only one line.');
         $this->assertFalse($model->hasMeta('architect-name'), 'The meta must no longer exist.');
+    }
+
+    /**
+     * @return void
+     * @covers HasMetas::deleteMeta
+     */
+    public function testDeleteUndefinedMeta(): void
+    {
+        $model = new Post();
+        $model->setPostTitle(__FUNCTION__);
+        $model->save();
+
+        $model->setMeta('architect-name', 'Norman F.');
+
+        $this->assertEquals(0, $model->deleteMeta('fake-meta'));
     }
 }
