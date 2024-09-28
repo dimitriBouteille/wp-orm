@@ -32,7 +32,8 @@ class HasMetasTest extends TestCase
         $this->assertInstanceOf(AbstractMeta::class, $meta);
         $this->assertEquals($createMeta->getId(), $meta->getId());
         $this->assertEquals($createMeta->getValue(), $meta->getValue());
-        $this->assertEquals('author', $meta->getValue());
+        $this->assertEquals('Norman FOSTER', $meta->getValue());
+        $this->assertEquals('author', $meta->getKey());
     }
 
     /**
