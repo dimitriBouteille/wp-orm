@@ -14,7 +14,6 @@ use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
-
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class HasMetasTest extends TestCase
