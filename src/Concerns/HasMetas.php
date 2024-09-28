@@ -115,7 +115,7 @@ trait HasMetas
         }
 
         $value = $meta->getValue();
-        if  (!$this->metaHasCast($metaKey)) {
+        if (!$this->metaHasCast($metaKey)) {
             return $value;
         }
 
