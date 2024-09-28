@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
+use Carbon\Carbon;
 use Dbout\WpOrm\Concerns\HasMetas;
 use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
@@ -141,6 +142,36 @@ class HasMetasTest extends TestCase
 
         $this->assertInstanceOf(YesNo::class, $value);
         $this->assertEquals('yes', $value->value);
+    }
+
+    /**
+     * @return void
+     * @covers HasMetas::getMetaValue
+     */
+    public function testGetMetaValueWithDatetimeCasts(): void
+    {
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'created_at' => 'datetime',
+                'uploaded_at' => 'date',
+            ];
+        };
+
+        $model = new $object();
+        $model->setPostTitle('Hello world');
+        $model->save();
+        $model->setMeta('created_at', '2022-09-08 07:30:05');
+        $model->setMeta('uploaded_at', '2024-10-08 10:25:35');
+
+        /** @var Carbon|null $date */
+        $date = $model->getMetaValue('created_at');
+        $this->assertInstanceOf(Carbon::class, $date);
+        $this->assertEquals('2022-09-08 07:30:05', $date->format('Y-m-d H:i:s'));
+
+        /** @var Carbon|null $date */
+        $date = $model->getMetaValue('uploaded_at');
+        $this->assertInstanceOf(Carbon::class, $date);
+        $this->assertEquals('2022-09-08 00:00:00', $date->format('Y-m-d H:i:s'));
     }
 
     /**
