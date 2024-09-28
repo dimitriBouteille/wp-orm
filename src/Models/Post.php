@@ -11,7 +11,7 @@ namespace Dbout\WpOrm\Models;
 use Carbon\Carbon;
 use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
-use Dbout\WpOrm\Concerns\HasMeta;
+use Dbout\WpOrm\Concerns\HasMetas;
 use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -67,7 +67,7 @@ use Illuminate\Support\Collection;
  */
 class Post extends AbstractModel implements WithMetaModelInterface
 {
-    use HasMeta;
+    use HasMetas;
 
     public const UPDATED_AT = self::MODIFIED;
     public const CREATED_AT = self::DATE;
