@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
 use Dbout\WpOrm\Concerns\HasMetas;
+use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
@@ -116,6 +117,30 @@ class HasMetasTest extends TestCase
         $this->assertEquals(2024, $model->getMetaValue('year'));
         $this->assertTrue($model->getMetaValue('is_active'));
         $this->assertFalse($model->getMetaValue('subscribed'));
+    }
+
+    /**
+     * @return void
+     * @covers HasMetas::getMetaValue
+     */
+    public function testGetMetaValueWithEnumCasts(): void
+    {
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'active' => YesNo::class,
+            ];
+        };
+
+        $model = new $object();
+        $model->setPostTitle('Hello world');
+        $model->save();
+        $model->setMeta('active', 'yes');
+
+        /** @var YesNo|null $value */
+        $value = $model->getMetaValue('active');
+
+        $this->assertInstanceOf(YesNo::class, $value);
+        $this->assertEquals('yes', $value->value);
     }
 
     /**
