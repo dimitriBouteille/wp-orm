@@ -38,20 +38,19 @@
     }
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.28",
-    "phpstan/phpstan": ">=1.10.59",
-    "phpstan/phpstan-phpunit": "^1.3",
-    "phpstan/extension-installer": "^1.3",
-    "rector/rector": "^1.0",
-    "szepeviktor/phpstan-wordpress": "^1.3",
+    "friendsofphp/php-cs-fixer": "^3.64",
+    "phpstan/phpstan": "^1.12",
     "phpunit/phpunit": "^9.6",
     "yoast/phpunit-polyfills": "^2.0",
-    "roots/wordpress": "^6.5"
+    "roots/wordpress": "^6.5",
+    "phpstan/extension-installer": "^1.4",
+    "szepeviktor/phpstan-wordpress": "^1.3",
+    "rector/rector": "^1.2"
   },
   "config": {
     "allow-plugins": {
-      "phpstan/extension-installer": true,
-      "roots/wordpress-core-installer": true
+      "roots/wordpress-core-installer": true,
+      "phpstan/extension-installer": true
     }
   },
   "extra": {

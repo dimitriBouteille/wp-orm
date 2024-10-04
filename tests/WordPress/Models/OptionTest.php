@@ -9,7 +9,6 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\Option;
-use Dbout\WpOrm\Tests\WordPress\Helpers\WithFindOneBy;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 /**
@@ -17,8 +16,6 @@ use Dbout\WpOrm\Tests\WordPress\TestCase;
  */
 class OptionTest extends TestCase
 {
-    use WithFindOneBy;
-
     private const OPTION_NAME = 'my_custom_option';
     private const OPTION_VALUE = 'option_value';
 
@@ -41,7 +38,7 @@ class OptionTest extends TestCase
         $option = Option::findOneByName(self::OPTION_NAME);
 
         $this->assertInstanceOf(Option::class, $option);
-        $this->checkFindOneByQuery('options', 'option_name', self::OPTION_NAME);
+        $this->assertFindLastQuery('options', 'option_name', self::OPTION_NAME);
 
         $this->assertEquals(self::OPTION_VALUE, $option->getOptionValue());
         $this->assertEquals(self::OPTION_NAME, $option->getOptionName());

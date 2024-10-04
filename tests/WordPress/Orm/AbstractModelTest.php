@@ -205,7 +205,7 @@ class AbstractModelTest extends TestCase
      */
     public function testUpsertWithUpdateKey(): void
     {
-        add_option('store_latitude', 75.652, autoload: 'yes');
+        add_option('store_latitude', '75.652');
 
         Option::upsert(
             [
@@ -226,10 +226,10 @@ class AbstractModelTest extends TestCase
 
     /**
      * @param string $optionName
-     * @param string $expectedValue
+     * @param mixed $expectedValue
      * @return Option|null
      */
-    private function checkUpsertOption(string $optionName, string $expectedValue): ?Option
+    private function checkUpsertOption(string $optionName, mixed $expectedValue): ?Option
     {
         $option = Option::findOneByName($optionName);
         $this->assertInstanceOf(Option::class, $option);

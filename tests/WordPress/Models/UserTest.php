@@ -9,7 +9,6 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
-use Dbout\WpOrm\Tests\WordPress\Helpers\WithFindOneBy;
 use Dbout\WpOrm\Tests\WordPress\Helpers\WithHasManyRelation;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
@@ -18,7 +17,6 @@ use Dbout\WpOrm\Tests\WordPress\TestCase;
  */
 class UserTest extends TestCase
 {
-    use WithFindOneBy;
     use WithHasManyRelation;
 
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
@@ -139,7 +137,7 @@ class UserTest extends TestCase
     private function checkFindOneResult(?User $user, string $whereColumn, string $whereValue): void
     {
         $this->assertInstanceOf(User::class, $user);
-        $this->checkFindOneByQuery('users', $whereColumn, $whereValue);
+        $this->assertFindLastQuery('users', $whereColumn, $whereValue);
 
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());

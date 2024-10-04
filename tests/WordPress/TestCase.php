@@ -12,12 +12,16 @@ use Dbout\WpOrm\Models\Comment;
 use Dbout\WpOrm\Models\Post;
 
 /**
- * @method static|$this assertEquals(mixed $expectedValue, mixed $checkValue, string $reason = null)
- * @method static|$this assertInstanceOf(string $className, mixed $object, string $reason = null)
- * @method static|$this expectExceptionMessageMatches(string $pattern)
- * @method static|$this assertTrue(mixed $value, string $reason = null)
- * @method static|$this assertFalse(mixed $value, string $reason = null)
- * @method static|$this assertNull(mixed $value, string $reason = null)
+ * @method static|$this assertEquals(mixed $expectedValue, mixed $checkValue, string $message = '')
+ * @method static|$this assertInstanceOf(string $className, mixed $object, string $message = '')
+ * @method static|$this expectExceptionMessageMatches(string $pattern, string $message = '')
+ * @method static|$this expectException(string $className, string $message = '')
+ * @method static|$this assertTrue(mixed $value, string $message = '')
+ * @method static|$this assertFalse(mixed $value, string $message = '')
+ * @method static|$this assertNull(mixed $value, string $message = '')
+ * @method static|$this assertCount(int $expectedCount, array $array, string $message = '')
+ * @method static|$this assertIsNumeric(mixed $vale, string $message = '')
+ * @method static|$this assertEqualsCanonicalizing(mixed $expected, mixed $actual, string $message = '')
  * @method static mixed factory()
  */
 abstract class TestCase extends \WP_UnitTestCase
@@ -107,5 +111,25 @@ abstract class TestCase extends \WP_UnitTestCase
         $this->assertEquals($wpComment->comment_author_email, $comment->getCommentAuthorEmail());
         $this->assertEquals($wpComment->comment_author, $comment->getCommentAuthor());
         $this->assertEquals($wpComment->comment_type, $comment->getCommentType());
+    }
+
+    /**
+     * @param string $table
+     * @param string $whereColumn
+     * @param string $whereValue
+     * @return void
+     */
+    protected function assertFindLastQuery(string $table, string $whereColumn, string $whereValue): void
+    {
+        $table = $this->getTable($table);
+        $this->assertLastQueryEqual(
+            sprintf(
+                "select `%s`.* from `%s` where `%s` = '%s' limit 1",
+                $table,
+                $table,
+                $whereColumn,
+                $whereValue
+            )
+        );
     }
 }
