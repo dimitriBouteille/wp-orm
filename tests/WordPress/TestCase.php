@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Tests\WordPress;
 
+use Dbout\WpOrm\Models\Comment;
 use Dbout\WpOrm\Models\Post;
 
 /**
@@ -92,5 +93,19 @@ abstract class TestCase extends \WP_UnitTestCase
         $this->assertEquals($wpPost->post_status, $post->getPostStatus());
         $this->assertEquals($wpPost->post_excerpt, $post->getPostExcerpt());
         $this->assertEquals($wpPost->post_name, $post->getPostName());
+    }
+
+    /**
+     * @param Comment $comment
+     * @return void
+     */
+    public function assertCommentEqualsToWpComment(Comment $comment): void
+    {
+        $wpComment = get_comment($comment->getId());
+        $this->assertEquals($wpComment->comment_ID, $comment->getId());
+        $this->assertEquals($wpComment->comment_content, $comment->getCommentContent());
+        $this->assertEquals($wpComment->comment_author_email, $comment->getCommentAuthorEmail());
+        $this->assertEquals($wpComment->comment_author, $comment->getCommentAuthor());
+        $this->assertEquals($wpComment->comment_type, $comment->getCommentType());
     }
 }

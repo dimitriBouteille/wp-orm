@@ -61,11 +61,10 @@ class CustomCommentTest extends TestCase
             protected string $_type = 'author';
         };
 
-        $comment = new $model([
-            'comment_author' => 'Norman FOSTER',
-            'comment_author_email' => 'test@test.com',
-            'comment_content' => 'Hello world',
-        ]);
+        $comment = new $model();
+        $comment->setCommentAuthor('Norman FOSTER');
+        $comment->setCommentAuthorEmail('test@test.com');
+        $comment->setCommentContent('Hello world');
 
         $this->assertTrue($comment->save());
         $this->assertEquals('Hello world', $comment->getCommentContent());
@@ -73,7 +72,7 @@ class CustomCommentTest extends TestCase
         $this->assertEquals('test@test.com', $comment->getCommentAuthorEmail());
         $this->assertEquals('author', $comment->getCommentType());
 
-        $this->checkCommentEqualToWpComment($comment);
+        $this->assertCommentEqualsToWpComment($comment);
     }
 
     /**
@@ -130,20 +129,6 @@ class CustomCommentTest extends TestCase
         $this->assertEquals('Jean Nouvel', $comment->getCommentAuthor());
         $this->assertEquals('contact@jean-nouvel.fr', $comment->getCommentAuthorEmail());
 
-        $this->checkCommentEqualToWpComment($comment);
-    }
-
-    /**
-     * @param CustomComment $comment
-     * @return void
-     */
-    private function checkCommentEqualToWpComment(CustomComment $comment): void
-    {
-        $wpComment = get_comment($comment->getId());
-        $this->assertEquals($wpComment->comment_ID, $comment->getId());
-        $this->assertEquals($wpComment->comment_content, $comment->getCommentContent());
-        $this->assertEquals($wpComment->comment_author_email, $comment->getCommentAuthorEmail());
-        $this->assertEquals($wpComment->comment_author, $comment->getCommentAuthor());
-        $this->assertEquals($wpComment->comment_type, $comment->getCommentType());
+        $this->assertCommentEqualsToWpComment($comment);
     }
 }
