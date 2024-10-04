@@ -65,20 +65,17 @@ class CustomCommentTest extends TestCase
             'comment_author' => 'Norman FOSTER',
             'comment_author_email' => 'test@test.com',
             'comment_content' => 'Hello world',
+            'comment_author_IP' => '0.0.0.1',
         ]);
 
         $this->assertTrue($comment->save());
         $this->assertEquals('Hello world', $comment->getCommentContent());
         $this->assertEquals('Norman FOSTER', $comment->getCommentAuthor());
         $this->assertEquals('test@test.com', $comment->getCommentAuthorEmail());
+        $this->assertEquals('0.0.0.1', $comment->getCommentAuthorIP());
         $this->assertEquals('author', $comment->getCommentType());
 
-        $wpComment = get_comment($comment->getId());
-        $this->assertEquals($wpComment->comment_ID, $comment->getId());
-        $this->assertEquals($wpComment->comment_content, $comment->getCommentContent());
-        $this->assertEquals($wpComment->comment_author_email, $comment->getCommentAuthorEmail());
-        $this->assertEquals($wpComment->comment_author, $comment->getCommentAuthor());
-        $this->assertEquals($wpComment->comment_type, $comment->getCommentType());
+        $this->checkCommentEqualToWpComment($comment);
     }
 
     /**
@@ -107,5 +104,49 @@ class CustomCommentTest extends TestCase
         $applicationComments = array_merge($applicationCommentsV1, $applicationCommentsV2);
         $this->assertEquals(12, $comments->count());
         $this->assertEquals($applicationComments, $comments->pluck('comment_ID')->toArray());
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdate(): void
+    {
+        $model = new class () extends CustomComment {
+            protected string $_type = 'seo';
+        };
+
+        $comment = new $model([
+            'comment_author' => 'Zaha HADID',
+            'comment_author_email' => 'test@test.com',
+            'comment_content' => 'My name is Zaha',
+            'comment_author_IP' => '127.0.0.1',
+        ]);
+
+        $this->assertTrue($comment->save());
+        $comment->setCommentAuthor('Jean Nouvel');
+        $comment->setCommentAuthorEmail('contact@jean-nouvel.fr');
+        $this->assertEquals('seo', $comment->getCommentType());
+
+        $this->assertTrue($comment->save());
+        $this->assertEquals('My name is Zaha', $comment->getCommentContent());
+        $this->assertEquals('Jean Nouvel', $comment->getCommentAuthor());
+        $this->assertEquals('contact@jean-nouvel.fr', $comment->getCommentAuthorEmail());
+
+        $this->checkCommentEqualToWpComment($comment);
+    }
+
+    /**
+     * @param CustomComment $comment
+     * @return void
+     */
+    private function checkCommentEqualToWpComment(CustomComment $comment): void
+    {
+        $wpComment = get_comment($comment->getId());
+        $this->assertEquals($wpComment->comment_ID, $comment->getId());
+        $this->assertEquals($wpComment->comment_content, $comment->getCommentContent());
+        $this->assertEquals($wpComment->comment_author_email, $comment->getCommentAuthorEmail());
+        $this->assertEquals($wpComment->comment_author, $comment->getCommentAuthor());
+        $this->assertEquals($wpComment->comment_author_IP, $comment->getCommentAuthorIP());
+        $this->assertEquals($wpComment->comment_type, $comment->getCommentType());
     }
 }
