@@ -17,6 +17,7 @@ use Dbout\WpOrm\Models\Post;
  * @method static|$this assertTrue(mixed $value, string $reason = null)
  * @method static|$this assertFalse(mixed $value, string $reason = null)
  * @method static|$this assertNull(mixed $value, string $reason = null)
+ * @method static mixed factory()
  */
 abstract class TestCase extends \WP_UnitTestCase
 {

@@ -9,38 +9,43 @@
 namespace Dbout\WpOrm\Tests\Unit\Models;
 
 use Dbout\WpOrm\Exceptions\CannotOverrideCustomTypeException;
+use Dbout\WpOrm\Exceptions\NotAllowedException;
 use Dbout\WpOrm\Models\Attachment;
+use Dbout\WpOrm\Models\CustomPost;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @since 3.0.0
- * @coversDefaultClass \Dbout\WpOrm\Models\Attachment
- */
-class CustomPostTypeTest extends TestCase
+class CustomPostTest extends TestCase
 {
     /**
-     * @throws \Dbout\WpOrm\Exceptions\NotAllowedException
+     * @throws NotAllowedException
      * @return never
-     * @covers ::setPostType
+     * @covers Attachment::setPostType
      */
     public function testSetPostTypeException(): never
     {
-        $model = new Attachment();
+        $model = new class () extends CustomPost {
+            protected string $_type = 'product';
+        };
+
         $this->expectException(CannotOverrideCustomTypeException::class);
-        $this->expectExceptionMessage('You cannot override type for this object. Current type [attachment]');
+        $this->expectExceptionMessage('You cannot override type for this object. Current type [product]');
         $model->setPostType('my_type');
     }
 
     /**
      * @return void
-     * @covers ::setPostType
+     * @covers Attachment::getPostType
      */
     public function testSetPostTypeInConstructor(): void
     {
-        $model = new Attachment([
+        $model = new class () extends CustomPost {
+            protected string $_type = 'product';
+        };
+
+        $model = new $model([
             'post_type' => 'my_type',
         ]);
 
-        $this->assertEquals('attachment', $model->getPostType());
+        $this->assertEquals('product', $model->getPostType());
     }
 }
