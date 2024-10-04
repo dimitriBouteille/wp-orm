@@ -106,6 +106,7 @@ class CustomCommentTest extends TestCase
 
     /**
      * @return void
+     * @covers CustomComment::update
      */
     public function testUpdate(): void
     {

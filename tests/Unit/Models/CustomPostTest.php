@@ -47,4 +47,19 @@ class CustomPostTest extends TestCase
 
         $this->assertEquals('product', $model->getPostType());
     }
+
+    /**
+     * @return void
+     * @covers CustomPost::setAttribute
+     */
+    public function testSetPostTypeWithSetAttribute(): void
+    {
+        $model = new class () extends CustomPost {
+            protected string $_type = 'product';
+        };
+
+        $model = new $model();
+        $model->setAttribute('post_type', 'architect');
+        $this->assertEquals('product', $model->getPostType());
+    }
 }
