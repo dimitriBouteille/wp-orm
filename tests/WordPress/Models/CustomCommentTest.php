@@ -65,14 +65,12 @@ class CustomCommentTest extends TestCase
             'comment_author' => 'Norman FOSTER',
             'comment_author_email' => 'test@test.com',
             'comment_content' => 'Hello world',
-            'comment_author_IP' => '0.0.0.1',
         ]);
 
         $this->assertTrue($comment->save());
         $this->assertEquals('Hello world', $comment->getCommentContent());
         $this->assertEquals('Norman FOSTER', $comment->getCommentAuthor());
         $this->assertEquals('test@test.com', $comment->getCommentAuthorEmail());
-        $this->assertEquals('0.0.0.1', $comment->getCommentAuthorIP());
         $this->assertEquals('author', $comment->getCommentType());
 
         $this->checkCommentEqualToWpComment($comment);
@@ -119,7 +117,6 @@ class CustomCommentTest extends TestCase
             'comment_author' => 'Zaha HADID',
             'comment_author_email' => 'test@test.com',
             'comment_content' => 'My name is Zaha',
-            'comment_author_IP' => '127.0.0.1',
         ]);
 
         $this->assertTrue($comment->save());
@@ -146,7 +143,6 @@ class CustomCommentTest extends TestCase
         $this->assertEquals($wpComment->comment_content, $comment->getCommentContent());
         $this->assertEquals($wpComment->comment_author_email, $comment->getCommentAuthorEmail());
         $this->assertEquals($wpComment->comment_author, $comment->getCommentAuthor());
-        $this->assertEquals($wpComment->comment_author_IP, $comment->getCommentAuthorIP());
         $this->assertEquals($wpComment->comment_type, $comment->getCommentType());
     }
 }
