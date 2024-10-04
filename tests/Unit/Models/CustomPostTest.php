@@ -10,7 +10,6 @@ namespace Dbout\WpOrm\Tests\Unit\Models;
 
 use Dbout\WpOrm\Exceptions\CannotOverrideCustomTypeException;
 use Dbout\WpOrm\Exceptions\NotAllowedException;
-use Dbout\WpOrm\Models\Attachment;
 use Dbout\WpOrm\Models\CustomPost;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +18,7 @@ class CustomPostTest extends TestCase
     /**
      * @throws NotAllowedException
      * @return never
-     * @covers Attachment::setPostType
+     * @covers CustomPost::setPostType
      */
     public function testSetPostTypeException(): never
     {
@@ -34,7 +33,7 @@ class CustomPostTest extends TestCase
 
     /**
      * @return void
-     * @covers Attachment::getPostType
+     * @covers CustomPost::getPostType
      */
     public function testSetPostTypeInConstructor(): void
     {

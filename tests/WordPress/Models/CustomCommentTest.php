@@ -91,7 +91,8 @@ class CustomCommentTest extends TestCase
             'comment_type' => 'application',
         ]);
 
-        $badComments = self::factory()->comment->create_many(10, [
+        var_dump('testQueryAll', $applicationComments);
+        self::factory()->comment->create_many(10, [
             'comment_type' => 'fake-type',
         ]);
 
