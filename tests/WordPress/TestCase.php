@@ -75,4 +75,22 @@ abstract class TestCase extends \WP_UnitTestCase
         global $wpdb;
         return $wpdb->prefix . $table;
     }
+
+    /**
+     * @param Post $post
+     * @return void
+     */
+    public function assertPostEqualsToWpPost(Post $post): void
+    {
+        $wpPost = get_post($post->getId());
+
+        $this->assertInstanceOf(\WP_Post::class, $wpPost);
+        $this->assertEquals($wpPost->ID, $post->getId());
+        $this->assertEquals($wpPost->post_content, $post->getPostContent());
+        $this->assertEquals($wpPost->post_type, $post->getPostType());
+        $this->assertEquals($wpPost->post_title, $post->getPostTitle());
+        $this->assertEquals($wpPost->post_status, $post->getPostStatus());
+        $this->assertEquals($wpPost->post_excerpt, $post->getPostExcerpt());
+        $this->assertEquals($wpPost->post_name, $post->getPostName());
+    }
 }
