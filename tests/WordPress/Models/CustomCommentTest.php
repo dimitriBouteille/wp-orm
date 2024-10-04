@@ -87,13 +87,16 @@ class CustomCommentTest extends TestCase
      */
     public function testQueryAll(): void
     {
-        $applicationComments = self::factory()->comment->create_many(5, [
+        $applicationCommentsV1 = self::factory()->comment->create_many(5, [
             'comment_type' => 'application',
         ]);
 
-        var_dump('testQueryAll', $applicationComments);
         self::factory()->comment->create_many(10, [
             'comment_type' => 'fake-type',
+        ]);
+
+        $applicationCommentsV2 = self::factory()->comment->create_many(7, [
+            'comment_type' => 'application',
         ]);
 
         $model = new class () extends CustomComment {
@@ -101,7 +104,8 @@ class CustomCommentTest extends TestCase
         };
 
         $comments = $model::all();
-        $this->assertEquals(5, $comments->count());
+        $applicationComments = array_merge($applicationCommentsV1, $applicationCommentsV2);
+        $this->assertEquals(12, $comments->count());
         $this->assertEquals($applicationComments, $comments->pluck('comment_ID')->toArray());
     }
 }
