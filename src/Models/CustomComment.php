@@ -13,7 +13,7 @@ use Dbout\WpOrm\Exceptions\CannotOverrideCustomTypeException;
 use Dbout\WpOrm\Exceptions\NotAllowedException;
 use Dbout\WpOrm\Scopes\CustomModelTypeScope;
 
-abstract class CustomPost extends Post implements CustomModelTypeInterface
+abstract class CustomComment extends Comment implements CustomModelTypeInterface
 {
     /**
      * @var string
@@ -33,7 +33,7 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
     /**
      * @inheritDoc
      */
-    public function getPostType(): ?string
+    public function getCommentType(): ?string
     {
         return $this->_type;
     }
@@ -43,7 +43,7 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
      */
     public function getCustomTypeCode(): string
     {
-        return $this->getPostType();
+        return $this->getCommentType();
     }
 
     /**
@@ -59,7 +59,7 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
      * @throws NotAllowedException
      * @return never
      */
-    final public function setPostType(string $type): never
+    final public function setCommentType(string $type): never
     {
         throw new CannotOverrideCustomTypeException($this->_type);
     }

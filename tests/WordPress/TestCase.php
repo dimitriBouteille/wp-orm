@@ -8,6 +8,7 @@
 
 namespace Dbout\WpOrm\Tests\WordPress;
 
+use Dbout\WpOrm\Models\Comment;
 use Dbout\WpOrm\Models\Post;
 
 /**
@@ -17,6 +18,7 @@ use Dbout\WpOrm\Models\Post;
  * @method static|$this assertTrue(mixed $value, string $reason = null)
  * @method static|$this assertFalse(mixed $value, string $reason = null)
  * @method static|$this assertNull(mixed $value, string $reason = null)
+ * @method static mixed factory()
  */
 abstract class TestCase extends \WP_UnitTestCase
 {
@@ -73,5 +75,37 @@ abstract class TestCase extends \WP_UnitTestCase
     {
         global $wpdb;
         return $wpdb->prefix . $table;
+    }
+
+    /**
+     * @param Post $post
+     * @return void
+     */
+    public function assertPostEqualsToWpPost(Post $post): void
+    {
+        $wpPost = get_post($post->getId());
+
+        $this->assertInstanceOf(\WP_Post::class, $wpPost);
+        $this->assertEquals($wpPost->ID, $post->getId());
+        $this->assertEquals($wpPost->post_content, $post->getPostContent());
+        $this->assertEquals($wpPost->post_type, $post->getPostType());
+        $this->assertEquals($wpPost->post_title, $post->getPostTitle());
+        $this->assertEquals($wpPost->post_status, $post->getPostStatus());
+        $this->assertEquals($wpPost->post_excerpt, $post->getPostExcerpt());
+        $this->assertEquals($wpPost->post_name, $post->getPostName());
+    }
+
+    /**
+     * @param Comment $comment
+     * @return void
+     */
+    public function assertCommentEqualsToWpComment(Comment $comment): void
+    {
+        $wpComment = get_comment($comment->getId());
+        $this->assertEquals($wpComment->comment_ID, $comment->getId());
+        $this->assertEquals($wpComment->comment_content, $comment->getCommentContent());
+        $this->assertEquals($wpComment->comment_author_email, $comment->getCommentAuthorEmail());
+        $this->assertEquals($wpComment->comment_author, $comment->getCommentAuthor());
+        $this->assertEquals($wpComment->comment_type, $comment->getCommentType());
     }
 }
