@@ -48,4 +48,22 @@ class CustomCommentTest extends TestCase
 
         $this->assertEquals('woocommerce', $model->getCommentType());
     }
+
+    /**
+     * @return void
+     * @covers CustomComment::setAttribute
+     */
+    public function testSetCommentTypeWithSetAttribute(): void
+    {
+        $model = new class () extends CustomComment {
+            protected string $_type = 'woocommerce';
+        };
+
+        $model = new $model();
+
+        $this->expectException(CannotOverrideCustomTypeException::class);
+        $this->expectExceptionMessage('You cannot override type for this object. Current type [woocommerce]');
+
+        $model->setAttribute('comment_type', 'application');
+    }
 }
