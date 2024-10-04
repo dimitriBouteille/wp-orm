@@ -29,7 +29,7 @@ class CustomPostTest extends TestCase
 
         $object = $model::find($objectId);
         $this->assertInstanceOf($model::class, $object);
-        $this->assertEquals('attachment', $object->getPostType());
+        $this->assertEquals('architect', $object->getPostType());
         $this->assertEquals($objectId, $object->getId());
     }
 
