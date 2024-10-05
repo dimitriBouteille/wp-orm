@@ -11,14 +11,19 @@ namespace Dbout\WpOrm\Tests\Unit\Models;
 use Dbout\WpOrm\Exceptions\CannotOverrideCustomTypeException;
 use Dbout\WpOrm\Exceptions\NotAllowedException;
 use Dbout\WpOrm\Models\CustomPost;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(CustomPost::class)]
+#[CoversFunction('setPostType')]
+#[CoversFunction('getPostType')]
+#[CoversFunction('setAttribute')]
 class CustomPostTest extends TestCase
 {
     /**
      * @throws NotAllowedException
      * @return never
-     * @covers CustomPost::setPostType
      */
     public function testSetPostTypeException(): never
     {
@@ -33,7 +38,6 @@ class CustomPostTest extends TestCase
 
     /**
      * @return void
-     * @covers CustomPost::getPostType
      */
     public function testSetPostTypeInConstructor(): void
     {
@@ -50,7 +54,6 @@ class CustomPostTest extends TestCase
 
     /**
      * @return void
-     * @covers CustomPost::setAttribute
      */
     public function testSetPostTypeWithSetAttribute(): void
     {

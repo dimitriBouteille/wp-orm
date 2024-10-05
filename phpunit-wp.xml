@@ -2,21 +2,19 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          bootstrap="./tests/WordPress/Bootstrap.php"
-         cacheResultFile="var/cache/phpunit/wordpress"
+         cacheDirectory="var/cache/phpunit/wordPress"
          backupGlobals="false"
-         backupStaticAttributes="false"
          colors="true"
-         convertDeprecationsToExceptions="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         forceCoversAnnotation="true"
+         stopOnDeprecation="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
          stopOnIncomplete="false"
-         stopOnSkipped="false"
-         verbose="true">
+         stopOnSkipped="false">
     <testsuites>
         <testsuite name="Tests">
             <directory>tests/WordPress</directory>

@@ -14,12 +14,12 @@ use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Models\Attachment;
 use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Scopes\CustomModelTypeScope;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @since 3.0.0
- * @coversDefaultClass \Dbout\WpOrm\Scopes\CustomModelTypeScope
- */
+#[CoversClass(CustomModelTypeScope::class)]
+#[CoversFunction('apply')]
 class CustomModelTypeScopeTest extends TestCase
 {
     private CustomModelTypeScope $subject;
@@ -36,7 +36,6 @@ class CustomModelTypeScopeTest extends TestCase
      * @throws WpOrmException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @return void
-     * @covers ::apply
      */
     public function testWithInvalidModel(): void
     {
@@ -50,7 +49,6 @@ class CustomModelTypeScopeTest extends TestCase
      * @throws WpOrmException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @return void
-     * @covers ::apply
      */
     public function testBuilderContainFilter(): void
     {
