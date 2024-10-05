@@ -69,7 +69,7 @@ class HasMetasTest extends TestCase
         $this->assertTrue($model->hasMeta('birthday-date'));
 
         $wpMetaId = add_post_meta($model->getId(), 'birthday-place', 'France');
-        $this->assertFalse($model->hasMeta('birthday-place'));
+        $this->assertTrue($model->hasMeta('birthday-place'));
         $this->assertEquals('France', $model->getMetaValue('birthday-place'));
         $this->assertEquals($wpMetaId, $model->getMeta('birthday-place')?->getId());
     }
