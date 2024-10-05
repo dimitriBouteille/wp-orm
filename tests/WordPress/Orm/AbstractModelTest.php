@@ -11,30 +11,21 @@ namespace Dbout\WpOrm\Tests\WordPress\Orm;
 use Dbout\WpOrm\Models\Article;
 use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Models\Post;
-use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\QueryException;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @coversDefaultClass \Dbout\WpOrm\Orm\AbstractModel
  */
-#[CoversClass(AbstractModel::class)]
-#[CoversFunction('saveOrFail')]
-#[CoversFunction('save')]
-#[CoversFunction('delete')]
-#[CoversFunction('fill')]
-#[CoversFunction('guard')]
-#[CoversFunction('upsert')]
 class AbstractModelTest extends TestCase
 {
     /**
      * @param string $saveMethod
      * @return void
+     * @covers ::save
+     * @covers ::saveOrFail
+     * @dataProvider providerTestSaveNewObject
      */
-    #[DataProvider('providerTestSaveNewObject')]
     public function testSuccessSaveNewObject(string $saveMethod): void
     {
         $model = new Article();
@@ -53,8 +44,10 @@ class AbstractModelTest extends TestCase
     /**
      * @param string $saveMethod
      * @return void
+     * @covers ::save
+     * @covers ::saveOrFail
+     * @dataProvider providerTestSaveNewObject
      */
-    #[DataProvider('providerTestSaveNewObject')]
     public function testSaveWithInvalidProperty(string $saveMethod): void
     {
         $fakeColumn = 'custom_column';
@@ -70,7 +63,7 @@ class AbstractModelTest extends TestCase
     /**
      * @return \Generator
      */
-    public static function providerTestSaveNewObject(): \Generator
+    protected function providerTestSaveNewObject(): \Generator
     {
         yield 'With save function' => [
             'save',
@@ -83,6 +76,7 @@ class AbstractModelTest extends TestCase
 
     /**
      * @return void
+     * @covers ::delete
      */
     public function testDelete(): void
     {
@@ -100,6 +94,8 @@ class AbstractModelTest extends TestCase
      * Test if all attributes have been overridden.
      *
      * @return void
+     * @covers ::fill
+     * @covers ::guard
      */
     public function testFillWithEmptyGuarded(): void
     {
@@ -121,6 +117,8 @@ class AbstractModelTest extends TestCase
 
     /**
      * @return void
+     * @covers ::fill
+     * @covers ::guard
      */
     public function testFillWithGuardedAttributes(): void
     {
@@ -144,6 +142,7 @@ class AbstractModelTest extends TestCase
 
     /**
      * @return void
+     * @covers ::upsert
      */
     public function testUpsertWithOneNewObjects(): void
     {
@@ -167,6 +166,7 @@ class AbstractModelTest extends TestCase
 
     /**
      * @return void
+     * @covers ::upsert
      */
     public function testUpsertWithExistingObjects(): void
     {
@@ -201,6 +201,7 @@ class AbstractModelTest extends TestCase
 
     /**
      * @return void
+     * @covers ::upsert
      */
     public function testUpsertWithUpdateKey(): void
     {

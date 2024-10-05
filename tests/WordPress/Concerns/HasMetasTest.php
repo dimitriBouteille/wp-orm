@@ -15,19 +15,12 @@ use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
 
-#[CoversClass(HasMetas::class)]
-#[CoversFunction('getMeta')]
-#[CoversFunction('setMeta')]
-#[CoversFunction('hasMeta')]
-#[CoversFunction('getMetaValue')]
-#[CoversFunction('deleteMeta')]
 class HasMetasTest extends TestCase
 {
     /**
      * @return void
+     * @covers HasMetas::getMeta
      */
     public function testGetMeta(): void
     {
@@ -46,6 +39,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::setMeta
      */
     public function testSetMeta(): void
     {
@@ -63,6 +57,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::hasMeta
      */
     public function testHasMeta(): void
     {
@@ -81,6 +76,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::getMetaValue
      */
     public function testGetMetaValueWithoutCast(): void
     {
@@ -96,6 +92,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::getMetaValue
      */
     public function testGetMetaValueWithGenericCasts(): void
     {
@@ -124,6 +121,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::getMetaValue
      */
     public function testGetMetaValueWithEnumCasts(): void
     {
@@ -147,6 +145,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::getMetaValue
      */
     public function testGetMetaValueWithDatetimeCasts(): void
     {
@@ -176,6 +175,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::getMetaValue
      */
     public function testGetMetaValueWithInvalidCasts(): void
     {
@@ -195,6 +195,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::deleteMeta
      */
     public function testDeleteMeta(): void
     {
@@ -210,6 +211,7 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
+     * @covers HasMetas::deleteMeta
      */
     public function testDeleteUndefinedMeta(): void
     {

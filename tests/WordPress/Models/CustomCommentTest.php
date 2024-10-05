@@ -10,18 +10,12 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\CustomComment;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
 
-#[CoversClass(CustomComment::class)]
-#[CoversFunction('find')]
-#[CoversFunction('save')]
-#[CoversFunction('all')]
-#[CoversFunction('update')]
 class CustomCommentTest extends TestCase
 {
     /**
      * @return void
+     * @covers CustomComment::find
      */
     public function testFindValidType(): void
     {
@@ -41,6 +35,7 @@ class CustomCommentTest extends TestCase
 
     /**
      * @return void
+     * @covers CustomComment::find
      */
     public function testFindWithDifferentType(): void
     {
@@ -58,6 +53,7 @@ class CustomCommentTest extends TestCase
 
     /**
      * @return void
+     * @covers CustomComment::save
      */
     public function testSave(): void
     {
@@ -81,6 +77,7 @@ class CustomCommentTest extends TestCase
 
     /**
      * @return void
+     * @covers CustomComment::all
      */
     public function testQueryAll(): void
     {
@@ -108,6 +105,7 @@ class CustomCommentTest extends TestCase
 
     /**
      * @return void
+     * @covers CustomComment::update
      */
     public function testUpdate(): void
     {
