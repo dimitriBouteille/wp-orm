@@ -4,4 +4,4 @@ parameters:
         - src
         - tests
     excludePaths:
-        - tests/WordPress
+        - tests/WordPress/TestCase

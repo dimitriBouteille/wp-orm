@@ -11,14 +11,19 @@ namespace Dbout\WpOrm\Tests\Unit\Models;
 use Dbout\WpOrm\Exceptions\CannotOverrideCustomTypeException;
 use Dbout\WpOrm\Exceptions\NotAllowedException;
 use Dbout\WpOrm\Models\CustomComment;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(CustomComment::class)]
+#[CoversFunction('setCommentType')]
+#[CoversFunction('getCommentType')]
+#[CoversFunction('setAttribute')]
 class CustomCommentTest extends TestCase
 {
     /**
      * @throws NotAllowedException
      * @return never
-     * @covers CustomComment::setCommentType
      */
     public function testSetCommentTypeTypeException(): never
     {
@@ -34,7 +39,6 @@ class CustomCommentTest extends TestCase
 
     /**
      * @return void
-     * @covers CustomComment::getCommentType
      */
     public function testSetCommentTypeInConstructor(): void
     {
@@ -51,7 +55,6 @@ class CustomCommentTest extends TestCase
 
     /**
      * @return void
-     * @covers CustomComment::setAttribute
      */
     public function testSetCommentTypeWithSetAttribute(): void
     {

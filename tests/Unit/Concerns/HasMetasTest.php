@@ -9,13 +9,17 @@
 namespace Dbout\WpOrm\Tests\Unit\Concerns;
 
 use Dbout\WpOrm\Models\Post;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(Post::class)]
+#[CoversFunction('metaHasCast')]
+#[CoversFunction('getMetaCasts')]
 class HasMetasTest extends TestCase
 {
     /**
      * @return void
-     * @covers \Dbout\WpOrm\Concerns\HasMetas::metaHasCast
      */
     public function testMetaHasCastWithProperty(): void
     {
@@ -33,7 +37,6 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
-     * @covers \Dbout\WpOrm\Concerns\HasMetas::metaHasCast
      */
     public function testMetaHasCastWithMetaCastsFunction(): void
     {
@@ -57,7 +60,6 @@ class HasMetasTest extends TestCase
 
     /**
      * @return void
-     * @covers \Dbout\WpOrm\Concerns\HasMetas::getMetaCasts
      */
     public function testGetMetaCasts(): void
     {
