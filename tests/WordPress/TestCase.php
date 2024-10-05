@@ -75,7 +75,7 @@ abstract class TestCase extends \WP_UnitTestCase
      * @param string $table
      * @return string
      */
-    protected function getTable(string $table): string
+    protected static function getTable(string $table): string
     {
         global $wpdb;
         return $wpdb->prefix . $table;
@@ -121,7 +121,7 @@ abstract class TestCase extends \WP_UnitTestCase
      */
     protected function assertFindLastQuery(string $table, string $whereColumn, string $whereValue): void
     {
-        $table = $this->getTable($table);
+        $table = self::getTable($table);
         $this->assertLastQueryEqual(
             sprintf(
                 "select `%s`.* from `%s` where `%s` = '%s' limit 1",

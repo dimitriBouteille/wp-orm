@@ -10,10 +10,13 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Models\Option
- */
+#[CoversClass(Option::class)]
+#[CoversFunction('findOneByName')]
+#[CoversFunction('getOptionName')]
+#[CoversFunction('getOptionValue')]
 class OptionTest extends TestCase
 {
     private const OPTION_NAME = 'my_custom_option';
@@ -29,9 +32,6 @@ class OptionTest extends TestCase
 
     /**
      * @return void
-     * @covers ::findOneByName
-     * @covers ::getOptionName
-     * @covers ::getOptionValue
      */
     public function testFindOneByName(): void
     {

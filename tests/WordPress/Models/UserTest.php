@@ -11,10 +11,14 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 use Dbout\WpOrm\Models\User;
 use Dbout\WpOrm\Tests\WordPress\Helpers\WithHasManyRelation;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Models\User
- */
+#[CoversClass(User::class)]
+#[CoversFunction('findOneByEmail')]
+#[CoversFunction('findOneByLogin')]
+#[CoversFunction('comments')]
+#[CoversFunction('posts')]
 class UserTest extends TestCase
 {
     use WithHasManyRelation;
@@ -46,7 +50,6 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::findOneByEmail
      */
     public function testFindOneByEmailWithExistingUser(): void
     {
@@ -59,7 +62,6 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::findOneByLogin
      */
     public function testFindOneByLoginWithExistingUser(): void
     {
@@ -72,7 +74,6 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::comments
      */
     public function testComments(): void
     {
@@ -101,7 +102,6 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::posts
      */
     public function testPosts(): void
     {

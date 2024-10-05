@@ -11,10 +11,17 @@ namespace Dbout\WpOrm\Tests\WordPress\Orm;
 use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Orm\Database;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Orm\Database
- */
+#[CoversClass(Database::class)]
+#[CoversFunction('getTablePrefix')]
+#[CoversFunction('getDatabaseName')]
+#[CoversFunction('getConfig')]
+#[CoversFunction('getName')]
+#[CoversFunction('table')]
+#[CoversFunction('lastInsertId')]
 class DatabaseTest extends TestCase
 {
     private Database $database;
@@ -29,7 +36,6 @@ class DatabaseTest extends TestCase
 
     /**
      * @return void
-     * @covers ::getTablePrefix
      */
     public function testGetTablePrefix(): void
     {
@@ -39,8 +45,6 @@ class DatabaseTest extends TestCase
 
     /**
      * @return void
-     * @covers ::getDatabaseName
-     * @covers ::getConfig
      */
     public function testGetDatabaseName(): void
     {
@@ -49,8 +53,6 @@ class DatabaseTest extends TestCase
 
     /**
      * @return void
-     * @covers ::getName
-     * @covers ::getConfig
      */
     public function testGetName(): void
     {
@@ -62,9 +64,8 @@ class DatabaseTest extends TestCase
      * @param string|null $alias
      * @param string $expectedQuery
      * @return void
-     * @covers ::table
-     * @dataProvider providerTestTable
      */
+    #[DataProvider('providerTestTable')]
     public function testTable(string $table, ?string $alias, string $expectedQuery): void
     {
         $builder = $this->database->table($table, $alias);
@@ -74,24 +75,23 @@ class DatabaseTest extends TestCase
     /**
      * @return \Generator
      */
-    protected function providerTestTable(): \Generator
+    public static function providerTestTable(): \Generator
     {
         yield 'Without alias' => [
             'options',
             null,
-            sprintf('select * from "%s"', $this->getTable('options')),
+            sprintf('select * from "%s"', self::getTable('options')),
         ];
 
         yield 'With alias' => [
             'options',
             'opts',
-            sprintf('select * from "%s" as "opts"', $this->getTable('options')),
+            sprintf('select * from "%s" as "opts"', self::getTable('options')),
         ];
     }
 
     /**
      * @return void
-     * @covers ::lastInsertId
      */
     public function testLastInsertId(): void
     {

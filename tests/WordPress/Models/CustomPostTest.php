@@ -10,12 +10,16 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\CustomPost;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 
+#[CoversClass(CustomPost::class)]
+#[CoversFunction('find')]
+#[CoversFunction('save')]
 class CustomPostTest extends TestCase
 {
     /**
      * @return void
-     * @covers CustomPost::find
      */
     public function testFindWithValidPostType(): void
     {
@@ -35,7 +39,6 @@ class CustomPostTest extends TestCase
 
     /**
      * @return void
-     * @covers CustomPost::find
      */
     public function testFindWithDifferentType(): void
     {
@@ -53,7 +56,6 @@ class CustomPostTest extends TestCase
 
     /**
      * @return void
-     * @covers CustomPost::save
      */
     public function testSave(): void
     {
