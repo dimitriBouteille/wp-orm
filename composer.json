@@ -40,12 +40,11 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.64",
     "phpstan/phpstan": "^1.12",
-    "yoast/phpunit-polyfills": "^3.0",
     "phpstan/extension-installer": "^1.4",
     "szepeviktor/phpstan-wordpress": "^1.3",
     "rector/rector": "^1.2",
     "roots/wordpress": "^6.6",
-    "phpunit/phpunit": "^11.0"
+    "phpunit/phpunit": "^10.0"
   },
   "config": {
     "allow-plugins": {
