@@ -246,7 +246,7 @@ class HasMetasTest extends TestCase
     private function getQueryGetMeta(int $postId, string $metaKey): string
     {
         return sprintf(
-            "select * from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = `%3\$s` limit 1",
+            "select * from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = '%3\$s' limit 1",
             '#TABLE_PREFIX#postmeta',
             $postId,
             $metaKey
