@@ -88,7 +88,7 @@ class CustomCommentTest extends TestCase
      * @return void
      * @covers CustomComment::all
      */
-    public function testQueryAll(): void
+    public function testAll(): void
     {
         $applicationCommentsV1 = self::factory()->comment->create_many(5, [
             'comment_type' => 'application',

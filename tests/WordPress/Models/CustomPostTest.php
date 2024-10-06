@@ -92,18 +92,18 @@ class CustomPostTest extends TestCase
      * @return void
      * @covers CustomPost::all
      */
-    public function testQueryAll(): void
+    public function testAll(): void
     {
         $objectsV1 = self::factory()->post->create_many(5, [
-            'comment_type' => 'project',
+            'post_type' => 'project',
         ]);
 
         self::factory()->post->create_many(10, [
-            'comment_type' => 'fake-project',
+            'post_type' => 'fake-project',
         ]);
 
         $objectsV2 = self::factory()->post->create_many(7, [
-            'comment_type' => 'project',
+            'post_type' => 'project',
         ]);
 
         $model = new class () extends CustomPost {
