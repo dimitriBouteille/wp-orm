@@ -132,4 +132,16 @@ abstract class TestCase extends \WP_UnitTestCase
             )
         );
     }
+
+    /**
+     * @param string $query
+     * @param string $message
+     * @return void
+     */
+    public function assertLastQueryEquals(string $query, string $message = ''): void
+    {
+        global $wpdb;
+        $query = str_replace('#TABLE_PREFIX#', $wpdb->prefix, $query);
+        self::assertEquals($query, $wpdb->last_query, $message);
+    }
 }
