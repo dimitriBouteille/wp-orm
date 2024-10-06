@@ -30,6 +30,7 @@ class HasMetasTest extends TestCase
         $createMeta = $model->setMeta('author', 'Norman FOSTER');
 
         $meta = $model->getMeta('author');
+        $this->assertLastQueryEquals($this->getQueryGetMeta($model->getId(), 'author'));
         $this->assertInstanceOf(AbstractMeta::class, $meta);
         $this->assertEquals($createMeta->getId(), $meta->getId());
         $this->assertEquals($createMeta->getValue(), $meta->getValue());
@@ -88,6 +89,7 @@ class HasMetasTest extends TestCase
 
         add_post_meta($model->getId(), 'place', 'Lyon, France');
         $this->assertEquals('Lyon, France', $model->getMetaValue('place'));
+        $this->assertLastQueryEquals($this->getQueryGetMeta($model->getId(), 'place'));
     }
 
     /**
@@ -206,6 +208,12 @@ class HasMetasTest extends TestCase
         $model->setMeta('architect-name', 'Norman F.');
 
         $this->assertEquals(1, $model->deleteMeta('architect-name'), 'The function must delete only one line.');
+        $this->assertLastQueryEquals(sprintf(
+            "delete from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = 'architect-name'",
+            '#TABLE_PREFIX#postmeta',
+            $model->getId()
+        ));
+
         $this->assertFalse($model->hasMeta('architect-name'), 'The meta must no longer exist.');
     }
 
@@ -228,5 +236,20 @@ class HasMetasTest extends TestCase
             '#TABLE_PREFIX#postmeta',
             $model->getId()
         ));
+    }
+
+    /**
+     * @param int $postId
+     * @param string $metaKey
+     * @return string
+     */
+    private function getQueryGetMeta(int $postId, string $metaKey): string
+    {
+        return sprintf(
+            "select * from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = `%3\$s` limit 1",
+            '#TABLE_PREFIX#postmeta',
+            $postId,
+            $metaKey
+        );
     }
 }
