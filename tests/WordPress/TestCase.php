@@ -123,7 +123,7 @@ abstract class TestCase extends \WP_UnitTestCase
     {
         $this->assertLastQueryEquals(
             sprintf(
-                "select `#TABE_PREFIX#%s`.* from `#TABLE_PREFIX#%s` where `%s` = '%s' limit 1",
+                "select `#TABLE_PREFIX#%s`.* from `#TABLE_PREFIX#%s` where `%s` = '%s' limit 1",
                 $table,
                 $table,
                 $whereColumn,
