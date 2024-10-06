@@ -222,5 +222,11 @@ class HasMetasTest extends TestCase
         $model->setMeta('architect-name', 'Norman F.');
 
         $this->assertEquals(0, $model->deleteMeta('fake-meta'));
+
+        $this->assertLastQueryEquals(sprintf(
+            "delete from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = 'fake-meta'",
+            '#TABLE_PREFIX#postmeta',
+            $model->getId()
+        ));
     }
 }
