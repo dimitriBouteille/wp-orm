@@ -12,9 +12,6 @@ use Dbout\WpOrm\Models\User;
 use Dbout\WpOrm\Tests\WordPress\Helpers\WithHasManyRelation;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Models\User
- */
 class UserTest extends TestCase
 {
     use WithHasManyRelation;
@@ -46,9 +43,9 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::findOneByEmail
+     * @covers User::findOneByEmail
      */
-    public function testFindOneByEmailWithExistingUser(): void
+    public function testFindOneByEmail(): void
     {
         $this->checkFindOneResult(
             User::findOneByEmail(self::USER_EMAIL),
@@ -59,9 +56,9 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::findOneByLogin
+     * @covers User::findOneByLogin
      */
-    public function testFindOneByLoginWithExistingUser(): void
+    public function testFindOneByLogin(): void
     {
         $this->checkFindOneResult(
             User::findOneByLogin(self::USER_LOGIN),
@@ -72,7 +69,7 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::comments
+     * @covers User::comments
      */
     public function testComments(): void
     {
@@ -101,7 +98,7 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::posts
+     * @covers User::posts
      */
     public function testPosts(): void
     {

@@ -121,10 +121,9 @@ abstract class TestCase extends \WP_UnitTestCase
      */
     protected function assertFindLastQuery(string $table, string $whereColumn, string $whereValue): void
     {
-        $table = self::getTable($table);
-        $this->assertLastQueryEqual(
+        $this->assertLastQueryEquals(
             sprintf(
-                "select `%s`.* from `%s` where `%s` = '%s' limit 1",
+                "select `#TABE_PREFIX#%s`.* from `#TABLE_PREFIX#%s` where `%s` = '%s' limit 1",
                 $table,
                 $table,
                 $whereColumn,
