@@ -31,9 +31,10 @@ class CustomCommentTest extends TestCase
         $this->assertInstanceOf($model::class, $object);
         $this->assertEquals('woocommerce', $object->getCommentType());
         $this->assertEquals($objectId, $object->getId());
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_type` = 'woocommerce' limit 1"
-        );
+        $this->assertLastQueryEquals(sprintf(
+            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `#TABLE_PREFIX#comments`.`comment_ID` = %s and `comment_type` = 'woocommerce' limit 1",
+            $objectId
+        ));
     }
 
     /**
@@ -53,9 +54,10 @@ class CustomCommentTest extends TestCase
         $object = $model::find($objectId);
         $this->assertNull($object);
 
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_type` = 'author' limit 1"
-        );
+        $this->assertLastQueryEquals(sprintf(
+            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `#TABLE_PREFIX#comments`.`comment_ID` = %s and `comment_type` = 'author' limit 1",
+            $objectId
+        ));
     }
 
     /**
@@ -163,7 +165,10 @@ class CustomCommentTest extends TestCase
         $comment->save();
         $commentId = $comment->getId();
         $this->assertTrue($comment->delete());
-        $this->assertLastQueryEquals("delete from `#TABLE_PREFIX#comments` where `comment_ID` = '%s'", $commentId);
+        $this->assertLastQueryEquals(sprintf(
+            "delete from `#TABLE_PREFIX#comments` where `comment_ID` = '%s'",
+            $commentId
+        ));
 
         $wpComment = get_comment($commentId);
         $this->assertNull($wpComment);
