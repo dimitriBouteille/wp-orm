@@ -107,7 +107,7 @@ class CustomCommentTest extends TestCase
         $comments = $model::all();
 
         $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `post_type` = 'application'"
+            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_type` = 'application'"
         );
 
         $applicationComments = array_merge($applicationCommentsV1, $applicationCommentsV2);
@@ -163,7 +163,7 @@ class CustomCommentTest extends TestCase
         $comment->save();
         $commentId = $comment->getId();
         $this->assertTrue($comment->delete());
-        $this->assertLastQueryEquals("delete from `#TABLE_PREFIX#comments` where `ID` = '%s'", $commentId);
+        $this->assertLastQueryEquals("delete from `#TABLE_PREFIX#comments` where `comment_ID` = '%s'", $commentId);
 
         $wpComment = get_comment($commentId);
         $this->assertNull($wpComment);
