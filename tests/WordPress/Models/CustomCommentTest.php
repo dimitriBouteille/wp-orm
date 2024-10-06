@@ -166,7 +166,7 @@ class CustomCommentTest extends TestCase
         $commentId = $comment->getId();
         $this->assertTrue($comment->delete());
         $this->assertLastQueryEquals(sprintf(
-            "delete from `#TABLE_PREFIX#comments` where `comment_ID` = '%s'",
+            "delete from `#TABLE_PREFIX#comments` where `comment_ID` = %s",
             $commentId
         ));
 
