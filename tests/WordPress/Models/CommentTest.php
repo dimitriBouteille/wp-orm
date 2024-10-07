@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\Comment;
+use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Models\User;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
@@ -35,8 +36,8 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $user = $reloadComment->user;
-
         $this->assertLastQueryHasOneRelation('users', 'ID', $userId);
+
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals($userId, $user->getId());
     }
@@ -47,7 +48,26 @@ class CommentTest extends TestCase
      */
     public function testPost(): void
     {
+        $postId = self::factory()->post->create([
+            'post_type' => 'product',
+            'post_content'  => 'product information',
+            'post_name' => 'product-15-10-15',
+        ]);
 
+        $comment = new Comment();
+        $comment->setCommentPostID($postId);
+        $comment->setCommentType('woocommerce');
+        $comment->setCommentContent('custom notification');
+
+        $this->assertTrue($comment->save());
+        $this->assertEquals($postId, $comment->getCommentPostID());
+
+        $reloadComment = Comment::find($comment->getId());
+        $post = $reloadComment->post;
+        $this->assertLastQueryHasOneRelation('posts', 'ID', $postId);
+
+        $this->assertInstanceOf(Post::class, $post);
+        $this->assertEquals($postId, $post->getId());
     }
 
     /**

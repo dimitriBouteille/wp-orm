@@ -141,10 +141,10 @@ abstract class TestCase extends \WP_UnitTestCase
      */
     public function assertLastQueryHasOneRelation(string $table, string $pkColum, string $pkValue): void
     {
+        $table = sprintf('#TABLE_PREFIX#%s', $table);
         $this->assertLastQueryEquals(
             sprintf(
-                "select `#TABLE_PREFIX#%s`.* from `#TABLE_PREFIX#%s` where `%s` = '%s' is not null limit 1",
-                $table,
+                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = `%3\$s` and `%1\$s`.`%2\$s` is not null limit 1",
                 $table,
                 $pkColum,
                 $pkValue
