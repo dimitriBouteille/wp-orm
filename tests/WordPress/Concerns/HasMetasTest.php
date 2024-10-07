@@ -93,13 +93,10 @@ class HasMetasTest extends TestCase
     }
 
     /**
-     * @param string $type
-     * @param mixed $value
-     * @param mixed $expectedValue
      * @return void
      * @covers HasMetas::getMetaValue
      */
-    public function testGetMetaValueWithGenericCasts(string $type, mixed $value, mixed $expectedValue): void
+    public function testGetMetaValueWithGenericCasts(): void
     {
         $object = new class () extends Post {
             protected array $metaCasts = [
