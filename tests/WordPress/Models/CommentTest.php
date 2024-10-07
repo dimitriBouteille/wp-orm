@@ -91,7 +91,7 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $parent = $reloadComment->parent;
-        $this->assertLastQueryHasOneRelation('comments', 'comment_ID', $parent);
+        $this->assertLastQueryHasOneRelation('comments', 'comment_ID', $objectId);
 
         $this->assertInstanceOf(Comment::class, $parent);
         $this->assertEquals($objectId, $parent->getId());
