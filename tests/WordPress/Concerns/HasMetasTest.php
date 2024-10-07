@@ -102,19 +102,13 @@ class HasMetasTest extends TestCase
      */
     public function testGetMetaValueWithGenericCasts(string $type, mixed $value, mixed $expectedValue): void
     {
-        $object = new class ($type) extends Post {
-            public function __construct(
-                string $type
-            ) {
-                parent::__construct([]);
-                $this->metaCasts = [
-                    'my_meta' => $type,
-                ];
-            }
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'my_meta' => 'int',
+            ];
         };
 
         $model = new $object($type);
-        var_dump($model->getMetaCasts());
 
         $model->setPostTitle(__FUNCTION__);
         $model->save();
