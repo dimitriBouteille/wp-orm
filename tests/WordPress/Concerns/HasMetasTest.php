@@ -114,6 +114,7 @@ class HasMetasTest extends TestCase
         };
 
         $model = new $object($type);
+        var_dump($model->getMetaCasts());
 
         $model->setPostTitle(__FUNCTION__);
         $model->save();
@@ -129,8 +130,8 @@ class HasMetasTest extends TestCase
     {
         yield 'With int' => [
             'int',
-            '10',
-            100,
+            '101',
+            101,
         ];
 
         yield 'With string' => [
