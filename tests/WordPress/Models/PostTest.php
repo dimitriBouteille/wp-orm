@@ -106,7 +106,7 @@ class PostTest extends TestCase
 
         $newObject = Post::find($object->getId());
         $parent = $newObject->parent;
-        $this->assertLastQueryHasOneRelation('posts', 'post_parent', $objectId);
+        $this->assertLastQueryHasOneRelation('posts', 'ID', $objectId);
 
         $this->assertInstanceOf(Post::class, $parent);
         $this->assertEquals($objectId, $parent->getId());
