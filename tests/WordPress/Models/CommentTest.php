@@ -30,13 +30,13 @@ class CommentTest extends TestCase
         $comment->setUserId($userId);
         $comment->setCommentContent('Hello world');
         $this->assertTrue($comment->save());
+        $this->assertEquals('Hello world', $comment->getCommentContent());
+        $this->assertEquals($userId, $comment->getUserId());
 
         $reloadComment = Comment::find($comment->getId());
         $user = $reloadComment->user;
 
-        global $wpdb;
-        var_dump($wpdb->last_query);
-
+        $this->assertLastQueryHasOneRelation('users', 'ID', $userId);
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals($userId, $user->getId());
     }

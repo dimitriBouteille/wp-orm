@@ -134,6 +134,25 @@ abstract class TestCase extends \WP_UnitTestCase
     }
 
     /**
+     * @param string $table
+     * @param string $pkColum
+     * @param string $pkValue
+     * @return void
+     */
+    public function assertLastQueryHasOneRelation(string $table, string $pkColum, string $pkValue): void
+    {
+        $this->assertLastQueryEquals(
+            sprintf(
+                "select `#TABLE_PREFIX#%s`.* from `#TABLE_PREFIX#%s` where `%s` = '%s' is not null limit 1",
+                $table,
+                $table,
+                $pkColum,
+                $pkValue
+            )
+        );
+    }
+
+    /**
      * @param string $query
      * @param string $message
      * @return void
