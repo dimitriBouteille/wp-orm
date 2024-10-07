@@ -99,10 +99,10 @@ class PostTest extends TestCase
         $object = new Post();
         $object->setPostName('product-test');
         $object->setPostTitle('Product test');
-        $object->setParent($objectId);
+        $object->setPostParent($objectId);
 
         $this->assertTrue($object->save());
-        $this->assertEquals($objectId, $object->getParent());
+        $this->assertEquals($objectId, $object->getPostParent());
 
         $newObject = Post::find($object->getId());
         $parent = $newObject->parent;
