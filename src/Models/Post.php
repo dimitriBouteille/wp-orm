@@ -104,6 +104,8 @@ class Post extends AbstractModel implements WithMetaModelInterface
      * @inheritDoc
      */
     protected $casts = [
+        self::AUTHOR => 'integer',
+        self::PARENT => 'integer',
         self::MENU_ORDER => 'integer',
         self::COMMENT_COUNT => 'integer',
         self::DATE => 'datetime',

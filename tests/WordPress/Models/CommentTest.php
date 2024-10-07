@@ -17,7 +17,7 @@ class CommentTest extends TestCase
 {
     /**
      * @return void
-     * @covers Comment::user()
+     * @covers Comment::user
      */
     public function testUser(): void
     {
@@ -44,7 +44,7 @@ class CommentTest extends TestCase
 
     /**
      * @return void
-     * @covers Comment::post()
+     * @covers Comment::post
      */
     public function testPost(): void
     {
@@ -72,7 +72,7 @@ class CommentTest extends TestCase
 
     /**
      * @return void
-     * @covers Comment::parent()
+     * @covers Comment::parent
      */
     public function testParent(): void
     {
