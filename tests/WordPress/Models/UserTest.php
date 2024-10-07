@@ -9,13 +9,10 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
-use Dbout\WpOrm\Tests\WordPress\Helpers\WithHasManyRelation;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class UserTest extends TestCase
 {
-    use WithHasManyRelation;
-
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
     private static ?int $testingUserId = null;
@@ -80,19 +77,14 @@ class UserTest extends TestCase
             'user_id' => self::$fakeUserId,
         ]);
 
-        $this->checkHasManyRelationResult(
-            resultCollectionCallback: fn () => $this->getTestingUser()?->comments,
+        $ids = self::factory()->comment->create_many(2, [
+            'user_id' => self::$testingUserId,
+        ]);
+
+        $this->assertHasManyRelation(
+            expectedItems: $this->getTestingUser()?->comments,
             relationProperty:  'comment_ID',
-            expectedIdsCallback: function () {
-                return [
-                    self::factory()->comment->create([
-                        'user_id' => self::$testingUserId,
-                    ]),
-                    self::factory()->comment->create([
-                        'user_id' => self::$testingUserId,
-                    ]),
-                ];
-            }
+            expectedIds: $ids
         );
     }
 
@@ -109,19 +101,14 @@ class UserTest extends TestCase
             'user_id' => self::$fakeUserId,
         ]);
 
-        $this->checkHasManyRelationResult(
-            resultCollectionCallback: fn () => $this->getTestingUser()?->posts,
+        $ids = self::factory()->post->create_many(3, [
+            'post_author' => self::$testingUserId,
+        ]);
+
+        $this->assertHasManyRelation(
+            expectedItems: $this->getTestingUser()?->posts,
             relationProperty: 'ID',
-            expectedIdsCallback: function () {
-                return [
-                    self::factory()->post->create([
-                        'post_author' => self::$testingUserId,
-                    ]),
-                    self::factory()->post->create([
-                        'post_author' => self::$testingUserId,
-                    ]),
-                ];
-            }
+            expectedIds: $ids
         );
     }
 

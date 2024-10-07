@@ -10,6 +10,7 @@ namespace Dbout\WpOrm\Tests\WordPress;
 
 use Dbout\WpOrm\Models\Comment;
 use Dbout\WpOrm\Models\Post;
+use Illuminate\Support\Collection;
 
 /**
  * @method static|$this assertEquals(mixed $expectedValue, mixed $checkValue, string $message = '')
@@ -142,5 +143,21 @@ abstract class TestCase extends \WP_UnitTestCase
         global $wpdb;
         $query = str_replace('#TABLE_PREFIX#', $wpdb->prefix, $query);
         self::assertEquals($query, $wpdb->last_query, $message);
+    }
+
+    /**
+     * @param Collection $expectedItems
+     * @param string $relationProperty
+     * @param array $expectedIds
+     * @return void
+     */
+    public function assertHasManyRelation(
+        Collection $expectedItems,
+        string $relationProperty,
+        array $expectedIds
+    ): void {
+        $ids = $expectedItems->pluck($relationProperty);
+        $this->assertCount(count($expectedIds), $expectedItems->toArray());
+        $this->assertEqualsCanonicalizing($expectedIds, $ids->toArray());
     }
 }
