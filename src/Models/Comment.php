@@ -40,6 +40,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method Carbon|null getCommentDateGmt()
  * @method Comment setCommentPostID(int $postId)
  * @method int|null getCommentPostID()
+ * @method Comment setCommentParent(?int $parentId)
+ * @method int|null getCommentParent()
  * @method static CommentBuilder query()
  *
  * @property-read User|null $user
@@ -80,7 +82,9 @@ class Comment extends AbstractModel
      * @inheritDoc
      */
     protected $casts = [
+        self::USER_ID => 'integer',
         self::POST_ID => 'integer',
+        self::PARENT => 'integer',
         self::KARMA => 'integer',
         self::DATE_GMT => 'datetime',
         self::DATE => 'datetime',

@@ -72,10 +72,28 @@ class CommentTest extends TestCase
 
     /**
      * @return void
-     * @covers Comment::parent
+     * @covers Comment::parent()
      */
     public function testParent(): void
     {
+        $objectId = self::factory()->comment->create([
+            'comment_author_email' => 'test@test.fr',
+            'comment_content'  => 'Comment content',
+        ]);
 
+        $comment = new Comment();
+        $comment->setCommentParent($objectId);
+        $comment->setCommentType('woocommerce');
+        $comment->setCommentContent('custom notification');
+
+        $this->assertTrue($comment->save());
+        $this->assertEquals($objectId, $comment->getCommentParent());
+
+        $reloadComment = Comment::find($comment->getId());
+        $parent = $reloadComment->parent;
+        $this->assertLastQueryHasOneRelation('comments', 'comment_ID', $parent);
+
+        $this->assertInstanceOf(Comment::class, $parent);
+        $this->assertEquals($objectId, $parent->getId());
     }
 }
