@@ -19,12 +19,15 @@ class PostTest extends TestCase
      */
     public function testFindOneByGuid(): void
     {
-        self::factory()->post->create([
+        $id = self::factory()->post->create([
             'post_type' => 'product',
             'post_content'  => 'product information',
             'post_name' => 'product-1585656',
             'guid' => 'guid-1585656',
         ]);
+
+        $ost =  get_post($id);
+        var_dump($ost);
 
         $post = Post::findOneByGuid('guid-1585656');
 
