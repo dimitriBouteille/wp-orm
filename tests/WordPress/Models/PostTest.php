@@ -83,4 +83,32 @@ class PostTest extends TestCase
         $post = Post::findOneByName('product-testFindOneByNameWithNotFound-fake');
         $this->assertNull($post);
     }
+
+    /**
+     * @return void
+     * @covers Post::parent
+     */
+    public function testParent(): void
+    {
+        $objectId = self::factory()->post->create([
+            'post_type' => 'product',
+            'post_content'  => 'Child product XX',
+            'post_name' => 'child-product',
+        ]);
+
+        $object = new Post();
+        $object->setPostName('product-test');
+        $object->setPostTitle('Product test');
+        $object->setParent($objectId);
+
+        $this->assertTrue($object->save());
+        $this->assertEquals($objectId, $object->getParent());
+
+        $newObject = Post::find($object->getId());
+        $parent = $newObject->parent;
+        $this->assertLastQueryHasOneRelation('posts', 'post_parent', $objectId);
+
+        $this->assertInstanceOf(Post::class, $parent);
+        $this->assertEquals($objectId, $parent->getId());
+    }
 }
