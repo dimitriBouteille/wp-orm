@@ -98,7 +98,6 @@ class HasMetasTest extends TestCase
      * @param mixed $expectedValue
      * @return void
      * @covers HasMetas::getMetaValue
-     * @dataProvider providerTestGetMetaValueWithGenericCasts
      */
     public function testGetMetaValueWithGenericCasts(string $type, mixed $value, mixed $expectedValue): void
     {
