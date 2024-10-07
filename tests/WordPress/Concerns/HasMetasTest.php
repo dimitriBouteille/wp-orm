@@ -105,6 +105,7 @@ class HasMetasTest extends TestCase
                 'is_active' => 'bool',
                 'subscribed' => 'boolean',
                 'data'  => 'json',
+                'created_at' => 'timestamp',
             ];
         };
 
@@ -116,12 +117,14 @@ class HasMetasTest extends TestCase
         $model->setMeta('is_active', '1');
         $model->setMeta('subscribed', '0');
         $model->setMeta('data', '{"firstname":"John","lastname":"Doe"}');
+        $model->setMeta('created_at', '2024-10-01 08:21:30');
 
         $this->assertEquals(18, $model->getMetaValue('age'));
         $this->assertEquals(2024, $model->getMetaValue('year'));
         $this->assertTrue($model->getMetaValue('is_active'));
         $this->assertFalse($model->getMetaValue('subscribed'));
         $this->assertEquals(['firstname' => 'John', 'lastname' => 'Doe'], $model->getMetaValue('data'));
+        $this->assertEquals(1727763690, $model->getMetaValue('created_at'));
     }
 
     /**
