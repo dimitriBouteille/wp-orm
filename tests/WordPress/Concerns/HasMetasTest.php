@@ -112,7 +112,7 @@ class HasMetasTest extends TestCase
             }
         };
 
-        $model = new $object($type);
+        $model = new $object([], $type);
 
         $model->setPostTitle(__FUNCTION__);
         $model->save();
