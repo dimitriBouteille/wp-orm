@@ -102,61 +102,31 @@ class HasMetasTest extends TestCase
      */
     public function testGetMetaValueWithGenericCasts(string $type, mixed $value, mixed $expectedValue): void
     {
-        $object = new class ($type) extends Post {
-            public function __construct(array $attributes = [], $type = '')
-            {
-                parent::__construct($attributes);
-                $this->metaCasts = [
-                    'my_meta' => $type,
-                ];
-            }
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'age' => 'int',
+                'year' => 'integer',
+                'is_active' => 'bool',
+                'subscribed' => 'boolean',
+                'data'  => 'json',
+            ];
         };
 
-        $model = new $object([], $type);
-
+        $model = new $object();
         $model->setPostTitle(__FUNCTION__);
         $model->save();
-        $model->setMeta('my_meta', $value);
+        $model->setMeta('age', '18');
+        $model->setMeta('year', '2024');
+        $model->setMeta('is_active', '1');
+        $model->setMeta('subscribed', '0');
+        $model->setMeta('data', '{"firstname":"John","lastname":"Doe"}');
 
-        $this->assertEquals($expectedValue, $model->getMetaValue('my_meta'));
+        $this->assertEquals(18, $model->getMetaValue('age'));
+        $this->assertEquals(2024, $model->getMetaValue('year'));
+        $this->assertTrue($model->getMetaValue('is_active'));
+        $this->assertFalse($model->getMetaValue('subscribed'));
+        $this->assertEquals(['firstname' => 'John', 'lastname' => 'Doe'], $model->getMetaValue('data'));
     }
-
-    /**
-     * @return \Generator
-     */
-    public function providerTestGetMetaValueWithGenericCasts(): \Generator
-    {
-        yield 'With int' => [
-            'int',
-            '101',
-            101,
-        ];
-
-        yield 'With string' => [
-            'integer',
-            '1501',
-            1501,
-        ];
-
-        yield 'With bool' => [
-            'bool',
-            '1',
-            true,
-        ];
-
-        yield 'With boolean' => [
-            'boolean',
-            '1',
-            true,
-        ];
-
-        yield 'With float' => [
-            'float',
-            '15.25',
-            15.25,
-        ];
-    }
-
 
     /**
      * @return void
