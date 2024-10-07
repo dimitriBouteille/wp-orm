@@ -29,4 +29,15 @@ class OptionTest extends TestCase
         $this->assertEquals('option_value', $option->getOptionValue());
         $this->assertEquals('my_custom_option', $option->getOptionName());
     }
+
+    /**
+     * @return void
+     * @covers Option::findOneByNam
+     */
+    public function testFindOneByNameWithNotFound(): void
+    {
+        add_option('my_custom_option', 'option_value');
+        $option = Option::findOneByName('my_custom_option_fake');
+        $this->assertNull($option);
+    }
 }

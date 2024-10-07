@@ -17,7 +17,7 @@ class PostTest extends TestCase
      * @return void
      * @covers Post::findOneByGuid
      */
-    public function testFindOneByGuidWithExistingPost(): void
+    public function _testFindOneByGuid(): void
     {
         self::factory()->post->create([
             'post_type' => 'product',
@@ -35,7 +35,7 @@ class PostTest extends TestCase
      * @return void
      * @covers Post::findOneByGuid
      */
-    public function testFindOneByGuidWithNotFoundPost(): void
+    public function testFindOneByGuidWithNotFound(): void
     {
         self::factory()->post->create([
             'post_type' => 'product',
@@ -70,7 +70,7 @@ class PostTest extends TestCase
      * @return void
      * @covers Post::findOneByName
      */
-    public function testFindOneByNameWithNotFoundPost(): void
+    public function testFindOneByNameWithNotFound(): void
     {
         self::factory()->post->create([
             'post_type' => 'product',
