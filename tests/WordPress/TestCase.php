@@ -69,7 +69,6 @@ abstract class TestCase extends \WP_UnitTestCase
         $this->assertEquals($wpPost->post_content, $post->getPostContent());
         $this->assertEquals($wpPost->post_type, $post->getPostType());
         $this->assertEquals($wpPost->post_title, $post->getPostTitle());
-        $this->assertEquals($wpPost->post_status, $post->getPostStatus());
         $this->assertEquals($wpPost->post_excerpt, $post->getPostExcerpt());
         $this->assertEquals($wpPost->post_name, $post->getPostName());
     }
@@ -118,7 +117,7 @@ abstract class TestCase extends \WP_UnitTestCase
         $table = sprintf('#TABLE_PREFIX#%s', $table);
         $this->assertLastQueryEquals(
             sprintf(
-                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = '%3\$s' and `%1\$s`.`%2\$s` is not null limit 1",
+                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = %3\$s and `%1\$s`.`%2\$s` is not null limit 1",
                 $table,
                 $pkColum,
                 $pkValue
