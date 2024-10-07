@@ -102,20 +102,18 @@ class HasMetasTest extends TestCase
      */
     public function testGetMetaValueWithGenericCasts(string $type, mixed $value, mixed $expectedValue): void
     {
-        $object = new class () extends Post {
+        $object = new class ($type) extends Post {
             public function __construct(
-                protected array $metaCasts,
-                array $attributes = []
+                string $type
             ) {
-                parent::__construct($attributes);
+                parent::__construct([]);
+                $this->metaCasts = [
+                    'my_meta' => $type,
+                ];
             }
         };
 
-        $model = new $object(
-            [
-                'my_meta' => $type,
-            ]
-        );
+        $model = new $object($type);
 
         $model->setPostTitle(__FUNCTION__);
         $model->save();
@@ -151,6 +149,12 @@ class HasMetasTest extends TestCase
             'boolean',
             '1',
             true,
+        ];
+
+        yield 'With float' => [
+            'float',
+            '15.25',
+            15.25,
         ];
     }
 
