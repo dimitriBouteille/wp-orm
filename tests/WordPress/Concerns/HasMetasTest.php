@@ -93,33 +93,67 @@ class HasMetasTest extends TestCase
     }
 
     /**
+     * @param string $type
+     * @param mixed $value
+     * @param mixed $expectedValue
      * @return void
      * @covers HasMetas::getMetaValue
+     * @dataProvider providerTestGetMetaValueWithGenericCasts
      */
-    public function testGetMetaValueWithGenericCasts(): void
+    public function testGetMetaValueWithGenericCasts(string $type, mixed $value, mixed $expectedValue): void
     {
         $object = new class () extends Post {
-            protected array $metaCasts = [
-                'age' => 'int',
-                'year' => 'integer',
-                'is_active' => 'bool',
-                'subscribed' => 'boolean',
-            ];
+            public function __construct(
+                protected array $metaCasts,
+                array $attributes = []
+            ) {
+                parent::__construct($attributes);
+            }
         };
 
-        $model = new $object();
+        $model = new $object(
+            [
+                'my_meta' => $type,
+            ]
+        );
+
         $model->setPostTitle(__FUNCTION__);
         $model->save();
-        $model->setMeta('age', '18');
-        $model->setMeta('year', '2024');
-        $model->setMeta('is_active', '1');
-        $model->setMeta('subscribed', '0');
+        $model->setMeta('my_meta', $value);
 
-        $this->assertEquals(18, $model->getMetaValue('age'));
-        $this->assertEquals(2024, $model->getMetaValue('year'));
-        $this->assertTrue($model->getMetaValue('is_active'));
-        $this->assertFalse($model->getMetaValue('subscribed'));
+        $this->assertEquals($expectedValue, $model->getMetaValue('my_meta'));
     }
+
+    /**
+     * @return \Generator
+     */
+    public function providerTestGetMetaValueWithGenericCasts(): \Generator
+    {
+        yield 'With int' => [
+            'int',
+            '10',
+            100,
+        ];
+
+        yield 'With string' => [
+            'integer',
+            '1501',
+            1501,
+        ];
+
+        yield 'With bool' => [
+            'bool',
+            '1',
+            true,
+        ];
+
+        yield 'With boolean' => [
+            'boolean',
+            '1',
+            true,
+        ];
+    }
+
 
     /**
      * @return void
