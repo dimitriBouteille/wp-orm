@@ -17,7 +17,7 @@ class PostTest extends TestCase
      * @return void
      * @covers Post::findOneByGuid
      */
-    public function _testFindOneByGuid(): void
+    public function testFindOneByGuid(): void
     {
         self::factory()->post->create([
             'post_type' => 'product',
@@ -27,6 +27,10 @@ class PostTest extends TestCase
         ]);
 
         $post = Post::findOneByGuid('guid-1585656');
+
+        global $wpdb;
+        var_dump($wpdb->last_query);
+
         $this->assertInstanceOf(Post::class, $post);
         $this->assertPostEqualsToWpPost($post);
     }
