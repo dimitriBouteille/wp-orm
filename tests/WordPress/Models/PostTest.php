@@ -19,21 +19,15 @@ class PostTest extends TestCase
      */
     public function testFindOneByGuid(): void
     {
-        $id = self::factory()->post->create([
+        self::factory()->post->create([
             'post_type' => 'product',
             'post_content'  => 'product information',
             'post_name' => 'product-testFindOneByGuid',
+            // Auto add http://
             'guid' => 'guid-testFindOneByGuid',
         ]);
 
-        $ost =  get_post($id);
-        var_dump($ost);
-
-        $post = Post::findOneByGuid('guid-testFindOneByGuid');
-
-        global $wpdb;
-        var_dump($wpdb->last_query);
-
+        $post = Post::findOneByGuid('http://guid-testFindOneByGuid');
         $this->assertInstanceOf(Post::class, $post);
         $this->assertPostEqualsToWpPost($post);
     }
@@ -51,7 +45,7 @@ class PostTest extends TestCase
             'guid' => 'guid-testFindOneByName',
         ]);
 
-        $post = Post::findOneByGuid('guid-testFindOneByName-fake');
+        $post = Post::findOneByGuid('http://guid-testFindOneByName-fake');
         $this->assertNull($post);
     }
 
