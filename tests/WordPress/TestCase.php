@@ -28,32 +28,6 @@ use Illuminate\Support\Collection;
 abstract class TestCase extends \WP_UnitTestCase
 {
     /**
-     * @param string $query
-     * @return void
-     */
-    public function assertLastQueryEqual(string $query): void
-    {
-        global $wpdb;
-        self::assertEquals($query, $wpdb->last_query);
-    }
-
-    /**
-     * @param Post|null $model
-     * @param \WP_Post|null $wpPost
-     * @return void
-     */
-    public function assertPostEqualToWpObject(?Post $model, ?\WP_Post $wpPost): void
-    {
-        self::assertInstanceOf(\WP_Post::class, $wpPost);
-
-        self::assertEquals($wpPost->ID, $model->getId());
-        self::assertEquals($wpPost->post_type, $model->getPostType());
-        self::assertEquals($wpPost->post_content, $model->getPostContent());
-        self::assertEquals($wpPost->post_title, $model->getPostTitle());
-        self::assertEquals($wpPost->post_name, $model->getPostName());
-    }
-
-    /**
      * @param int|null $id
      * @return void
      */
@@ -144,7 +118,7 @@ abstract class TestCase extends \WP_UnitTestCase
         $table = sprintf('#TABLE_PREFIX#%s', $table);
         $this->assertLastQueryEquals(
             sprintf(
-                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = `%3\$s` and `%1\$s`.`%2\$s` is not null limit 1",
+                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = '%3\$s' and `%1\$s`.`%2\$s` is not null limit 1",
                 $table,
                 $pkColum,
                 $pkValue

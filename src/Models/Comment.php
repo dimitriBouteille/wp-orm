@@ -80,6 +80,7 @@ class Comment extends AbstractModel
      * @inheritDoc
      */
     protected $casts = [
+        self::POST_ID => 'integer',
         self::KARMA => 'integer',
         self::DATE_GMT => 'datetime',
         self::DATE => 'datetime',
@@ -115,5 +116,45 @@ class Comment extends AbstractModel
     public function newEloquentBuilder($query): CommentBuilder
     {
         return new CommentBuilder($query);
+    }
+
+    /**
+     * @return int|null
+     * @see getCommentPostID()
+     */
+    public function getCommentPostIdAttribute(): ?int
+    {
+        return $this->getAttributes()[self::POST_ID] ?? null;
+    }
+
+    /**
+     * @param int|null $postId
+     * @return $this
+     * @see setCommentPostID()
+     */
+    public function setCommentPostIdAttribute(?int $postId): self
+    {
+        $this->attributes[self::POST_ID] = $postId;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     * @see getCommentAuthorIp()
+     */
+    public function getCommentAuthorIpAttribute(): ?string
+    {
+        return $this->getAttributes()[self::AUTHOR_IP] ?? null;
+    }
+
+    /**
+     * @param mixed $ip
+     * @return self
+     * @see setCommentAuthorIp()
+     */
+    public function setCommentAuthorIpAttribute(mixed $ip): self
+    {
+        $this->attributes[self::AUTHOR_IP] = $ip;
+        return $this;
     }
 }
