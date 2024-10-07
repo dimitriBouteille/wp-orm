@@ -22,14 +22,14 @@ class PostTest extends TestCase
         $id = self::factory()->post->create([
             'post_type' => 'product',
             'post_content'  => 'product information',
-            'post_name' => 'product-1585656',
-            'guid' => 'guid-1585656',
+            'post_name' => 'product-testFindOneByGuid',
+            'guid' => 'guid-testFindOneByGuid',
         ]);
 
         $ost =  get_post($id);
         var_dump($ost);
 
-        $post = Post::findOneByGuid('guid-1585656');
+        $post = Post::findOneByGuid('guid-testFindOneByGuid');
 
         global $wpdb;
         var_dump($wpdb->last_query);
@@ -47,11 +47,11 @@ class PostTest extends TestCase
         self::factory()->post->create([
             'post_type' => 'product',
             'post_content'  => 'product information',
-            'post_name' => 'product-1585656',
-            'guid' => 'guid-1585656',
+            'post_name' => 'product-testFindOneByName',
+            'guid' => 'guid-testFindOneByName',
         ]);
 
-        $post = Post::findOneByGuid('guid-1585656-fake');
+        $post = Post::findOneByGuid('guid-testFindOneByName-fake');
         $this->assertNull($post);
     }
 
@@ -64,8 +64,8 @@ class PostTest extends TestCase
         self::factory()->post->create([
             'post_type' => 'product',
             'post_content'  => 'product AABB',
-            'post_name' => 'product-AABB',
-            'guid' => 'guid-AABB',
+            'post_name' => 'product-testFindOneByName',
+            'guid' => 'guid-testFindOneByName',
         ]);
 
         $post = Post::findOneByName('product-AABB');
@@ -82,11 +82,11 @@ class PostTest extends TestCase
         self::factory()->post->create([
             'post_type' => 'product',
             'post_content'  => 'product AABB',
-            'post_name' => 'product-AABB',
-            'guid' => 'guid-AABB',
+            'post_name' => 'product-testFindOneByNameWithNotFound',
+            'guid' => 'guid-testFindOneByNameWithNotFound',
         ]);
 
-        $post = Post::findOneByName('product-AABB-fake');
+        $post = Post::findOneByName('product-testFindOneByNameWithNotFound-fake');
         $this->assertNull($post);
     }
 }
