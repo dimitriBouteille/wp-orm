@@ -62,7 +62,7 @@ class PostTest extends TestCase
             'guid' => 'guid-testFindOneByName',
         ]);
 
-        $post = Post::findOneByName('product-AABB');
+        $post = Post::findOneByName('product-testFindOneByName');
         $this->assertInstanceOf(Post::class, $post);
         $this->assertPostEqualsToWpPost($post);
     }
