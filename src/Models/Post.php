@@ -60,6 +60,8 @@ use Illuminate\Support\Collection;
  * @method string|null getPostContentFiltered()
  * @method Post setPostParent(?int $parentId)
  * @method int|null getPostParent()
+ * @method Post setPostAuthor(?int $authorId)
+ * @method int|null getPostAuthor()
  * @method static PostBuilder query()
  *
  * @property-read User|null $author

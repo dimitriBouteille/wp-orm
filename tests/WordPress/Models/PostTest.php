@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\Post;
+use Dbout\WpOrm\Models\User;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class PostTest extends TestCase
@@ -110,5 +111,32 @@ class PostTest extends TestCase
 
         $this->assertInstanceOf(Post::class, $parent);
         $this->assertEquals($objectId, $parent->getId());
+    }
+
+    /**
+     * @return void
+     * @covers Post::author
+     */
+    public function testAuthor(): void
+    {
+        $userId = self::factory()->user->create([
+            'user_login' => 'test-post-15',
+            'user_pass'  => 'testing',
+            'user_email' => 'test-post-15@test.com',
+        ]);
+
+        $object = new Post();
+        $object->setPostAuthor($userId);
+        $object->setPostContent('Custom post content');
+        $object->setPostName('custom-post-content');
+        $this->assertTrue($object->save());
+
+        $this->assertPostEqualsToWpPost($object);
+
+        $newObject = Post::find($object->getId());
+        $author = $newObject->author;
+        $this->assertLastQueryHasOneRelation('posts', 'post_author', $userId);
+        $this->assertInstanceOf(User::class, $author);
+        $this->assertEquals($userId, $author->getId());
     }
 }
