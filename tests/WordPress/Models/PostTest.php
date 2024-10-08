@@ -174,28 +174,6 @@ class PostTest extends TestCase
     /**
      * @return void
      * @covers Post::save
-     * @covers Post::setPostTitle
-     * @covers Post::setPostName
-     * @covers Post::setPostContent
-     * @covers Post::setPostType
-     * @covers Post::setPostExcerpt
-     * @covers Post::setPostStatus
-     * @covers Post::setPostPassword
-     * @covers Post::setCommentStatus
-     * @covers Post::setPostAuthor
-     * @covers Post::setPostParent
-     * @covers Post::setMenuOrder
-     * @covers Post::getPostTitle
-     * @covers Post::getPostName
-     * @covers Post::getPostContent
-     * @covers Post::getPostType
-     * @covers Post::getPostExcerpt
-     * @covers Post::getPostStatus
-     * @covers Post::getPostPassword
-     * @covers Post::getCommentStatus
-     * @covers Post::getPostAuthor
-     * @covers Post::getPostParent
-     * @covers Post::getMenuOrder
      */
     public function testSave(): void
     {

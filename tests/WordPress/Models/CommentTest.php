@@ -96,4 +96,38 @@ class CommentTest extends TestCase
         $this->assertInstanceOf(Comment::class, $parent);
         $this->assertEquals($objectId, $parent->getId());
     }
+
+    /**
+     * @return void
+     * @covers Comment::save
+     */
+    public function testSave(): void
+    {
+        $comment = new Comment();
+        $comment->setCommentContent('I think the piano on Sunset Jesus is a masterpiece.');
+        $comment->setCommentAuthor('15');
+        $comment->setCommentAuthorIP('127.0.0.1');
+        $comment->setCommentAgent('chrome');
+        $comment->setCommentAuthorEmail('test@test.com');
+        $comment->setCommentPostID(165);
+        $comment->setCommentType('custom');
+        $comment->setCommentApproved('yes');
+        $comment->setCommentAuthorUrl('https://my-site.com');
+        $comment->setCommentParent(6525);
+
+        $this->assertTrue($comment->save());
+
+        $loadComment = Comment::find($comment->getId());
+        $this->assertInstanceOf(Comment::class, $loadComment);
+        $this->assertEquals('I think the piano on Sunset Jesus is a masterpiece.', $comment->getCommentContent());
+        $this->assertEquals('15', $comment->getCommentAuthor());
+        $this->assertEquals('127.0.0.1', $comment->getCommentAuthorIP());
+        $this->assertEquals('chrome/15.x', $comment->getCommentAgent());
+        $this->assertEquals('chrome/15.x', $comment->getCommentAuthorEmail());
+        $this->assertEquals(165, $comment->getCommentPostID());
+        $this->assertEquals('custom', $comment->getCommentType());
+        $this->assertEquals('yes', $comment->getCommentApproved());
+        $this->assertEquals('https://my-site.com', $comment->getCommentAuthorUrl());
+        $this->assertEquals(6525, $comment->getCommentParent());
+    }
 }
