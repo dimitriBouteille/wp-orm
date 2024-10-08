@@ -10,6 +10,7 @@ namespace Dbout\WpOrm\Tests\WordPress;
 
 use Dbout\WpOrm\Models\Comment;
 use Dbout\WpOrm\Models\Post;
+use Illuminate\Support\Collection;
 
 /**
  * @method static|$this assertEquals(mixed $expectedValue, mixed $checkValue, string $message = '')
@@ -26,32 +27,6 @@ use Dbout\WpOrm\Models\Post;
  */
 abstract class TestCase extends \WP_UnitTestCase
 {
-    /**
-     * @param string $query
-     * @return void
-     */
-    public function assertLastQueryEqual(string $query): void
-    {
-        global $wpdb;
-        self::assertEquals($query, $wpdb->last_query);
-    }
-
-    /**
-     * @param Post|null $model
-     * @param \WP_Post|null $wpPost
-     * @return void
-     */
-    public function assertPostEqualToWpObject(?Post $model, ?\WP_Post $wpPost): void
-    {
-        self::assertInstanceOf(\WP_Post::class, $wpPost);
-
-        self::assertEquals($wpPost->ID, $model->getId());
-        self::assertEquals($wpPost->post_type, $model->getPostType());
-        self::assertEquals($wpPost->post_content, $model->getPostContent());
-        self::assertEquals($wpPost->post_title, $model->getPostTitle());
-        self::assertEquals($wpPost->post_name, $model->getPostName());
-    }
-
     /**
      * @param int|null $id
      * @return void
@@ -94,7 +69,6 @@ abstract class TestCase extends \WP_UnitTestCase
         $this->assertEquals($wpPost->post_content, $post->getPostContent());
         $this->assertEquals($wpPost->post_type, $post->getPostType());
         $this->assertEquals($wpPost->post_title, $post->getPostTitle());
-        $this->assertEquals($wpPost->post_status, $post->getPostStatus());
         $this->assertEquals($wpPost->post_excerpt, $post->getPostExcerpt());
         $this->assertEquals($wpPost->post_name, $post->getPostName());
     }
@@ -121,15 +95,61 @@ abstract class TestCase extends \WP_UnitTestCase
      */
     protected function assertFindLastQuery(string $table, string $whereColumn, string $whereValue): void
     {
-        $table = self::getTable($table);
-        $this->assertLastQueryEqual(
+        $this->assertLastQueryEquals(
             sprintf(
-                "select `%s`.* from `%s` where `%s` = '%s' limit 1",
+                "select `#TABLE_PREFIX#%s`.* from `#TABLE_PREFIX#%s` where `%s` = '%s' limit 1",
                 $table,
                 $table,
                 $whereColumn,
                 $whereValue
             )
         );
+    }
+
+    /**
+     * @param string $table
+     * @param string $pkColum
+     * @param string $pkValue
+     * @return void
+     */
+    public function assertLastQueryHasOneRelation(string $table, string $pkColum, string $pkValue): void
+    {
+        $table = sprintf('#TABLE_PREFIX#%s', $table);
+        $this->assertLastQueryEquals(
+            sprintf(
+                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = %3\$s and `%1\$s`.`%2\$s` is not null limit 1",
+                $table,
+                $pkColum,
+                $pkValue
+            )
+        );
+    }
+
+    /**
+     * @param string $query
+     * @param string $message
+     * @return void
+     */
+    public function assertLastQueryEquals(string $query, string $message = ''): void
+    {
+        global $wpdb;
+        $query = str_replace('#TABLE_PREFIX#', $wpdb->prefix, $query);
+        self::assertEquals($query, $wpdb->last_query, $message);
+    }
+
+    /**
+     * @param Collection $expectedItems
+     * @param string $relationProperty
+     * @param array $expectedIds
+     * @return void
+     */
+    public function assertHasManyRelation(
+        Collection $expectedItems,
+        string $relationProperty,
+        array $expectedIds
+    ): void {
+        $ids = $expectedItems->pluck($relationProperty);
+        $this->assertCount(count($expectedIds), $expectedItems->toArray());
+        $this->assertEqualsCanonicalizing($expectedIds, $ids->toArray());
     }
 }

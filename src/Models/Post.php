@@ -58,6 +58,10 @@ use Illuminate\Support\Collection;
  * @method int|null getMenuOrder()
  * @method Post setPostContentFiltered($content)
  * @method string|null getPostContentFiltered()
+ * @method Post setPostParent(?int $parentId)
+ * @method int|null getPostParent()
+ * @method Post setPostAuthor(?int $authorId)
+ * @method int|null getPostAuthor()
  * @method static PostBuilder query()
  *
  * @property-read User|null $author
@@ -104,6 +108,8 @@ class Post extends AbstractModel implements WithMetaModelInterface
      * @inheritDoc
      */
     protected $casts = [
+        self::AUTHOR => 'integer',
+        self::PARENT => 'integer',
         self::MENU_ORDER => 'integer',
         self::COMMENT_COUNT => 'integer',
         self::DATE => 'datetime',

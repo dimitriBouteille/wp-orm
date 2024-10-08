@@ -11,36 +11,33 @@ namespace Dbout\WpOrm\Tests\WordPress\Models;
 use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Models\Option
- */
 class OptionTest extends TestCase
 {
-    private const OPTION_NAME = 'my_custom_option';
-    private const OPTION_VALUE = 'option_value';
-
     /**
      * @return void
+     * @covers Option::findOneByName
+     * @covers Option::getOptionName
+     * @covers Option::getOptionValue
      */
-    public static function setUpBeforeClass(): void
+    public function testFindOneByName(): void
     {
-        add_option(self::OPTION_NAME, self::OPTION_VALUE);
+        add_option('my_custom_option', 'option_value');
+        $option = Option::findOneByName('my_custom_option');
+
+        $this->assertInstanceOf(Option::class, $option);
+        $this->assertFindLastQuery('options', 'option_name', 'my_custom_option');
+        $this->assertEquals('option_value', $option->getOptionValue());
+        $this->assertEquals('my_custom_option', $option->getOptionName());
     }
 
     /**
      * @return void
-     * @covers ::findOneByName
-     * @covers ::getOptionName
-     * @covers ::getOptionValue
+     * @covers Option::findOneByNam
      */
-    public function testFindOneByName(): void
+    public function testFindOneByNameWithNotFound(): void
     {
-        $option = Option::findOneByName(self::OPTION_NAME);
-
-        $this->assertInstanceOf(Option::class, $option);
-        $this->assertFindLastQuery('options', 'option_name', self::OPTION_NAME);
-
-        $this->assertEquals(self::OPTION_VALUE, $option->getOptionValue());
-        $this->assertEquals(self::OPTION_NAME, $option->getOptionName());
+        add_option('my_custom_option', 'option_value');
+        $option = Option::findOneByName('my_custom_option_fake');
+        $this->assertNull($option);
     }
 }

@@ -38,6 +38,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method Carbon|null getCommentDate()
  * @method Comment setCommentDateGmt(mixed $date)
  * @method Carbon|null getCommentDateGmt()
+ * @method Comment setCommentPostID(int $postId)
+ * @method int|null getCommentPostID()
+ * @method Comment setCommentParent(?int $parentId)
+ * @method int|null getCommentParent()
  * @method static CommentBuilder query()
  *
  * @property-read User|null $user
@@ -78,6 +82,9 @@ class Comment extends AbstractModel
      * @inheritDoc
      */
     protected $casts = [
+        self::USER_ID => 'integer',
+        self::POST_ID => 'integer',
+        self::PARENT => 'integer',
         self::KARMA => 'integer',
         self::DATE_GMT => 'datetime',
         self::DATE => 'datetime',
@@ -113,5 +120,45 @@ class Comment extends AbstractModel
     public function newEloquentBuilder($query): CommentBuilder
     {
         return new CommentBuilder($query);
+    }
+
+    /**
+     * @return int|null
+     * @see getCommentPostID()
+     */
+    public function getCommentPostIdAttribute(): ?int
+    {
+        return $this->getAttributes()[self::POST_ID] ?? null;
+    }
+
+    /**
+     * @param int|null $postId
+     * @return $this
+     * @see setCommentPostID()
+     */
+    public function setCommentPostIdAttribute(?int $postId): self
+    {
+        $this->attributes[self::POST_ID] = $postId;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     * @see getCommentAuthorIp()
+     */
+    public function getCommentAuthorIpAttribute(): ?string
+    {
+        return $this->getAttributes()[self::AUTHOR_IP] ?? null;
+    }
+
+    /**
+     * @param mixed $ip
+     * @return self
+     * @see setCommentAuthorIp()
+     */
+    public function setCommentAuthorIpAttribute(mixed $ip): self
+    {
+        $this->attributes[self::AUTHOR_IP] = $ip;
+        return $this;
     }
 }

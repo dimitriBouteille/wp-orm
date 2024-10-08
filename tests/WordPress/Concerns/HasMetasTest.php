@@ -30,6 +30,7 @@ class HasMetasTest extends TestCase
         $createMeta = $model->setMeta('author', 'Norman FOSTER');
 
         $meta = $model->getMeta('author');
+        $this->assertLastQueryEquals($this->getQueryGetMeta($model->getId(), 'author'));
         $this->assertInstanceOf(AbstractMeta::class, $meta);
         $this->assertEquals($createMeta->getId(), $meta->getId());
         $this->assertEquals($createMeta->getValue(), $meta->getValue());
@@ -88,6 +89,7 @@ class HasMetasTest extends TestCase
 
         add_post_meta($model->getId(), 'place', 'Lyon, France');
         $this->assertEquals('Lyon, France', $model->getMetaValue('place'));
+        $this->assertLastQueryEquals($this->getQueryGetMeta($model->getId(), 'place'));
     }
 
     /**
@@ -102,6 +104,7 @@ class HasMetasTest extends TestCase
                 'year' => 'integer',
                 'is_active' => 'bool',
                 'subscribed' => 'boolean',
+                'data'  => 'json',
             ];
         };
 
@@ -112,11 +115,13 @@ class HasMetasTest extends TestCase
         $model->setMeta('year', '2024');
         $model->setMeta('is_active', '1');
         $model->setMeta('subscribed', '0');
+        $model->setMeta('data', '{"firstname":"John","lastname":"Doe"}');
 
         $this->assertEquals(18, $model->getMetaValue('age'));
         $this->assertEquals(2024, $model->getMetaValue('year'));
         $this->assertTrue($model->getMetaValue('is_active'));
         $this->assertFalse($model->getMetaValue('subscribed'));
+        $this->assertEquals(['firstname' => 'John', 'lastname' => 'Doe'], $model->getMetaValue('data'));
     }
 
     /**
@@ -206,6 +211,12 @@ class HasMetasTest extends TestCase
         $model->setMeta('architect-name', 'Norman F.');
 
         $this->assertEquals(1, $model->deleteMeta('architect-name'), 'The function must delete only one line.');
+        $this->assertLastQueryEquals(sprintf(
+            "delete from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = 'architect-name'",
+            '#TABLE_PREFIX#postmeta',
+            $model->getId()
+        ));
+
         $this->assertFalse($model->hasMeta('architect-name'), 'The meta must no longer exist.');
     }
 
@@ -222,5 +233,26 @@ class HasMetasTest extends TestCase
         $model->setMeta('architect-name', 'Norman F.');
 
         $this->assertEquals(0, $model->deleteMeta('fake-meta'));
+
+        $this->assertLastQueryEquals(sprintf(
+            "delete from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = 'fake-meta'",
+            '#TABLE_PREFIX#postmeta',
+            $model->getId()
+        ));
+    }
+
+    /**
+     * @param int $postId
+     * @param string $metaKey
+     * @return string
+     */
+    private function getQueryGetMeta(int $postId, string $metaKey): string
+    {
+        return sprintf(
+            "select * from `%1\$s` where `%1\$s`.`post_id` = %2\$d and `%1\$s`.`post_id` is not null and `meta_key` = '%3\$s' limit 1",
+            '#TABLE_PREFIX#postmeta',
+            $postId,
+            $metaKey
+        );
     }
 }

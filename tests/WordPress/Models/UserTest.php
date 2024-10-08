@@ -9,16 +9,10 @@
 namespace Dbout\WpOrm\Tests\WordPress\Models;
 
 use Dbout\WpOrm\Models\User;
-use Dbout\WpOrm\Tests\WordPress\Helpers\WithHasManyRelation;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Models\User
- */
 class UserTest extends TestCase
 {
-    use WithHasManyRelation;
-
     private const USER_EMAIL = 'wp-testing@wp-orm.fr';
     private const USER_LOGIN = 'testing.wp-orm';
     private static ?int $testingUserId = null;
@@ -46,9 +40,9 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::findOneByEmail
+     * @covers User::findOneByEmail
      */
-    public function testFindOneByEmailWithExistingUser(): void
+    public function testFindOneByEmail(): void
     {
         $this->checkFindOneResult(
             User::findOneByEmail(self::USER_EMAIL),
@@ -59,9 +53,9 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::findOneByLogin
+     * @covers User::findOneByLogin
      */
-    public function testFindOneByLoginWithExistingUser(): void
+    public function testFindOneByLogin(): void
     {
         $this->checkFindOneResult(
             User::findOneByLogin(self::USER_LOGIN),
@@ -72,7 +66,7 @@ class UserTest extends TestCase
 
     /**
      * @return void
-     * @covers ::comments
+     * @covers User::comments
      */
     public function testComments(): void
     {
@@ -83,25 +77,20 @@ class UserTest extends TestCase
             'user_id' => self::$fakeUserId,
         ]);
 
-        $this->checkHasManyRelationResult(
-            resultCollectionCallback: fn () => $this->getTestingUser()?->comments,
+        $ids = self::factory()->comment->create_many(2, [
+            'user_id' => self::$testingUserId,
+        ]);
+
+        $this->assertHasManyRelation(
+            expectedItems: $this->getTestingUser()?->comments,
             relationProperty:  'comment_ID',
-            expectedIdsCallback: function () {
-                return [
-                    self::factory()->comment->create([
-                        'user_id' => self::$testingUserId,
-                    ]),
-                    self::factory()->comment->create([
-                        'user_id' => self::$testingUserId,
-                    ]),
-                ];
-            }
+            expectedIds: $ids
         );
     }
 
     /**
      * @return void
-     * @covers ::posts
+     * @covers User::posts
      */
     public function testPosts(): void
     {
@@ -112,19 +101,14 @@ class UserTest extends TestCase
             'user_id' => self::$fakeUserId,
         ]);
 
-        $this->checkHasManyRelationResult(
-            resultCollectionCallback: fn () => $this->getTestingUser()?->posts,
+        $ids = self::factory()->post->create_many(3, [
+            'post_author' => self::$testingUserId,
+        ]);
+
+        $this->assertHasManyRelation(
+            expectedItems: $this->getTestingUser()?->posts,
             relationProperty: 'ID',
-            expectedIdsCallback: function () {
-                return [
-                    self::factory()->post->create([
-                        'post_author' => self::$testingUserId,
-                    ]),
-                    self::factory()->post->create([
-                        'post_author' => self::$testingUserId,
-                    ]),
-                ];
-            }
+            expectedIds: $ids
         );
     }
 

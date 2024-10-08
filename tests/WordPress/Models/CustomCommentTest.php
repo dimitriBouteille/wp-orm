@@ -31,6 +31,10 @@ class CustomCommentTest extends TestCase
         $this->assertInstanceOf($model::class, $object);
         $this->assertEquals('woocommerce', $object->getCommentType());
         $this->assertEquals($objectId, $object->getId());
+        $this->assertLastQueryEquals(sprintf(
+            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `#TABLE_PREFIX#comments`.`comment_ID` = %s and `comment_type` = 'woocommerce' limit 1",
+            $objectId
+        ));
     }
 
     /**
@@ -49,6 +53,11 @@ class CustomCommentTest extends TestCase
 
         $object = $model::find($objectId);
         $this->assertNull($object);
+
+        $this->assertLastQueryEquals(sprintf(
+            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `#TABLE_PREFIX#comments`.`comment_ID` = %s and `comment_type` = 'author' limit 1",
+            $objectId
+        ));
     }
 
     /**
@@ -79,7 +88,7 @@ class CustomCommentTest extends TestCase
      * @return void
      * @covers CustomComment::all
      */
-    public function testQueryAll(): void
+    public function testAll(): void
     {
         $applicationCommentsV1 = self::factory()->comment->create_many(5, [
             'comment_type' => 'application',
@@ -98,6 +107,11 @@ class CustomCommentTest extends TestCase
         };
 
         $comments = $model::all();
+
+        $this->assertLastQueryEquals(
+            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_type` = 'application'"
+        );
+
         $applicationComments = array_merge($applicationCommentsV1, $applicationCommentsV2);
         $this->assertEquals(12, $comments->count());
         $this->assertEquals($applicationComments, $comments->pluck('comment_ID')->toArray());
@@ -130,5 +144,33 @@ class CustomCommentTest extends TestCase
         $this->assertEquals('contact@jean-nouvel.fr', $comment->getCommentAuthorEmail());
 
         $this->assertCommentEqualsToWpComment($comment);
+    }
+
+    /**
+     * @return void
+     * @covers CustomComment::delete
+     */
+    public function testDelete(): void
+    {
+        $model = new class () extends CustomComment {
+            protected string $_type = 'seo';
+        };
+
+        $comment = new $model([
+            'comment_author' => 'Zaha HADID',
+            'comment_author_email' => 'test@test.com',
+            'comment_content' => 'My name is Zaha',
+        ]);
+
+        $comment->save();
+        $commentId = $comment->getId();
+        $this->assertTrue($comment->delete());
+        $this->assertLastQueryEquals(sprintf(
+            "delete from `#TABLE_PREFIX#comments` where `comment_ID` = %s",
+            $commentId
+        ));
+
+        $wpComment = get_comment($commentId);
+        $this->assertNull($wpComment);
     }
 }
