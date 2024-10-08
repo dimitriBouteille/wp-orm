@@ -136,8 +136,17 @@ class PostTest extends TestCase
 
         $newObject = Post::find($object->getId());
         $author = $newObject->author;
-        $this->assertLastQueryHasOneRelation('posts', 'post_author', $userId);
+        $this->assertLastQueryHasOneRelation('users', 'ID', $userId);
         $this->assertInstanceOf(User::class, $author);
         $this->assertEquals($userId, $author->getId());
+    }
+
+    /**
+     * @return void
+     * @covers User::comments
+     */
+    public function testComments(): void
+    {
+
     }
 }
