@@ -143,7 +143,7 @@ class PostTest extends TestCase
 
     /**
      * @return void
-     * @covers User::comments
+     * @covers Post::comments
      */
     public function testComments(): void
     {
@@ -166,8 +166,17 @@ class PostTest extends TestCase
 
         $this->assertHasManyRelation(
             expectedItems: $post->comments,
-            relationProperty: 'comment_post_ID',
+            relationProperty: 'comment_ID',
             expectedIds: $ids
         );
+    }
+
+    /**
+     * @return void
+     * @covers Post::save
+     */
+    public function testSave(): void
+    {
+
     }
 }
