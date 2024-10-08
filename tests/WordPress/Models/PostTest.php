@@ -147,6 +147,27 @@ class PostTest extends TestCase
      */
     public function testComments(): void
     {
+        /**
+         * Create fake post with any relation with post
+         */
+        self::factory()->comment->create([
+            'comment_post_ID' => 1585,
+        ]);
 
+        $post = new Post();
+        $post->setPostTitle('Norman FOSTER - British Museum');
+        $post->setPostName('norman-foster-british-museum');
+        $post->setPostContent('Lorem ipsum dolor sit amet');
+        $this->assertTrue($post->save());
+
+        $ids = self::factory()->comment->create_many(3, [
+            'comment_post_ID' => $post->getId(),
+        ]);
+
+        $this->assertHasManyRelation(
+            expectedItems: $post->comments,
+            relationProperty: 'comment_post_ID',
+            expectedIds: $ids
+        );
     }
 }
