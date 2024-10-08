@@ -174,9 +174,58 @@ class PostTest extends TestCase
     /**
      * @return void
      * @covers Post::save
+     * @covers Post::setPostTitle
+     * @covers Post::setPostName
+     * @covers Post::setPostContent
+     * @covers Post::setPostType
+     * @covers Post::setPostExcerpt
+     * @covers Post::setPostStatus
+     * @covers Post::setPostPassword
+     * @covers Post::setCommentStatus
+     * @covers Post::setPostAuthor
+     * @covers Post::setPostParent
+     * @covers Post::setMenuOrder
+     * @covers Post::getPostTitle
+     * @covers Post::getPostName
+     * @covers Post::getPostContent
+     * @covers Post::getPostType
+     * @covers Post::getPostExcerpt
+     * @covers Post::getPostStatus
+     * @covers Post::getPostPassword
+     * @covers Post::getCommentStatus
+     * @covers Post::getPostAuthor
+     * @covers Post::getPostParent
+     * @covers Post::getMenuOrder
      */
     public function testSave(): void
     {
+        $post = new Post();
+        $post->setPostTitle('Avicii - The best DJ in the world');
+        $post->setPostName('avicii-the-best-dj-in-the-world');
+        $post->setPostContent('Praesent turpis sapien, hendrerit.');
+        $post->setPostType('artist');
+        $post->setPostExcerpt('Fusce consequat tellus augue.');
+        $post->setPostStatus('closed');
+        $post->setPostPassword('avicii-pwd');
+        $post->setCommentStatus('opened');
+        $post->setPostAuthor(158);
+        $post->setPostParent(86585);
+        $post->setMenuOrder(15);
 
+        $this->assertTrue($post->save());
+        $loadedPost = Post::find($post->getId());
+
+        $this->assertInstanceOf(Post::class, $loadedPost);
+        $this->assertEquals('Avicii - The best DJ in the world', $post->getPostTitle());
+        $this->assertEquals('avicii-the-best-dj-in-the-world', $post->getPostName());
+        $this->assertEquals('Praesent turpis sapien, hendrerit.', $post->getPostContent());
+        $this->assertEquals('artist', $post->getPostType());
+        $this->assertEquals('Fusce consequat tellus augue.', $post->getPostExcerpt());
+        $this->assertEquals('closed', $post->getPostStatus());
+        $this->assertEquals('avicii-pwd', $post->getPostPassword());
+        $this->assertEquals('opened', $post->getCommentStatus());
+        $this->assertEquals(158, $post->getPostAuthor());
+        $this->assertEquals(86585, $post->getPostParent());
+        $this->assertEquals(15, $post->getMenuOrder());
     }
 }
