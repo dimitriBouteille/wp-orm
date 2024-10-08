@@ -122,8 +122,8 @@ class CommentTest extends TestCase
         $this->assertEquals('I think the piano on Sunset Jesus is a masterpiece.', $comment->getCommentContent());
         $this->assertEquals('15', $comment->getCommentAuthor());
         $this->assertEquals('127.0.0.1', $comment->getCommentAuthorIP());
-        $this->assertEquals('chrome/15.x', $comment->getCommentAgent());
-        $this->assertEquals('chrome/15.x', $comment->getCommentAuthorEmail());
+        $this->assertEquals('chrome', $comment->getCommentAgent());
+        $this->assertEquals('test@test.com', $comment->getCommentAuthorEmail());
         $this->assertEquals(165, $comment->getCommentPostID());
         $this->assertEquals('custom', $comment->getCommentType());
         $this->assertEquals('yes', $comment->getCommentApproved());
