@@ -127,6 +127,7 @@ class PostTest extends TestCase
 
         $object = new Post();
         $object->setPostAuthor($userId);
+        $object->setPostType('product');
         $object->setPostContent('Custom post content');
         $object->setPostName('custom-post-content');
         $this->assertTrue($object->save());
