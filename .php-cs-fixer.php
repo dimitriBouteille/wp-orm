@@ -15,7 +15,7 @@ $finder = \PhpCsFixer\Finder::create()
 ;
 
 $header = <<<EOF
-    Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+    Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
     See LICENSE.txt for license details.
 
     Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
