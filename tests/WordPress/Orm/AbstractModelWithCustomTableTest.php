@@ -221,8 +221,9 @@ class AbstractModelWithCustomTableTest extends TestCase
     /**
      * @return void
      * @covers AbstractModel::truncate
+     * @covers AbstractModel::insert
      */
-    public function testTruncate(): void
+    public function testInsertAndTruncate(): void
     {
         $data = [
             [
@@ -242,7 +243,10 @@ class AbstractModelWithCustomTableTest extends TestCase
             ],
         ];
 
-        var_dump(self::$model::insert($data));
+        self::$model::insert($data);
+        $this->assertEquals(3, self::$model::all()->count());
+
         self::$model::truncate();
+        $this->assertEquals(0, self::$model::all()->count());
     }
 }
