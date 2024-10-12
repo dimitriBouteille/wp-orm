@@ -49,6 +49,14 @@ class AbstractModelWithCustomTableTest extends TestCase
 
     /**
      * @return void
+     */
+    public function setUp(): void
+    {
+        self::$model::truncate();
+    }
+
+    /**
+     * @return void
      * @covers AbstractModel::save
      */
     public function testSave(): void
@@ -90,7 +98,7 @@ class AbstractModelWithCustomTableTest extends TestCase
      * @return void
      * @covers AbstractModel::query
      */
-    public function testWhereWithJsonColumn(): void
+    public function testWhereWithComplexJsonColumn(): void
     {
         $seArtists = [
             [
@@ -135,8 +143,56 @@ class AbstractModelWithCustomTableTest extends TestCase
             $model->save();
         }
 
-        $selectedIds = self::$model::query()->where('metadata->address->country', 'SE')->get()->pluck('id');
+        $selectedIds = self::$model::query()->where('metadata->address.country', 'SE')->get()->pluck('id');
         $this->assertEquals($seIds, $selectedIds);
+    }
+
+    /**
+     * @return void
+     * @covers AbstractModel::query
+     */
+    public function testWhereWithSimpleJsonColum(): void
+    {
+        $edmArtists = [
+            [
+                'name' => 'Martin Garrix',
+                'url' => 'martin-garrix',
+                'metadata' => ['type' => 'edm'],
+            ],
+            [
+                'name' => 'Marshmello',
+                'url' => 'marshmello',
+                'metadata' => ['type' => 'edm'],
+            ],
+            [
+                'name' => 'Calvin Harris',
+                'url' => 'calvin-harris',
+                'metadata' => ['type' => 'edm'],
+            ],
+        ];
+
+        $edmIds = [];
+        foreach ($edmArtists as $artist) {
+            $model = new self::$model($artist);
+            $model->save();
+            $edmIds[] = $model->getId();
+        }
+
+        $popArtists = [
+            [
+                'name' => 'Coldplay',
+                'url' => 'coldplay',
+                'metadata' => ['type' => 'pop'],
+            ],
+        ];
+
+        foreach ($popArtists as $artist) {
+            $model = new self::$model($artist);
+            $model->save();
+        }
+
+        $selectedIds = self::$model::query()->where('metadata->type', 'edm')->get()->pluck('id');
+        $this->assertEquals($edmIds, $selectedIds);
     }
 
     /**

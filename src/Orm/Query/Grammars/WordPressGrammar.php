@@ -12,4 +12,13 @@ use Illuminate\Database\Query\Grammars\MySqlGrammar;
 
 class WordPressGrammar extends MySqlGrammar
 {
+    /**
+     * @inheritDoc
+     */
+    protected function wrapJsonSelector($value): string
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($value);
+        $path = \str_replace('"', '', $path);
+        return 'json_unquote(json_extract('.$field.$path.'))';
+    }
 }
