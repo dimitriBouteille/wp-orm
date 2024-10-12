@@ -144,7 +144,7 @@ class AbstractModelWithCustomTableTest extends TestCase
         }
 
         $selectedIds = self::$model::query()->where('metadata->address.country', 'SE')->get()->pluck('id')->toArray();
-        $this->assertLastQueryEquals("select * from `eol_wp_659efecustom_table` where json_unquote(json_extract(`metadata`, '$.address.country')) = 'SE'");
+        $this->assertLastQueryEquals("select * from `#TABLE_PREFIX#custom_table` where json_unquote(json_extract(`metadata`, '$.address.country')) = 'SE'");
         $this->assertEquals($seIds, $selectedIds);
     }
 
@@ -193,7 +193,7 @@ class AbstractModelWithCustomTableTest extends TestCase
         }
 
         $selectedIds = self::$model::query()->where('metadata->type', 'edm')->get()->pluck('id')->toArray();
-        $this->assertLastQueryEquals("select * from `eol_wp_659efecustom_table` where json_unquote(json_extract(`metadata`, '$.type')) = 'edm'");
+        $this->assertLastQueryEquals("select * from `#TABLE_PREFIX#custom_table` where json_unquote(json_extract(`metadata`, '$.type')) = 'edm'");
         $this->assertEquals($edmIds, $selectedIds);
     }
 
