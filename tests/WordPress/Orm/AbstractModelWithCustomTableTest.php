@@ -39,6 +39,8 @@ class AbstractModelWithCustomTableTest extends TestCase
             protected $primaryKey = 'id';
             public $timestamps = false;
 
+            protected $table = 'custom_table';
+
             protected $casts = [
                 'metadata' => 'json',
             ];
