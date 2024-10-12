@@ -217,4 +217,32 @@ class AbstractModelWithCustomTableTest extends TestCase
         $newObject = self::$model::find($id);
         $this->assertNull($newObject);
     }
+
+    /**
+     * @return void
+     * @covers AbstractModel::truncate
+     */
+    public function testTruncate(): void
+    {
+        $data = [
+            [
+                'name' => 'Martin Garrix',
+                'url' => 'martin-garrix',
+                'metadata' => ['type' => 'edm'],
+            ],
+            [
+                'name' => 'Marshmello',
+                'url' => 'marshmello',
+                'metadata' => ['type' => 'edm'],
+            ],
+            [
+                'name' => 'Calvin Harris',
+                'url' => 'calvin-harris',
+                'metadata' => ['type' => 'edm'],
+            ],
+        ];
+
+        self::$model::insert($data);
+        var_dump(self::$model::truncate());
+    }
 }
