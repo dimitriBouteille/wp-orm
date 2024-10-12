@@ -242,7 +242,7 @@ class AbstractModelWithCustomTableTest extends TestCase
             ],
         ];
 
-        self::$model::insert($data);
-        var_dump(self::$model::truncate());
+        var_dump(self::$model::insert($data));
+        self::$model::truncate();
     }
 }
