@@ -88,20 +88,55 @@ class AbstractModelWithCustomTableTest extends TestCase
 
     /**
      * @return void
-     * @covers AbstractModel::all
-     */
-    public function testAll(): void
-    {
-
-    }
-
-    /**
-     * @return void
      * @covers AbstractModel::query
      */
     public function testWhereWithJsonColumn(): void
     {
+        $seArtists = [
+            [
+                'name' => 'Avicii',
+                'url' => 'avicii',
+                'metadata' => ['birthday-date' => '08-09-1989', 'address' => ['city' => 'Stockholm', 'country' => 'SE']],
+            ],
+            [
+                'name' => 'Basshunter',
+                'url' => 'basshunter',
+                'metadata' => ['birthday-date' => '22-12-1984', 'address' => ['city' => 'Halmstad', 'country' => 'SE']],
+            ],
+            [
+                'name' => 'Måns Zelmerlöw',
+                'url' => 'mans-zelmerlow',
+                'metadata' => ['birthday-date' => '11-06-1986', 'address' => ['city' => 'Lund', 'country' => 'SE']],
+            ],
+        ];
 
+        $seIds = [];
+        foreach ($seArtists as $artist) {
+            $model = new self::$model($artist);
+            $model->save();
+            $seIds[] = $model->getId();
+        }
+
+        $frArtists = [
+            [
+                'name' => 'Madeon',
+                'url' => 'madeon',
+                'metadata' => ['birthday-date' => '30-05-1994', 'address' => ['city' => 'Nantes', 'country' => 'FR']],
+            ],
+            [
+                'name' => 'Kavinsky',
+                'url' => 'kavinsky',
+                'metadata' => ['birthday-date' => '31-07-1975', 'address' => ['city' => 'Seine-Saint-Denis', 'country' => 'FR']],
+            ],
+        ];
+
+        foreach ($frArtists as $artist) {
+            $model = new self::$model($artist);
+            $model->save();
+        }
+
+        $selectedIds = self::$model::query()->where('metadata->address->country', 'SE')->get()->pluck('id');
+        $this->assertEquals($seIds, $selectedIds);
     }
 
     /**
