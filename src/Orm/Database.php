@@ -143,7 +143,7 @@ class Database extends Connection
      */
     private function bindParams(?string $query, array $bindings): string
     {
-        $query = \str_replace('"', '`', (string)$query);
+        //$query = \str_replace('"', '`', (string)$query);
         $bindings = $this->prepareBindings($bindings);
         if ($bindings === []) {
             return $query;
