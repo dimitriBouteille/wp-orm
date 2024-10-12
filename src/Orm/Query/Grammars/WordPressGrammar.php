@@ -13,6 +13,9 @@ use Illuminate\Database\Query\Grammars\MySqlGrammar;
 class WordPressGrammar extends MySqlGrammar
 {
     /**
+     * Fix issue with JSON path
+     * @see https://github.com/dimitriBouteille/wp-orm/pull/93
+     * @see https://stackoverflow.com/a/35735594
      * @inheritDoc
      */
     protected function wrapJsonSelector($value): string
