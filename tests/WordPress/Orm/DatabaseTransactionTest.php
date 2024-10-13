@@ -129,6 +129,42 @@ class DatabaseTransactionTest extends TestCase
     }
 
     /**
+     * @throws \Throwable
+     * @return void
+     * @covers Database::beginTransaction
+     */
+    public function testBeginTransaction(): void
+    {
+        $this->db->beginTransaction();
+        $this->assertLastQueryEquals('START TRANSACTION;');
+        $this->assertEquals(1, $this->db->transactionCount);
+    }
+
+    /**
+     * @throws \Throwable
+     * @return void
+     * @covers Database::rollBack
+     */
+    public function testRollback(): void
+    {
+        $this->db->rollBack();
+        $this->assertLastQueryEquals('ROLLBACK;');
+        $this->assertEquals(0, $this->db->transactionCount);
+    }
+
+    /**
+     * @throws \Throwable
+     * @return void
+     * @covers Database::commit
+     */
+    public function testCommit(): void
+    {
+        $this->db->commit();
+        $this->assertLastQueryEquals('COMMIT;');
+        $this->assertEquals(0, $this->db->transactionCount);
+    }
+
+    /**
      * @param string $mode
      * @return void
      */
