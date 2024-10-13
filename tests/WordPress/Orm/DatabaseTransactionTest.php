@@ -110,6 +110,7 @@ class DatabaseTransactionTest extends TestCase
 
         $items = $this->model::all();
         $this->assertCount(2, $items->toArray(), 'There must be only 2 items because the transaction was rollback.');
+        $this->assertEquals(['deposit-1', 'deposit-2'], $items->pluck('url'));
     }
 
     /**
