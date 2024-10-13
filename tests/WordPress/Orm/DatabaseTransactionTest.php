@@ -101,16 +101,28 @@ class DatabaseTransactionTest extends TestCase
                  */
                 $this->db->delete(sprintf('DELETE FROM %s WHERE fake_column = %d;', $this->tableName, $query));
             });
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             // Off exception
-            $this->assertInstanceOf(QueryException::class, $exception);
         }
 
         $this->assertTransaction('rollback');
 
         $items = $this->model::all();
         $this->assertCount(2, $items->toArray(), 'There must be only 2 items because the transaction was rollback.');
-        $this->assertEquals(['deposit-1', 'deposit-2'], $items->pluck('url'));
+        $this->assertEquals(['deposit-1', 'deposit-2'], $items->pluck('url')->toArray());
+    }
+
+    /**
+     * @return void
+     * @throws \Throwable
+     * @covers Database::transaction
+     */
+    public function testTransactionThrowsQueryException(): void
+    {
+        $this->expectException(QueryException::class);
+        $this->db->transaction(function () {
+            $this->db->delete('DELETE FROM fake_table;');
+        });
     }
 
     /**
@@ -125,6 +137,7 @@ class DatabaseTransactionTest extends TestCase
         $firstQuery = reset($query)[0] ?? '';
         $lastQuery = end($query)[0] ?? '';
         $this->assertEquals('START TRANSACTION;', $firstQuery);
+        $this->assertEquals(0, $this->db->transactionCount);
 
         if ($mode === 'commit') {
             $this->assertEquals('COMMIT;', $lastQuery);
