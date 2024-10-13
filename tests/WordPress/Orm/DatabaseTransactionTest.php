@@ -77,12 +77,12 @@ class DatabaseTransactionTest extends TestCase
     }
 
     /**
+     * @throws \Throwable
      * @return void
      * @covers Database::transaction
      * @covers Database::delete
      * @covers Database::insert
      * @covers Database::rollBack
-     * @throws \Throwable
      */
     public function testTransactionRollback(): void
     {
