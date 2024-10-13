@@ -43,7 +43,6 @@ class DatabaseTransactionTest extends TestCase
      */
     public function setUp(): void
     {
-        define('SAVEQUERIES', false);
         $this->model = new class () extends AbstractModel {
             protected $primaryKey = 'id';
             public $timestamps = false;
@@ -54,6 +53,7 @@ class DatabaseTransactionTest extends TestCase
         $this->tableName = $wpdb->prefix . 'document';
         $this->model::truncate();
         $this->db = Database::getInstance();
+        define('SAVEQUERIES', true);
     }
 
     /**
@@ -65,7 +65,7 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testTransactionCommit(): void
     {
-        $this->activeLogQueries();
+        $this->resetLogQueries();
         $this->db->transaction(function () {
             $query = sprintf('INSERT INTO %s (name, url) VALUES(?, ?);', $this->tableName);
             $this->db->insert($query, ['Invoice #15', 'invoice-15']);
@@ -90,7 +90,7 @@ class DatabaseTransactionTest extends TestCase
         $this->db->insert($query, ['Deposit #1', 'deposit-1']);
         $this->db->insert($query, ['Deposit #2', 'deposit-2']);
 
-        $this->activeLogQueries();
+        $this->resetLogQueries();
         try {
             $this->db->transaction(function () use ($query) {
                 $this->db->insert($query, ['Deposit #99', 'deposit-99']);
@@ -135,8 +135,9 @@ class DatabaseTransactionTest extends TestCase
     /**
      * @return void
      */
-    private function activeLogQueries(): void
+    private function resetLogQueries(): void
     {
-        define('SAVEQUERIES', true);
+        global $wpdb;
+        $wpdb->queries = [];
     }
 }
