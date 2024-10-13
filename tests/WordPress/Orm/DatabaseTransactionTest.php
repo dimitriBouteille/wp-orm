@@ -14,9 +14,9 @@ use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class DatabaseTransactionTest extends TestCase
 {
-    private static string $tableName = '';
-    private static AbstractModel $model;
-
+    private string $tableName = '';
+    private AbstractModel $model;
+    private Database $db;
 
     /**
      * @return void
@@ -26,22 +26,15 @@ class DatabaseTransactionTest extends TestCase
         global $wpdb;
 
         $tableName = $wpdb->prefix . 'document';
-        self::$tableName = $tableName;
         $sql = "CREATE TABLE $tableName (
             id INT NOT NULL AUTO_INCREMENT,
             name varchar(100) NOT NULL,
-            url varchar(55) DEFAULT '' NOT NULL
+            url varchar(55) DEFAULT '' NOT NULL,
             PRIMARY KEY  (id)
         );";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
-
-        self::$model = new class () extends AbstractModel {
-            protected $primaryKey = 'id';
-            public $timestamps = false;
-            protected $table = 'document';
-        };
 
         define('SAVEQUERIES', true);
     }
@@ -51,7 +44,16 @@ class DatabaseTransactionTest extends TestCase
      */
     public function setUp(): void
     {
-        self::$model::truncate();
+        $this->model = new class () extends AbstractModel {
+            protected $primaryKey = 'id';
+            public $timestamps = false;
+            protected $table = 'document';
+        };
+
+        global $wpdb;
+        $this->tableName = $wpdb->prefix . 'document';
+        $this->model::truncate();
+        $this->db = new Database();
     }
 
     /**
@@ -61,15 +63,10 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testTransactionSuccess(): void
     {
-        Database::getInstance()->transaction(function () {
-            Database::getInstance()->insert(self::$tableName, [
-                'name' => 'Invoice #15',
-                'url' => 'invoice-15',
-            ]);
-            Database::getInstance()->insert(self::$tableName, [
-                'name' => 'Invoice #10',
-                'url' => 'invoice-10',
-            ]);
+        $this->db->transaction(function () {
+            $query = sprintf('INSERT INTO %s (name, URL) VALUES(? ?);', $this->tableName);
+            $this->db->insert($query, ['Invoice #15', 'invoice-15']);
+            $this->db->insert($query, ['Invoice #16', 'invoice-16']);
         });
 
         global $wpdb;
