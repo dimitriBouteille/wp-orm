@@ -36,6 +36,7 @@ class DatabaseTransactionTest extends TestCase
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
+        define('SAVEQUERIES', true);
     }
 
     /**
@@ -53,7 +54,6 @@ class DatabaseTransactionTest extends TestCase
         $this->tableName = $wpdb->prefix . 'document';
         $this->model::truncate();
         $this->db = Database::getInstance();
-        define('SAVEQUERIES', true);
     }
 
     /**
