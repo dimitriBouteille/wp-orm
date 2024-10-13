@@ -113,16 +113,19 @@ class DatabaseTransactionTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \Throwable
+     * @return void
      * @covers Database::transaction
      */
     public function testTransactionThrowsQueryException(): void
     {
         $this->expectException(QueryException::class);
+        $this->resetLogQueries();
         $this->db->transaction(function () {
             $this->db->delete('DELETE FROM fake_table;');
         });
+
+        $this->assertTransaction('rollback');
     }
 
     /**
