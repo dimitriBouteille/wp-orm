@@ -220,7 +220,8 @@ class Database extends Connection
     public function unprepared($query): bool
     {
         return $this->run($query, [], function (string $query) {
-            return $this->db->query($query);
+            $result = $this->db->query($query);
+            return $this->lastRequestHasError() ? $result : true;
         });
     }
 
@@ -250,10 +251,16 @@ class Database extends Connection
     {
         $this->beginTransaction();
         try {
+
+            // We'll simply execute the given callback within a try / catch block and if we
+            // catch any exception we can rollback this transaction so that none of this
+            // gets actually persisted to a database or stored in a permanent fashion.
             $data = $callback();
             $this->commit();
             return $data;
         } catch (\Exception $e) {
+
+            // If we catch an exception we'll rollback this transaction
             $this->rollBack();
             throw $e;
         }
