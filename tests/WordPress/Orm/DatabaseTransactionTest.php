@@ -35,8 +35,6 @@ class DatabaseTransactionTest extends TestCase
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
-
-        define('SAVEQUERIES', true);
     }
 
     /**
@@ -53,7 +51,8 @@ class DatabaseTransactionTest extends TestCase
         global $wpdb;
         $this->tableName = $wpdb->prefix . 'document';
         $this->model::truncate();
-        $this->db = new Database();
+        $this->db = Database::getInstance();
+        define('SAVEQUERIES', true);
     }
 
     /**
@@ -70,7 +69,23 @@ class DatabaseTransactionTest extends TestCase
             $this->db->insert($query, ['Invoice #16', 'invoice-16']);
         });
 
+        $this->assertTransactionStartEndCommit();
+        $items = $this->model::all();
+        var_dump($items->toArray());
+        $this->assertCount(2, $items->toArray());
+    }
+
+    /**
+     * @return void
+     */
+    private function assertTransactionStartEndCommit(): void
+    {
         global $wpdb;
-        var_dump($wpdb->queries);
+        $query = $wpdb->queries;
+
+        $firstQuery = reset($query)[0] ?? '';
+        $lastQuery = end($query)[0] ?? '';
+        $this->assertEquals('START TRANSACTION;', $firstQuery);
+        $this->assertEquals('COMMIT;', $lastQuery);
     }
 }
