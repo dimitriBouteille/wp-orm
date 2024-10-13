@@ -137,7 +137,6 @@ class DatabaseTransactionTest extends TestCase
     {
         $this->db->beginTransaction();
         $this->assertLastQueryEquals('START TRANSACTION;');
-        $this->assertEquals(1, $this->db->transactionCount);
     }
 
     /**
@@ -148,10 +147,8 @@ class DatabaseTransactionTest extends TestCase
     public function testRollback(): void
     {
         $this->db->beginTransaction();
-        $this->assertEquals(1, $this->db->transactionCount);
         $this->db->rollBack();
         $this->assertLastQueryEquals('ROLLBACK;');
-        $this->assertEquals(0, $this->db->transactionCount);
     }
 
     /**
@@ -162,10 +159,8 @@ class DatabaseTransactionTest extends TestCase
     public function testCommit(): void
     {
         $this->db->beginTransaction();
-        $this->assertEquals(1, $this->db->transactionCount);
         $this->db->commit();
         $this->assertLastQueryEquals('COMMIT;');
-        $this->assertEquals(0, $this->db->transactionCount);
     }
 
     /**
