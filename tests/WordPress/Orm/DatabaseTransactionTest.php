@@ -60,11 +60,12 @@ class DatabaseTransactionTest extends TestCase
      * @throws \Throwable
      * @return void
      * @covers Database::transaction
+     * @covers Database::insert
      */
     public function testTransactionSuccess(): void
     {
         $this->db->transaction(function () {
-            $query = sprintf('INSERT INTO %s (name, URL) VALUES(? ?);', $this->tableName);
+            $query = sprintf('INSERT INTO %s (name, url) VALUES(?, ?);', $this->tableName);
             $this->db->insert($query, ['Invoice #15', 'invoice-15']);
             $this->db->insert($query, ['Invoice #16', 'invoice-16']);
         });
