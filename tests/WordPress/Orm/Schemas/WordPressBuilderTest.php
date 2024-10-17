@@ -21,6 +21,19 @@ class WordPressBuilderTest extends TestCase
     /**
      * @return void
      */
+    public function setUpBeforeClass(): void
+    {
+        Database::getInstance()->getSchemaBuilder()->create('project', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('author');
+            $table->string('address');
+        });
+    }
+
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         $this->database = Database::getInstance();
@@ -28,13 +41,6 @@ class WordPressBuilderTest extends TestCase
         /** @var WordPressBuilder $schema */
         $schema  = $this->database->getSchemaBuilder();
         $this->schema = $schema;
-
-        $this->schema->create('project', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('author');
-            $table->string('address');
-        });
     }
 
     /**
