@@ -60,8 +60,8 @@ class WordPressBuilderTest extends TestCase
         });
 
         $this->assertTrue($this->schema->hasTable('architect'));
-        $columns = $this->schema->getColumns('architect');
         $table = $this->database->getTablePrefix() . 'architect';
+        $columns = $this->schema->getColumns($table);
         $this->assertCount(4, $columns);
         $this->assertTrue($this->schema->hasColumn($table, 'id'));
         $this->assertTrue($this->schema->hasColumn($table, 'name'));
