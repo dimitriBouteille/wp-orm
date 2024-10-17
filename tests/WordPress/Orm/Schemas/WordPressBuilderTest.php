@@ -21,7 +21,7 @@ class WordPressBuilderTest extends TestCase
     /**
      * @return void
      */
-    public function setUpBeforeClass(): void
+    public static function setUpBeforeClass(): void
     {
         Database::getInstance()->getSchemaBuilder()->create('project', function (Blueprint $table) {
             $table->id();
