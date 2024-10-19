@@ -120,11 +120,11 @@ class WordPressBuilderTest extends TestCase
 
         $table = $this->database->getTablePrefix() . 'address';
         $columns = $this->schema->getColumns($table);
-        $this->assertCount(5, $columns);
+        $this->assertCount(6, $columns);
 
         $this->schema->dropColumns('address', ['street_3']);
         $columns = $this->schema->getColumns($table);
-        $this->assertCount(4, $columns);
+        $this->assertCount(5, $columns);
         $this->assertFalse($this->schema->hasColumn($table, 'street_3'));
 
     }
