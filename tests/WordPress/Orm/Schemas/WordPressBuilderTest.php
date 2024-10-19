@@ -85,4 +85,47 @@ class WordPressBuilderTest extends TestCase
         $this->assertTrue($this->schema->hasColumn($table, 'country'));
         $this->assertTrue($this->schema->hasColumn($table, 'finish'));
     }
+
+    /**
+     * @return void
+     * @covers WordPressBuilder::drop
+     */
+    public function testDrop(): void
+    {
+        $this->schema->create('company', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug');
+        });
+
+        $this->assertTrue($this->schema->hasTable('company'));
+        $this->schema->drop('company');
+        $this->assertFalse($this->schema->hasTable('company'));
+    }
+
+    /**
+     * @return void
+     * @covers WordPressBuilder::dropColumns
+     */
+    public function testDropColumn(): void
+    {
+        $this->schema->create('address', function (Blueprint $table) {
+            $table->id();
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('street_1');
+            $table->string('street_2');
+            $table->string('street_3');
+        });
+
+        $table = $this->database->getTablePrefix() . 'address';
+        $columns = $this->schema->getColumns($table);
+        $this->assertCount(5, $columns);
+
+        $this->schema->dropColumns('address', ['street_3']);
+        $columns = $this->schema->getColumns($table);
+        $this->assertCount(4, $columns);
+        $this->assertFalse($this->schema->hasColumn($table, 'street_3'));
+
+    }
 }
