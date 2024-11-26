@@ -13,29 +13,31 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 - ✅ Support core WordPress post type: `Article`, `Attachment` and `Page`
 - ✅ Based on core WordPress database connection (`wpdb` class), no configuration required !
 - ✅ Custom functions to filter models with meta
-- ❤️ Easy integration of a custom post type
+- ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting))
+- ❤️ Easy integration of a custom post and comment type
 - ❤️ Easy model creation for projects with custom tables
 - ❤️ All the features available in Eloquent, are usable with this library !
 
 **Not yet developed but planned in a future version:**
 
-- 🗓️ Create custom comment type
-- 🗓️ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting)) 
+- 🗓️ [Create migration tool with Eloquent](https://github.com/dimitriBouteille/wp-orm/issues/28)
 
 ### Documentation
 
-This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/10.x/eloquent) :)
+This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/11.x/eloquent).
 
 - [Installation](#installation)
 - [Use WordPress core models](doc/wordpress-core-models.md)
-- [Filter data](/doc/filter-data.md)
-    - [With findOneBy*](/doc/filter-data.md#with-findoneby)
-    - [With taps](/doc/filter-data.md#with-taps)
-    - [With query builder](/doc/filter-data.md#with-query-builder)
-- [Events](/doc/events.md)
+- [Filter data](/doc/documentation.md#filter-data)
+    - [With findOneBy*](/doc/documentation.md#with-findoneby)
+    - [With taps](/doc/documentation.md#with-taps)
+    - [With query builder](/doc/documentation.md#with-query-builder)
 - [Create custom model](doc/create-model.md)
     - [Generic Model](doc/create-model.md#generic-model)
     - [Custom Post Type Model](doc/create-model.md#custom-post-type-model)
+- [Meta casts](doc/documentation.md/#meta-casts)
+- [Events](/doc/documentation.md#events)
+- [DB facade](/doc/documentation.md#facades)
 
 ## Installation
 
