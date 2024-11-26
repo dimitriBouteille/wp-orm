@@ -27,18 +27,7 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 
 This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/11.x/eloquent).
 
-- [Installation](#installation)
-- [Use WordPress core models](doc/wordpress-core-models.md)
-- [Filter data](/doc/documentation.md#filter-data)
-    - [With findOneBy*](/doc/documentation.md#with-findoneby)
-    - [With taps](/doc/documentation.md#with-taps)
-    - [With query builder](/doc/documentation.md#with-query-builder)
-- [Create custom model](doc/create-model.md)
-    - [Generic Model](doc/create-model.md#generic-model)
-    - [Custom Post Type Model](doc/create-model.md#custom-post-type-model)
-- [Meta casts](doc/documentation.md/#meta-casts)
-- [Events](/doc/documentation.md#events)
-- [DB facade](/doc/documentation.md#facades)
+You can find all the documentation in [the wiki](https://github.com/dimitriBouteille/wp-orm/wiki).
 
 ## Installation
 
