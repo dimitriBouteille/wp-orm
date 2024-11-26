@@ -15,6 +15,7 @@ use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Orm\Database;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Migrations\Migration;
 
 abstract class AbstractWithMetaBuilder extends AbstractBuilder
 {
@@ -25,6 +26,7 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
         'inner' => 'join',
         'left' => 'leftJoin',
         'right' => 'rightJoin',
+        Migration::class,
     ];
 
     /**
