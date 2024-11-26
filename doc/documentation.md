@@ -96,7 +96,8 @@ $products = Post::query()
 
 Eloquent models dispatch several events, allowing you to hook into the following moments in a model's lifecycle: `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, `trashed`, `forceDeleting`, `forceDeleted`, `restoring`, `restored`, and `replicating`.
 
-> 📘 The following few lines explain how to use events with the library, if you want to know more you can look at the documentation: [Eloquent - Events](https://laravel.com/docs/10.x/eloquent#events).
+> [!NOTE]
+> The following few lines explain how to use events with the library, if you want to know more you can look at the documentation: [Eloquent - Events](https://laravel.com/docs/10.x/eloquent#events).
 
 ### How to use Eloquent events ?
 
@@ -146,8 +147,8 @@ class User extends AbstractModel
 
 You can now use events, you can use [$dispatchesEvents](https://laravel.com/docs/10.x/eloquent#events) property or [closures](https://laravel.com/docs/10.x/eloquent#events-using-closures).
 
-
-> Warning, if you use abstract class, you must call `setEventDispatcher` in child class. 
+> [!WARNING]
+> if you use abstract class, you must call `setEventDispatcher` in child class. 
 
 ## Meta casting
 
