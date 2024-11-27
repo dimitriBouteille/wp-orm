@@ -40,6 +40,7 @@ return $config
         'no_unused_imports' => true,
         'align_multiline_comment' => true,
         'array_indentation' => true,
+        'blank_line_after_opening_tag' => false,
         'header_comment' => [
             'header' => $header,
             'comment_type' => 'PHPDoc',

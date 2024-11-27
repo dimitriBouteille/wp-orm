@@ -255,7 +255,7 @@ class Database extends Connection
             // We'll simply execute the given callback within a try / catch block and if we
             // catch any exception we can rollback this transaction so that none of this
             // gets actually persisted to a database or stored in a permanent fashion.
-            $data = $callback();
+            $data = $callback($this);
             $this->commit();
             return $data;
         } catch (\Exception $e) {
