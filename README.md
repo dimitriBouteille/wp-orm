@@ -8,13 +8,13 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 > [!TIP]
 > To simplify the integration of this library, we recommend using WordPress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
 
-### Features
+## Features
 
 - ✅ Support core WordPress models: `Comment`, `Option`, `Post`, `TermTaxonomy`, `Term`, `User`, `PostMeta` and `UserMeta`
 - ✅ Support core WordPress post type: `Article`, `Attachment` and `Page`
 - ✅ Based on core WordPress database connection (`wpdb` class), no configuration required !
 - ✅ Custom functions to filter models with meta
-- ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/10.x/eloquent-mutators#attribute-casting))
+- ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/eloquent-mutators#attribute-casting))
 - ❤️ Easy integration of a custom post and comment type
 - ❤️ Easy model creation for projects with custom tables
 - ❤️ All the features available in Eloquent, are usable with this library !
@@ -23,9 +23,9 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 
 - 🗓️ [Create migration tool with Eloquent](https://github.com/dimitriBouteille/wp-orm/issues/28)
 
-### Documentation
+## Documentation
 
-This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/11.x/eloquent).
+This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/doc/eloquent).
 
 You can find all the documentation in [the wiki](https://github.com/dimitriBouteille/wp-orm/wiki).
 
