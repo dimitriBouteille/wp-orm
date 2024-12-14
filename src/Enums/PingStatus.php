@@ -8,9 +8,6 @@
 
 namespace Dbout\WpOrm\Enums;
 
-/**
- * @since 3.0.0
- */
 enum PingStatus: string
 {
     case Closed = 'closed';

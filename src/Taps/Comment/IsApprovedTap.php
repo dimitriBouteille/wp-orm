@@ -11,16 +11,13 @@ namespace Dbout\WpOrm\Taps\Comment;
 use Dbout\WpOrm\Builders\CommentBuilder;
 use Dbout\WpOrm\Models\Comment;
 
-/**
- * @since 3.0.0
- */
-class IsApprovedTap
+readonly class IsApprovedTap
 {
     /**
      * @param bool $isApproved
      */
     public function __construct(
-        protected readonly bool $isApproved = true
+        protected bool $isApproved = true
     ) {
     }
 
