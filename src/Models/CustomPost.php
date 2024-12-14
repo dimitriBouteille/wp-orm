@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -65,19 +65,9 @@ abstract class CustomPost extends Post implements CustomModelTypeInterface
     }
 
     /**
-     * @return string|null
-     * @deprecated Remove in next version - Use constant
-     */
-    public static function type(): ?string
-    {
-        // @phpstan-ignore-next-line
-        return (new static())->getPostType();
-    }
-
-    /**
      * @inheritDoc
      */
-    protected static function booted()
+    protected static function booted(): void
     {
         static::addGlobalScope(new CustomModelTypeScope());
     }

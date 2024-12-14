@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -164,18 +164,6 @@ class Database extends Connection
     }
 
     /**
-     * @param $query
-     * @param $bindings
-     * @throws \Exception
-     * @return never
-     * @deprecated Remove in next version.
-     */
-    public function bind_and_run($query, $bindings = []): never
-    {
-        throw new \Exception('This function is no longer usable, it will be removed in a future version.');
-    }
-
-    /**
      * @inheritDoc
      */
     public function insert($query, $bindings = []): bool
@@ -232,7 +220,8 @@ class Database extends Connection
     public function unprepared($query): bool
     {
         return $this->run($query, [], function (string $query) {
-            return $this->db->query($query);
+            $result = $this->db->query($query);
+            return $this->lastRequestHasError() ? $result : true;
         });
     }
 
@@ -262,10 +251,16 @@ class Database extends Connection
     {
         $this->beginTransaction();
         try {
-            $data = $callback();
+
+            // We'll simply execute the given callback within a try / catch block and if we
+            // catch any exception we can rollback this transaction so that none of this
+            // gets actually persisted to a database or stored in a permanent fashion.
+            $data = $callback($this);
             $this->commit();
             return $data;
         } catch (\Exception $e) {
+
+            // If we catch an exception we'll rollback this transaction
             $this->rollBack();
             throw $e;
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -11,7 +11,7 @@ namespace Dbout\WpOrm\Models;
 use Carbon\Carbon;
 use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Builders\UserBuilder;
-use Dbout\WpOrm\Concerns\HasMeta;
+use Dbout\WpOrm\Concerns\HasMetas;
 use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -45,7 +45,7 @@ use Illuminate\Support\Collection;
  */
 class User extends AbstractModel implements WithMetaModelInterface
 {
-    use HasMeta;
+    use HasMetas;
 
     final public const CREATED_AT = self::REGISTERED;
     final public const UPDATED_AT = null;

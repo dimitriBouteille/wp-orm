@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -37,7 +37,7 @@ class AbstractModelTest extends TestCase
         $expectedId = $model->getId();
         $this->assertIsNumeric($expectedId);
 
-        $this->assertPostEqualToWpObject($model, get_post($expectedId));
+        $this->assertPostEqualsToWpPost($model);
         $this->assertEqualLastInsertId($expectedId);
     }
 
@@ -205,7 +205,7 @@ class AbstractModelTest extends TestCase
      */
     public function testUpsertWithUpdateKey(): void
     {
-        add_option('store_latitude', 75.652, autoload: 'yes');
+        add_option('store_latitude', '75.652');
 
         Option::upsert(
             [
@@ -226,10 +226,10 @@ class AbstractModelTest extends TestCase
 
     /**
      * @param string $optionName
-     * @param string $expectedValue
+     * @param mixed $expectedValue
      * @return Option|null
      */
-    private function checkUpsertOption(string $optionName, string $expectedValue): ?Option
+    private function checkUpsertOption(string $optionName, mixed $expectedValue): ?Option
     {
         $option = Option::findOneByName($optionName);
         $this->assertInstanceOf(Option::class, $option);

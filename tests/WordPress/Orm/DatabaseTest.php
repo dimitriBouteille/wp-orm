@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -12,9 +12,6 @@ use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Orm\Database;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Orm\Database
- */
 class DatabaseTest extends TestCase
 {
     private Database $database;
@@ -29,7 +26,7 @@ class DatabaseTest extends TestCase
 
     /**
      * @return void
-     * @covers ::getTablePrefix
+     * @covers Database::getTablePrefix
      */
     public function testGetTablePrefix(): void
     {
@@ -39,8 +36,8 @@ class DatabaseTest extends TestCase
 
     /**
      * @return void
-     * @covers ::getDatabaseName
-     * @covers ::getConfig
+     * @covers Database::getDatabaseName
+     * @covers Database::getConfig
      */
     public function testGetDatabaseName(): void
     {
@@ -49,8 +46,8 @@ class DatabaseTest extends TestCase
 
     /**
      * @return void
-     * @covers ::getName
-     * @covers ::getConfig
+     * @covers Database::getName
+     * @covers Database::getConfig
      */
     public function testGetName(): void
     {
@@ -62,7 +59,7 @@ class DatabaseTest extends TestCase
      * @param string|null $alias
      * @param string $expectedQuery
      * @return void
-     * @covers ::table
+     * @covers Database::table
      * @dataProvider providerTestTable
      */
     public function testTable(string $table, ?string $alias, string $expectedQuery): void
@@ -79,19 +76,19 @@ class DatabaseTest extends TestCase
         yield 'Without alias' => [
             'options',
             null,
-            sprintf('select * from "%s"', $this->getTable('options')),
+            sprintf('select * from `%s`', $this->getTable('options')),
         ];
 
         yield 'With alias' => [
             'options',
             'opts',
-            sprintf('select * from "%s" as "opts"', $this->getTable('options')),
+            sprintf('select * from `%s` as `opts`', $this->getTable('options')),
         ];
     }
 
     /**
      * @return void
-     * @covers ::lastInsertId
+     * @covers Database::lastInsertId
      */
     public function testLastInsertId(): void
     {

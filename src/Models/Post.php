@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -11,7 +11,7 @@ namespace Dbout\WpOrm\Models;
 use Carbon\Carbon;
 use Dbout\WpOrm\Api\WithMetaModelInterface;
 use Dbout\WpOrm\Builders\PostBuilder;
-use Dbout\WpOrm\Concerns\HasMeta;
+use Dbout\WpOrm\Concerns\HasMetas;
 use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
@@ -58,6 +58,10 @@ use Illuminate\Support\Collection;
  * @method int|null getMenuOrder()
  * @method Post setPostContentFiltered($content)
  * @method string|null getPostContentFiltered()
+ * @method Post setPostParent(?int $parentId)
+ * @method int|null getPostParent()
+ * @method Post setPostAuthor(?int $authorId)
+ * @method int|null getPostAuthor()
  * @method static PostBuilder query()
  *
  * @property-read User|null $author
@@ -67,7 +71,7 @@ use Illuminate\Support\Collection;
  */
 class Post extends AbstractModel implements WithMetaModelInterface
 {
-    use HasMeta;
+    use HasMetas;
 
     public const UPDATED_AT = self::MODIFIED;
     public const CREATED_AT = self::DATE;
@@ -104,6 +108,8 @@ class Post extends AbstractModel implements WithMetaModelInterface
      * @inheritDoc
      */
     protected $casts = [
+        self::AUTHOR => 'integer',
+        self::PARENT => 'integer',
         self::MENU_ORDER => 'integer',
         self::COMMENT_COUNT => 'integer',
         self::DATE => 'datetime',

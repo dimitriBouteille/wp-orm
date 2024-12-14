@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @method static \int upsert(array $values, array|string $uniqueBy, array|null $update = null) Insert new records or update the existing ones.
  * @method static static|null find(int|string $objectId) Retrieve a model by its primary key.
+ * @method static void truncate() Delete all the model's associated database records, operation will also reset any auto-incrementing IDs on the model's associated table.
  */
 abstract class AbstractModel extends Model
 {
@@ -63,20 +64,6 @@ abstract class AbstractModel extends Model
     public function getId(): null|int|string
     {
         return $this->{$this->primaryKey};
-    }
-
-    /**
-     * Returns model table name
-     *
-     * @return string
-     * @deprecated Remove in next version
-     * @see self::getTable()
-     * @see https://stackoverflow.com/a/20812314
-     */
-    public static function table(): string
-    {
-        // @phpstan-ignore-next-line
-        return (new static())->getTable();
     }
 
     /**

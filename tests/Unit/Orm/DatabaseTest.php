@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -9,17 +9,16 @@
 namespace Dbout\WpOrm\Tests\Unit\Orm;
 
 use Dbout\WpOrm\Orm\Database;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Dbout\WpOrm\Orm\Database
- */
-
+#[CoversClass(Database::class)]
+#[CoversFunction('getInstance')]
 class DatabaseTest extends TestCase
 {
     /**
      * @return void
-     * @covers ::getInstance
      */
     public function testInvalidWPInstance(): void
     {

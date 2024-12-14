@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+ * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  *
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -38,6 +38,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method Carbon|null getCommentDate()
  * @method Comment setCommentDateGmt(mixed $date)
  * @method Carbon|null getCommentDateGmt()
+ * @method Comment setCommentPostID(int $postId)
+ * @method int|null getCommentPostID()
+ * @method Comment setCommentParent(?int $parentId)
+ * @method int|null getCommentParent()
  * @method static CommentBuilder query()
  *
  * @property-read User|null $user
@@ -78,6 +82,9 @@ class Comment extends AbstractModel
      * @inheritDoc
      */
     protected $casts = [
+        self::USER_ID => 'integer',
+        self::POST_ID => 'integer',
+        self::PARENT => 'integer',
         self::KARMA => 'integer',
         self::DATE_GMT => 'datetime',
         self::DATE => 'datetime',
@@ -116,233 +123,42 @@ class Comment extends AbstractModel
     }
 
     /**
-     * @param string $author
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentAuthor()
+     * @return int|null
+     * @see getCommentPostID()
      */
-    public function setAuthor(string $author): self
+    public function getCommentPostIdAttribute(): ?int
     {
-        return $this->setCommentAuthor($author);
+        return $this->getAttributes()[self::POST_ID] ?? null;
+    }
+
+    /**
+     * @param int|null $postId
+     * @return $this
+     * @see setCommentPostID()
+     */
+    public function setCommentPostIdAttribute(?int $postId): self
+    {
+        $this->attributes[self::POST_ID] = $postId;
+        return $this;
     }
 
     /**
      * @return string|null
-     * @deprecated Remove in next version
-     * @see getCommentAuthor()
+     * @see getCommentAuthorIp()
      */
-    public function getAuthor(): ?string
+    public function getCommentAuthorIpAttribute(): ?string
     {
-        return $this->getCommentAuthor();
+        return $this->getAttributes()[self::AUTHOR_IP] ?? null;
     }
 
     /**
-     * @param string|null $email
+     * @param mixed $ip
      * @return self
-     * @deprecated Remove in next version
-     * @see setCommentAuthorEmail()
+     * @see setCommentAuthorIp()
      */
-    public function setAuthorEmail(?string $email): self
+    public function setCommentAuthorIpAttribute(mixed $ip): self
     {
-        return $this->setCommentAuthorEmail($email);
-    }
-
-    /**
-     * @return string|null
-     * @deprecated Remove in next version
-     * @see getCommentAuthorEmail()
-     */
-    public function getAuthorEmail(): ?string
-    {
-        return $this->getCommentAuthorEmail();
-    }
-
-    /**
-     * @param string|null $url
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentAuthorUrl()
-     */
-    public function setAuthorUrl(?string $url): self
-    {
-        return $this->setCommentAuthorUrl($url);
-    }
-
-    /**
-     * @return string|null
-     * @deprecated Remove in next version
-     * @see getCommentAuthorUrl()
-     */
-    public function getAuthorUrl(): ?string
-    {
-        return $this->getCommentAuthorUrl();
-    }
-
-    /**
-     * @param string|null $ip
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentAuthorIP()
-     */
-    public function setAuthorIp(?string $ip): self
-    {
-        return $this->setCommentAuthorIP($ip);
-    }
-
-    /**
-     * @return string|null
-     * @deprecated Remove in next version
-     * @see getCommentAuthorIP()
-     */
-    public function getAuthorIp(): ?string
-    {
-        return $this->getCommentAuthorIP();
-    }
-
-    /**
-     * @param string|null $content
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentContent()
-     */
-    public function setContent(?string $content): self
-    {
-        return $this->setCommentContent($content);
-    }
-
-    /**
-     * @return string|null
-     * @deprecated Remove in next version
-     * @see gsetCommentContent()
-     */
-    public function getContent(): ?string
-    {
-        return $this->getCommentContent();
-    }
-
-    /**
-     * @param int|null $karma
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentKarma()
-     */
-    public function setKarma(?int $karma): self
-    {
-        return $this->setCommentKarma($karma);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated Remove in next version
-     * @see getCommentKarma()
-     */
-    public function getKarma(): ?int
-    {
-        return $this->getCommentKarma();
-    }
-
-    /**
-     * @param string|null $agent
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentAgent()
-     */
-    public function setAgent(?string $agent): self
-    {
-        return $this->setCommentAgent($agent);
-    }
-
-    /**
-     * @return string|null
-     * @deprecated Remove in next version
-     * @see getCommentAgent()
-     */
-    public function getAgent(): ?string
-    {
-        return $this->getCommentAgent();
-    }
-
-    /**
-     * @param string|null $type
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentType()
-     */
-    public function setType(?string $type): self
-    {
-        return $this->setCommentType($type);
-    }
-
-    /**
-     * @return string|null
-     * @deprecated Remove in next version
-     * @see getCommentType()
-     */
-    public function getType(): ?string
-    {
-        return $this->getCommentType();
-    }
-
-    /**
-     * @param string|null $approved
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentApproved()
-     */
-    public function setApproved(?string $approved): self
-    {
-        return $this->setCommentApproved($approved);
-    }
-
-    /**
-     * @return string|null
-     * @deprecated Remove in next version
-     * @see getCommentApproved()
-     */
-    public function getApproved(): ?string
-    {
-        return $this->getCommentApproved();
-    }
-
-    /**
-     * @param mixed $date
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentDate()
-     */
-    public function setDate(mixed $date): self
-    {
-        return $this->setCommentDate($date);
-    }
-
-    /**
-     * @return Carbon|null
-     * @deprecated Remove in next version
-     * @see getCommentDate()
-     */
-    public function getDate(): ?Carbon
-    {
-        return $this->getCommentDate();
-    }
-
-    /**
-     * @param mixed $date
-     * @return self
-     * @deprecated Remove in next version
-     * @see setCommentDateGmt()
-     */
-    public function setDateGMT(mixed $date): self
-    {
-        return $this->setCommentDateGmt($date);
-    }
-
-    /**
-     * @return Carbon|null
-     * @deprecated Remove in next version
-     * @see getCommentDateGmt()
-     */
-    public function getDateGMT(): ?Carbon
-    {
-        return $this->getCommentDateGmt();
+        $this->attributes[self::AUTHOR_IP] = $ip;
+        return $this;
     }
 }

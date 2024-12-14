@@ -15,7 +15,7 @@ $finder = \PhpCsFixer\Finder::create()
 ;
 
 $header = <<<EOF
-    Copyright (c) 2024 Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
+    Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
     See LICENSE.txt for license details.
 
     Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
@@ -40,6 +40,7 @@ return $config
         'no_unused_imports' => true,
         'align_multiline_comment' => true,
         'array_indentation' => true,
+        'blank_line_after_opening_tag' => false,
         'header_comment' => [
             'header' => $header,
             'comment_type' => 'PHPDoc',
