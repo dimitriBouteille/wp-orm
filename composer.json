@@ -21,7 +21,7 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.1",
-    "robmorgan/phinx": "^0.12.5",
+    "robmorgan/phinx": "^0.16.0",
     "illuminate/database": "^10.0"
   },
   "suggest": {
