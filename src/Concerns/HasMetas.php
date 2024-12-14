@@ -351,7 +351,7 @@ trait HasMetas
         } elseif (class_exists($castType)) {
             $convertedCastType = $castType;
         } else {
-            $convertedCastType = trim(strtolower($castType));
+            $convertedCastType = trim(strtolower((string)$castType));
         }
 
         return static::$metaCastTypeCache[$castType] = $convertedCastType;
