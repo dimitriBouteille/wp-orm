@@ -78,8 +78,12 @@ class Database extends Connection
         );
 
         $this->db = $wpdb;
+        $this->addWordPresHooks();
+    }
 
-        // Add hook to update prefix when switching between blogs in multisite
+    protected function addWordPresHooks(): void
+    {
+        // Reset Database instance when switching between blogs in multisite to update prefix
         add_action('switch_blog', function () {
             self::$instance = null;
         });
