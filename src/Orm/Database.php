@@ -80,7 +80,7 @@ class Database extends Connection
         $this->db = $wpdb;
 
         // Add hook to update prefix when switching between blogs in multisite
-        add_action('switch_blog', function() {
+        add_action('switch_blog', function () {
             $this->setTablePrefix($this->db->prefix);
         });
     }
