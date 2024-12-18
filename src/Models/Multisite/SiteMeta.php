@@ -6,7 +6,7 @@
  * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
-namespace Dbout\WpOrm\Models\Network;
+namespace Dbout\WpOrm\Models\Multisite;
 
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Illuminate\Database\Eloquent\Relations\HasOne;
