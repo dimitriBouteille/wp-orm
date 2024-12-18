@@ -22,11 +22,6 @@ abstract class AbstractMeta extends AbstractModel
     public $timestamps = false;
 
     /**
-     * @inheritdoc
-     */
-    protected bool $useBasePrefix = true;
-
-    /**
      * @inheritDoc
      */
     protected $fillable = [
