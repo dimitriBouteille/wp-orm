@@ -448,6 +448,17 @@ class Database extends Connection
     }
 
     /**
+     * Get the base table prefix for multisite installation.
+     * This prefix is shared across all sites in the network.
+     *
+     * @return string Base prefix for multisite shared tables
+     */
+    public function getBaseTablePrefix(): string
+    {
+        return $this->db->base_prefix;
+    }
+
+    /**
      * @inheritDoc
      */
     protected function getDefaultSchemaGrammar(): Grammar
