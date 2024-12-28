@@ -4,4 +4,7 @@ parameters:
         - src
         - tests
     excludePaths:
-        - tests/WordPress/TestCase
+        - tests/WordPress/TestCase.php
+    ignoreErrors:
+        -
+            identifier: requireOnce.fileNotFound
