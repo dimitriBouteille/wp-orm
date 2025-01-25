@@ -10,26 +10,21 @@ namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
 use Carbon\Carbon;
 use Dbout\WpOrm\Orm\AbstractModel;
+use Dbout\WpOrm\Orm\Database;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Database\Schema\Blueprint;
 
 class PrunableTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        global $wpdb;
-
-        $tableName = $wpdb->prefix . 'sales_payment';
-        $sql = "CREATE TABLE $tableName (
-            id INT NOT NULL AUTO_INCREMENT,
-            method varchar(100) NOT NULL,
-            created_at DATE NOT NULL,
-            amount float(10,7) NOT NULL,
-            PRIMARY KEY  (id)
-        );";
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta($sql);
+        Database::getInstance()->getSchemaBuilder()->create('sales_payment', function (Blueprint $table) {
+            $table->id();
+            $table->date('created_at');
+            $table->string('method');
+            $table->float('amount');
+        });
     }
 
     /**
