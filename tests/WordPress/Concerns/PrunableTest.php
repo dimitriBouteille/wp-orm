@@ -88,7 +88,7 @@ class PrunableTest extends TestCase
         $deletedCount = (new $model())->pruneAll();
         $this->assertEquals(4, $deletedCount);
 
-        $result = $model::query()->whereDate('created_at', '>=', Carbon::create(2025, 1, 1))->count();
+        $result = $model::query()->whereDate('created_at', '<', Carbon::create(2025, 1, 1))->count();
         $this->assertEquals(0, $result, 'It should no longer have value since all the rows were deleted before.');
     }
 }
