@@ -28,6 +28,9 @@
     "illuminate/events": "Add events to your models"
   },
   "autoload": {
+    "files": [
+      "src/helpers.php"
+    ],
     "psr-4": {
       "Dbout\\WpOrm\\": "src/"
     }
