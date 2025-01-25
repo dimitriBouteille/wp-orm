@@ -9,9 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Install subversion"
-        run: sudo apt-get install -y subversion
-
       - name: "Checkout repo"
         uses: actions/checkout@v4
 
@@ -45,6 +42,9 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
 
     steps:
+      - name: "Install subversion"
+        run: sudo apt-get install -y subversion
+
       - name: "Checkout repo"
         uses: actions/checkout@v4
 
