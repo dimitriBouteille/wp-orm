@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static int upsert(array $values, array|string $uniqueBy, array|null $update = null) Insert new records or update the existing ones.
  * @method static static|null find(int|string $objectId) Retrieve a model by its primary key.
  * @method static void truncate() Delete all the model's associated database records, operation will also reset any auto-incrementing IDs on the model's associated table.
+ * @method static \Illuminate\Database\Eloquent\Builder<static> where($column, $operator = null, $value = null, $boolean = 'and') Add a basic where clause to the query.
+ * @method static \bool insert($query, $bindings = []) Run an insert statement against the database.
  */
 abstract class AbstractModel extends Model
 {
