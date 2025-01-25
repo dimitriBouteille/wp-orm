@@ -9,8 +9,8 @@
 namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
 use Carbon\Carbon;
+use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 
 class PrunableTest extends TestCase
@@ -38,9 +38,11 @@ class PrunableTest extends TestCase
      */
     public function testPrunable(): void
     {
-        $model = new class () extends Model {
+        $model = new class () extends AbstractModel {
             use Prunable;
 
+            protected $primaryKey = 'id';
+            public $timestamps = false;
             protected $table = 'sales_payment';
 
             public function prunable()
