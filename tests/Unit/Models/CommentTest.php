@@ -10,14 +10,14 @@ namespace Dbout\WpOrm\Tests\Unit\Models;
 
 use Dbout\WpOrm\Models\Comment;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Comment::class)]
-#[CoversFunction('getCommentAuthorIP')]
-#[CoversFunction('setCommentAuthorIP')]
-#[CoversFunction('getCommentPostID')]
-#[CoversFunction('setCommentPostID')]
+#[CoversMethod(Comment::class, 'getCommentAuthorIpAttribute')]
+#[CoversMethod(Comment::class, 'setCommentAuthorIpAttribute')]
+#[CoversMethod(Comment::class, 'getCommentPostIdAttribute')]
+#[CoversMethod(Comment::class, 'setCommentPostIdAttribute')]
 class CommentTest extends TestCase
 {
     /**

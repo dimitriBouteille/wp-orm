@@ -10,12 +10,12 @@ namespace Dbout\WpOrm\Tests\Unit\Concerns;
 
 use Dbout\WpOrm\Models\Post;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Post::class)]
-#[CoversFunction('metaHasCast')]
-#[CoversFunction('getMetaCasts')]
+#[CoversMethod(Post::class, 'metaHasCast')]
+#[CoversMethod(Post::class, 'getMetaCasts')]
 class HasMetasTest extends TestCase
 {
     /**
