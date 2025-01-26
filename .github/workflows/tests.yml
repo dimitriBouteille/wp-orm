@@ -28,7 +28,7 @@ jobs:
       - name: "Send coverage to Coveralls"
         env:
           COVERALLS_REPO_TOKEN: ${{ github.token }}
-        if: ${{ env.COVERALLS_REPO_TOKEN && matrix.coverage }}
+        if: ${{ env.COVERALLS_REPO_TOKEN }}
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}

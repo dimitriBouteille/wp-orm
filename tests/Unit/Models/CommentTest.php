@@ -10,7 +10,6 @@ namespace Dbout\WpOrm\Tests\Unit\Models;
 
 use Dbout\WpOrm\Models\Comment;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Comment::class)]
