@@ -16,8 +16,8 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Comment::class)]
 #[CoversMethod(Comment::class, 'getCommentAuthorIpAttribute')]
 #[CoversMethod(Comment::class, 'setCommentAuthorIpAttribute')]
-#[CoversMethod(Comment::class, 'getCommentPostID')]
-#[CoversMethod(Comment::class, 'setCommentPostID')]
+#[CoversMethod(Comment::class, 'getCommentPostIdAttribute')]
+#[CoversMethod(Comment::class, 'setCommentPostIdAttribute')]
 class CommentTest extends TestCase
 {
     /**
