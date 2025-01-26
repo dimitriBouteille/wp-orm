@@ -32,7 +32,7 @@ class OptionTest extends TestCase
 
     /**
      * @return void
-     * @covers Option::findOneByNam
+     * @covers Option::findOneByName
      */
     public function testFindOneByNameWithNotFound(): void
     {
