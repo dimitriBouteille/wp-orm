@@ -76,7 +76,7 @@ jobs:
         run: composer run test:wordPress
 
       - name: "Run WordPress tests with coverage"
-        if: ${{ !matrix.coverage }}
+        if: ${{ matrix.coverage }}
         run: composer run test:coverage
 
       - name: "Send coverage to Coveralls"
