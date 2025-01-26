@@ -69,7 +69,7 @@
     "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
     "test:unit": "vendor/bin/phpunit --no-coverage",
     "test:wordPress": "vendor/bin/phpunit -c phpunit-wp.xml --no-coverage",
-    "test:coverage": "vendor/bin/phpunit -c phpunit-wp.xml",
+    "test:coverage": "vendor/bin/phpunit",
     "csFixer": "vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
     "fix:csFixer": "vendor/bin/php-cs-fixer fix"
   }
