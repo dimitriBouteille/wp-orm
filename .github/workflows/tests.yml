@@ -56,6 +56,7 @@ jobs:
         with:
           php-version: 8.2
           tools: composer:v2
+          coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
 
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
