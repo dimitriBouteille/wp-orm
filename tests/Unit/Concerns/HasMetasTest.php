@@ -10,6 +10,7 @@ namespace Dbout\WpOrm\Tests\Unit\Concerns;
 
 use Dbout\WpOrm\Models\Post;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Post::class)]

@@ -15,6 +15,7 @@ use Dbout\WpOrm\Models\Attachment;
 use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Scopes\CustomModelTypeScope;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CustomModelTypeScope::class)]

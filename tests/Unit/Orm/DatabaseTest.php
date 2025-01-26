@@ -10,6 +10,7 @@ namespace Dbout\WpOrm\Tests\Unit\Orm;
 
 use Dbout\WpOrm\Orm\Database;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Database::class)]
