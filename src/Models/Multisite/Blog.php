@@ -39,7 +39,7 @@ class Blog extends AbstractModel
     final public const DOMAIN = 'domain';
     final public const PATH = 'path';
     final public const REGISTERED = 'registered';
-    final public const  LAST_UPDATED = 'last_updated';
+    final public const LAST_UPDATED = 'last_updated';
     final public const PUBLIC = 'public';
     final public const ARCHIVED = 'archived';
     final public const MATURE = 'mature';
