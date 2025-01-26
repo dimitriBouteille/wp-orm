@@ -14,8 +14,8 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Post::class)]
-#[CoversFunction('metaHasCast')]
-#[CoversFunction('getMetaCasts')]
+#[CoversMethod(Post::class, 'metaHasCast')]
+#[CoversMethod(Post::class, 'getMetaCasts')]
 class HasMetasTest extends TestCase
 {
     /**

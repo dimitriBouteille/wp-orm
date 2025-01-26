@@ -14,10 +14,10 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Comment::class)]
-#[CoversFunction('getCommentAuthorIP')]
-#[CoversFunction('setCommentAuthorIP')]
-#[CoversFunction('getCommentPostID')]
-#[CoversFunction('setCommentPostID')]
+#[CoversMethod(Comment::class, 'getCommentAuthorIP')]
+#[CoversMethod(Comment::class, 'setCommentAuthorIP')]
+#[CoversMethod(Comment::class, 'getCommentPostID')]
+#[CoversMethod(Comment::class, 'setCommentPostID')]
 class CommentTest extends TestCase
 {
     /**

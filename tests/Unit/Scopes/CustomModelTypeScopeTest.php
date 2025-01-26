@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CustomModelTypeScope::class)]
-#[CoversFunction('apply')]
+#[CoversMethod(CustomModelTypeScope::class, 'apply')]
 class CustomModelTypeScopeTest extends TestCase
 {
     private CustomModelTypeScope $subject;

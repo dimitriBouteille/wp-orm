@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Database::class)]
-#[CoversFunction('getInstance')]
+#[CoversMethod(Database::class, 'getInstance')]
 class DatabaseTest extends TestCase
 {
     /**

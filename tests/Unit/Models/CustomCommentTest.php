@@ -16,9 +16,9 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CustomComment::class)]
-#[CoversFunction('setCommentType')]
-#[CoversFunction('getCommentType')]
-#[CoversFunction('setAttribute')]
+#[CoversMethod(CustomComment::class, 'setCommentType')]
+#[CoversMethod(CustomComment::class, 'getCommentType')]
+#[CoversMethod(CustomComment::class, 'setAttribute')]
 class CustomCommentTest extends TestCase
 {
     /**

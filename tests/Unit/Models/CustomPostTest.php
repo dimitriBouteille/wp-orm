@@ -16,9 +16,9 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CustomPost::class)]
-#[CoversFunction('setPostType')]
-#[CoversFunction('getPostType')]
-#[CoversFunction('setAttribute')]
+#[CoversMethod(CustomPost::class, 'setPostType')]
+#[CoversMethod(CustomPost::class, 'getPostType')]
+#[CoversMethod(CustomPost::class, 'setAttribute')]
 class CustomPostTest extends TestCase
 {
     /**
