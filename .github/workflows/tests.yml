@@ -15,7 +15,7 @@ jobs:
       - name: "Install PHP"
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: "8.2"
           tools: composer:v2
 
       - name: "Install composer dependencies"
@@ -51,18 +51,18 @@ jobs:
       - name: "Install PHP"
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: "8.2"
           tools: composer:v2
 
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
 
       # WordPress tests works only with PHPUnit 9.x :(
-      # https://github.com/dimitriBouteille/wp-orm/actions/runs/11192354429/job/31116408495
+      # https://make.wordpress.org/core/handbook/references/phpunit-compatibility-and-wordpress-versions/
       - name: "Install PHPUnit v9"
         run: |
-          composer require --dev phpunit/phpunit ^9.0 -W
-          composer require --dev yoast/phpunit-polyfills ^3.0 -W
+          composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0'
+          composer require --dev --update-with-all-dependencies 'yoast/phpunit-polyfills:^3.0'
 
       - name: "Install WP"
         shell: bash
