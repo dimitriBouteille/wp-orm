@@ -50,7 +50,7 @@ You can use [Composer](https://getcomposer.org/). Follow the [installation instr
 composer require dbout/wp-orm
 ~~~
 
-In your PHP script, make sure you include the autoloader:
+In your `wp-config.php` make sure you include the autoloader:
 
 ~~~php
 require __DIR__ . '/vendor/autoload.php';
