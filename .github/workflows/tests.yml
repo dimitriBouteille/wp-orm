@@ -32,8 +32,9 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
-          flag-name: "Unit"
+          flag-name: "unit"
           allow-empty: false
+          parallel: true
 
   wp-test:
     name: "WordPress tests with WP ${{ matrix.wp_version }}"
@@ -90,7 +91,19 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
-          flag-name: "Functional"
+          flag-name: wp-test-$
           allow-empty: false
           parallel: true
 
+  finish:
+    needs:
+      - unit-test
+      - wp-test
+    if: $
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close parallel build
+        uses: coverallsapp/github-action@v1
+        with:
+          parallel-finished: true
+          carryforward: "wp-test-1,wp-test-2,wp-test-3,wp-test-4,wp-test-5,wp-test-6,unit"
