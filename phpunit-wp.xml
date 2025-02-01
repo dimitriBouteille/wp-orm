@@ -23,13 +23,11 @@
         </testsuite>
     </testsuites>
     <coverage>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
         <report>
             <clover outputFile="build/logs/clover.xml"/>
         </report>
     </coverage>
-    <source>
-        <include>
-            <directory suffix=".php">./src</directory>
-        </include>
-    </source>
 </phpunit>
