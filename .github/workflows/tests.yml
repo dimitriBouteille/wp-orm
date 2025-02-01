@@ -99,7 +99,7 @@ jobs:
     needs:
       - unit-test
       - wp-test
-    if: $
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Close parallel build
