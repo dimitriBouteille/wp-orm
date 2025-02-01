@@ -10,11 +10,11 @@ namespace Dbout\WpOrm\Tests\Unit\Orm;
 
 use Dbout\WpOrm\Orm\Database;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Database::class)]
-#[CoversFunction('getInstance')]
+#[CoversMethod(Database::class, 'getInstance')]
 class DatabaseTest extends TestCase
 {
     /**

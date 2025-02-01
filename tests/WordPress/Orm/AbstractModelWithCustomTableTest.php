@@ -152,7 +152,7 @@ class AbstractModelWithCustomTableTest extends TestCase
      * @return void
      * @covers AbstractModel::query
      */
-    public function testWhereWithSimpleJsonColum(): void
+    public function testWhereWithSimpleJsonColumn(): void
     {
         $edmArtists = [
             [
