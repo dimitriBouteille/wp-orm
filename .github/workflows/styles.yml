@@ -24,8 +24,8 @@ jobs:
       - name: "PHPCsFixer"
         run: composer csFixer
 
-      #- name: Rector
-      #  run: composer rector
+      - name: Rector
+        run: composer rector
 
       - name: "PHPStan Analyse"
         run: composer phpstan
