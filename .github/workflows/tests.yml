@@ -80,5 +80,7 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
-          flag-name: "Unit"
+          flag-name: "Functional"
           allow-empty: false
+          parallel: true
+
