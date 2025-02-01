@@ -27,11 +27,6 @@ trait HasMetas
      */
     protected array $metaCasts = [];
 
-    /**
-     * The built-in, primitive cast types supported by Eloquent.
-     *
-     * @var string[]
-     */
     protected static array $primitiveMetaCastTypes = [
         'array',
         'bool',
