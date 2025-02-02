@@ -86,7 +86,7 @@ class Database extends Connection
         // Reset Database instance when switching between blogs in multisite to update prefix
         add_action('switch_blog', function () {
             self::$instance = null;
-        });
+        }, 1);
     }
 
     /**
