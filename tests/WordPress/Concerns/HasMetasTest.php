@@ -21,6 +21,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::getMeta
+     * @uses Post
      */
     public function testGetMeta(): void
     {
@@ -41,6 +42,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::setMeta
+     * @uses Post
      */
     public function testSetMeta(): void
     {
@@ -59,6 +61,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::hasMeta
+     * @uses Post
      */
     public function testHasMeta(): void
     {
@@ -78,6 +81,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::getMetaValue
+     * @uses Post
      */
     public function testGetMetaValueWithoutCast(): void
     {
@@ -95,6 +99,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::getMetaValue
+     * @uses Post
      */
     public function testGetMetaValueWithGenericCasts(): void
     {
@@ -127,6 +132,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::getMetaValue
+     * @uses Post
      */
     public function testGetMetaValueWithEnumCasts(): void
     {
@@ -151,6 +157,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::getMetaValue
+     * @uses Post
      */
     public function testGetMetaValueWithDatetimeCasts(): void
     {
@@ -181,6 +188,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::getMetaValue
+     * @uses Post
      */
     public function testGetMetaValueWithInvalidCasts(): void
     {
@@ -201,6 +209,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::deleteMeta
+     * @uses Post
      */
     public function testDeleteMeta(): void
     {
@@ -223,6 +232,7 @@ class HasMetasTest extends TestCase
     /**
      * @return void
      * @covers HasMetas::deleteMeta
+     * @uses Post
      */
     public function testDeleteUndefinedMeta(): void
     {
@@ -239,6 +249,28 @@ class HasMetasTest extends TestCase
             '#TABLE_PREFIX#postmeta',
             $model->getId()
         ));
+    }
+
+    /**
+     * @return void
+     * @covers HasMetas::setMeta
+     * @covers HasMetas::hasMeta
+     * @covers HasMetas::getMeta
+     * @uses Post
+     */
+    public function testSaveNewModelWithMetas(): void
+    {
+        $metaValue = '31-10-1950';
+        $metaKey = 'birthday-date';
+
+        $model = new Post();
+        $model->setPostTitle('Zaha Hadid projects');
+        $model->setMeta($metaKey, $metaValue);
+        $model->save();
+
+        $this->assertEquals($metaValue, get_post_meta($model->getId(), $metaKey, true));
+        $this->assertInstanceOf(PostMeta::class, $model->getMeta($metaKey));
+        $this->assertTrue($model->hasMeta($metaKey));
     }
 
     /**
