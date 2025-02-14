@@ -15,6 +15,7 @@ use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
+use Illuminate\Events\Dispatcher;
 
 class HasMetasTest extends TestCase
 {
@@ -263,13 +264,21 @@ class HasMetasTest extends TestCase
         $metaValue = '31-10-1950';
         $metaKey = 'birthday-date';
 
-        $model = new Post();
+        $object = new class () extends Post {
+            protected static function boot()
+            {
+                static::setEventDispatcher(new Dispatcher());
+                parent::boot();
+            }
+        };
+
+        $model = new $object();
         $model->setPostTitle('Zaha Hadid projects');
         $model->setMeta($metaKey, $metaValue);
         $model->save();
 
         var_dump($model->getMeta($metaKey), $model);
-        //$this->assertEquals($metaValue, get_post_meta($model->getId(), $metaKey, true));
+        $this->assertEquals($metaValue, get_post_meta($model->getId(), $metaKey, true));
         $this->assertInstanceOf(PostMeta::class, $model->getMeta($metaKey));
         $this->assertTrue($model->hasMeta($metaKey));
     }
