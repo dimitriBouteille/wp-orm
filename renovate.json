@@ -7,6 +7,6 @@
   "minimumReleaseAge": "30 days",
   "labels": ["dependencies"],
   "prConcurrentLimit": 5,
-  "baseBranches": ["develop"],
+  "baseBranches": ["main"],
   "assignees": ["dimitriBouteille"]
 }
