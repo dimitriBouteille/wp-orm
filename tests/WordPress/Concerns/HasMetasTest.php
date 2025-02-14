@@ -277,7 +277,6 @@ class HasMetasTest extends TestCase
         $model->setMeta($metaKey, $metaValue);
         $model->save();
 
-        var_dump($model->getMeta($metaKey), $model);
         $this->assertEquals($metaValue, get_post_meta($model->getId(), $metaKey, true));
         $this->assertInstanceOf(PostMeta::class, $model->getMeta($metaKey));
         $this->assertTrue($model->hasMeta($metaKey));
