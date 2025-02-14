@@ -72,7 +72,7 @@ trait HasMetas
     /**
      * @return void
      */
-    protected static function bootHasMeta(): void
+    protected static function bootHasMetas(): void
     {
         static::saved(function ($model) {
             $model->saveTmpMetas();
