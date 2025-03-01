@@ -78,6 +78,15 @@ class Database extends Connection
         );
 
         $this->db = $wpdb;
+        $this->addWordPressHooks();
+    }
+
+    protected function addWordPressHooks(): void
+    {
+        // Reset Database instance when switching between blogs in multisite to update prefix
+        add_action('switch_blog', function () {
+            self::$instance = null;
+        }, 1);
     }
 
     /**
@@ -440,6 +449,17 @@ class Database extends Connection
          * If you want to log queries, you must enable the constant SAVEQUERIES
          * @see https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/#savequeries
          */
+    }
+
+    /**
+     * Get the base table prefix for multisite installation.
+     * This prefix is shared across all sites in the network.
+     *
+     * @return string Base prefix for multisite shared tables
+     */
+    public function getBaseTablePrefix(): string
+    {
+        return $this->db->base_prefix;
     }
 
     /**
