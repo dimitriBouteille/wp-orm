@@ -50,4 +50,21 @@ class RegistrationLog extends AbstractModel
     {
         return $this->belongsTo(Blog::class, self::BLOG_ID);
     }
+
+    /**
+     * @see getIP()
+     */
+    public function getIpAttribute(): ?string
+    {
+        return $this->getAttributes()[self::IP] ?? null;
+    }
+
+    /**
+     * @see setIP()
+     */
+    public function setIpAttribute(mixed $ip): self
+    {
+        $this->attributes[self::IP] = $ip;
+        return $this;
+    }
 }
