@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close parallel build
-        uses: coverallsapp/github-action@v1
+        uses: coverallsapp/github-action@v2
         with:
           parallel-finished: true
           carryforward: "wp-test-1,wp-test-2,wp-test-3,wp-test-4,wp-test-5,wp-test-6,unit"
