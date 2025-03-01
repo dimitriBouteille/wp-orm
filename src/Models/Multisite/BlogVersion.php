@@ -13,9 +13,10 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property-read int $blog_id
- * @property string $db_version
- * @property Carbon $last_updated
+ * @method string getDbVersion()
+ * @method BlogVersion setDbVersion(string $dbVersion)
+ * @method Carbon getLastUpdated()
+ * @method BlogVersion setLastUpdated($lastUpdated)
  *
  * @property-read Blog $blog
  */
@@ -23,6 +24,7 @@ class BlogVersion extends AbstractModel
 {
     public const CREATED_AT = null;
     public const UPDATED_AT = self::LAST_UPDATED;
+
     final public const BLOG_ID = 'blog_id';
     final public const DB_VERSION = 'db_version';
     final public const LAST_UPDATED = 'last_updated';

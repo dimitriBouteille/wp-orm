@@ -14,18 +14,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property-read int $blog_id
- * @property int $site_id
- * @property string $domain
- * @property string $path
- * @property Carbon $registered
- * @property Carbon $last_updated
- * @property bool $public
- * @property bool $archived
- * @property bool $mature
- * @property bool $spam
- * @property bool $deleted
- * @property int $lang_id
+ * @method int getSiteId()
+ * @method Blog setSiteId(int $siteId)
+ * @method string getDomain()
+ * @method Blog setDomain(string $domain)
+ * @method string getPath()
+ * @method Blog setPath(string $path)
+ * @method Carbon getRegistered()
+ * @method Blog setRegistered($registered)
+ * @method Carbon getLastUpdated()
+ * @method Blog setLastUpdated($lastUpdated)
+ * @method bool getPublic()
+ * @method Blog setPublic(bool $public)
+ * @method bool getArchived()
+ * @method Blog setArchived(bool $archived)
+ * @method bool getMature()
+ * @method Blog setMature(bool $mature)
+ * @method bool getSpam()
+ * @method Blog setSpam(bool $spam)
+ * @method bool getDeleted()
+ * @method Blog setDeleted(bool $deleted)
+ * @method int getLangId()
+ * @method Blog setLangId(int $langId)
  *
  * @property-read Site $site
  * @property-read BlogVersion|null $version
@@ -34,6 +44,7 @@ class Blog extends AbstractModel
 {
     public const CREATED_AT = self::REGISTERED;
     public const UPDATED_AT = self::LAST_UPDATED;
+
     final public const BLOG_ID = 'blog_id';
     final public const SITE_ID = 'site_id';
     final public const DOMAIN = 'domain';

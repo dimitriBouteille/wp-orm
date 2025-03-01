@@ -12,10 +12,12 @@ use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property-read int $meta_id
- * @property int $site_id
- * @property string|null $meta_key
- * @property mixed|null $meta_value
+ * @method int getSiteId()
+ * @method SiteMeta setSiteId(int $siteId)
+ * @method string|null getMetaKey()
+ * @method SiteMeta setMetaKey(?string $metaKey)
+ * @method mixed|null getMetaValue()
+ * @method SiteMeta setMetaValue($metaValue)
  *
  * @property-read Site $site
  */

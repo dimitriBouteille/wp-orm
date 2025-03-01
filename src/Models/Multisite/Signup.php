@@ -14,17 +14,26 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property-read int $signup_id
- * @property string $domain
- * @property string $path
- * @property string $title
- * @property string $user_login
- * @property string $user_email
- * @property Carbon $registered
- * @property Carbon $activated
- * @property bool $active
- * @property string $activation_key
- * @property string|null $meta
+ * @method string getDomain()
+ * @method Signup setDomain(string $domain)
+ * @method string getPath()
+ * @method Signup setPath(string $path)
+ * @method string getTitle()
+ * @method Signup setTitle(string $title)
+ * @method string getUserLogin()
+ * @method Signup setUserLogin(string $userLogin)
+ * @method string getUserEmail()
+ * @method Signup setUserEmail(string $userEmail)
+ * @method Carbon getRegistered()
+ * @method Signup setRegistered($registered)
+ * @method Carbon getActivated()
+ * @method Signup setActivated($activated)
+ * @method bool getActive()
+ * @method Signup setActive(bool $active)
+ * @method string getActivationKey()
+ * @method Signup setActivationKey(string $activationKey)
+ * @method string|null getMeta()
+ * @method Signup setMeta(?string $meta)
  *
  * @property-read User|null $user
  */
@@ -32,6 +41,7 @@ class Signup extends AbstractModel
 {
     public const CREATED_AT = self::REGISTERED;
     public const UPDATED_AT = null;
+
     final public const SIGNUP_ID = 'signup_id';
     final public const DOMAIN = 'domain';
     final public const PATH = 'path';

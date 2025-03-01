@@ -13,11 +13,14 @@ use Dbout\WpOrm\Orm\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property-read int $ID
- * @property string $email
- * @property string $IP
- * @property int $blog_id
- * @property Carbon $date_registered
+ * @method string getEmail()
+ * @method RegistrationLog setEmail(string $email)
+ * @method string getIP()
+ * @method RegistrationLog setIP(string $ip)
+ * @method int getBlogId()
+ * @method RegistrationLog setBlogId(int $blogId)
+ * @method Carbon getDateRegistered()
+ * @method RegistrationLog setDateRegistered($dateRegistered)
  *
  * @property-read Blog|null $blog
  */
@@ -25,6 +28,7 @@ class RegistrationLog extends AbstractModel
 {
     public const CREATED_AT = self::DATE_REGISTERED;
     public const UPDATED_AT = null;
+
     final public const ID = 'ID';
     final public const EMAIL = 'email';
     final public const IP = 'IP';
