@@ -19,6 +19,7 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 - ✅ Based on core WordPress database connection (`wpdb` class), no configuration required !
 - ✅ Custom functions to filter models with meta
 - ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/eloquent-mutators#attribute-casting))
+- ✅ Multisite support
 - ❤️ Easy integration of a custom post and comment type
 - ❤️ Easy model creation for projects with custom tables
 - ❤️ All the features available in Eloquent, are usable with this library !
