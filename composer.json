@@ -22,8 +22,8 @@
   "require": {
     "php": ">=8.2",
     "laravel/serializable-closure": ">=1.3",
-    "illuminate/database": "^11.0",
-    "illuminate/events": "^11.0"
+    "illuminate/database": "^12.0",
+    "illuminate/events": "^12.0"
   },
   "autoload": {
     "files": [
