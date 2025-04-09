@@ -483,7 +483,7 @@ class Database extends Connection
      */
     public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
     {
-        if (!is_null($this->schemaGrammar)) {
+        if (is_null($this->schemaGrammar)) {
             $this->useDefaultSchemaGrammar();
         }
 
