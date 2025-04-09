@@ -467,11 +467,7 @@ class Database extends Connection
      */
     protected function getDefaultSchemaGrammar(): Grammar
     {
-        ($grammar = new SchemaGrammar())->setConnection($this);
-
-        /** @var Grammar $grammar */
-        $grammar = $this->withTablePrefix($grammar);
-        return $grammar;
+        return new SchemaGrammar($this);
     }
 
     /**
@@ -488,7 +484,7 @@ class Database extends Connection
     public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
     {
         // @phpstan-ignore-next-line
-        if (!$this->schemaGrammar instanceof Grammar) {
+        if (is_null($this->schemaGrammar)) {
             $this->useDefaultSchemaGrammar();
         }
 
@@ -500,8 +496,6 @@ class Database extends Connection
      */
     protected function getDefaultQueryGrammar(): WordPressGrammar
     {
-        ($grammar = new WordPressGrammar())->setConnection($this);
-
-        return $grammar;
+        return new WordPressGrammar($this);
     }
 }

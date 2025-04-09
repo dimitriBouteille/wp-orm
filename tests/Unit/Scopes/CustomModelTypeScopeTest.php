@@ -14,6 +14,7 @@ use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Models\Attachment;
 use Dbout\WpOrm\Models\Option;
 use Dbout\WpOrm\Scopes\CustomModelTypeScope;
+use Illuminate\Database\Connection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
@@ -55,7 +56,7 @@ class CustomModelTypeScopeTest extends TestCase
         $model = new Attachment();
         $query = new \Illuminate\Database\Query\Builder(
             $this->createMock(\Illuminate\Database\MySqlConnection::class),
-            new \Illuminate\Database\Query\Grammars\Grammar(),
+            new \Illuminate\Database\Query\Grammars\Grammar($this->createMock(Connection::class)),
             new \Illuminate\Database\Query\Processors\Processor()
         );
         $builder = new PostBuilder($query);
