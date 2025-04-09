@@ -483,6 +483,7 @@ class Database extends Connection
      */
     public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
     {
+        // @phpstan-ignore-next-line
         if (is_null($this->schemaGrammar)) {
             $this->useDefaultSchemaGrammar();
         }
