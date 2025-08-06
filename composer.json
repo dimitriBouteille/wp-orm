@@ -46,7 +46,7 @@
     "szepeviktor/phpstan-wordpress": "^2.0",
     "friendsofphp/php-cs-fixer": "^3.68",
     "phpstan/phpstan": "^2.0",
-    "roots/wordpress": "^6.7"
+    "roots/wordpress": "^6.8"
   },
   "config": {
     "allow-plugins": {
