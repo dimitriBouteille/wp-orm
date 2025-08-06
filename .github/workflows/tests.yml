@@ -49,7 +49,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:9.2
+        image: mysql:9.4
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
         ports:
