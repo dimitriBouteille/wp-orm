@@ -45,11 +45,11 @@ jobs:
 
     strategy:
       matrix:
-        wp_version: ["6.3", "6.4", "6.5", "6.6", "6.7", "latest"]
+        wp_version: ["6.3", "6.4", "6.5", "6.6", "6.7", "6.8", "latest"]
 
     services:
       mysql:
-        image: mysql:9.2
+        image: mysql:9.4
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
         ports:

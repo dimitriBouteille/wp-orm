@@ -5,7 +5,7 @@
     ":disableDependencyDashboard"
   ],
   "minimumReleaseAge": "30 days",
-  "labels": ["dependencies"],
+  "labels": ["Dependency"],
   "prConcurrentLimit": 5,
   "baseBranches": ["main"],
   "assignees": ["dimitriBouteille"]
