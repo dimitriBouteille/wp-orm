@@ -9,7 +9,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Load .env file if exists
-if [ -f .env ]; then
+if [[ -f .env ]]; then
     echo -e "${GREEN}Loading configuration from .env file...${NC}"
     export $(grep -v '^#' .env | xargs)
 fi
@@ -47,7 +47,7 @@ docker compose exec -T mysql mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "DROP DATA
 echo -e "${GREEN}Database ready!${NC}"
 echo ""
 
-if [ ! -d "vendor" ]; then
+if [[ ! -d "vendor" ]]; then
     echo -e "${RED}Error: vendor directory not found. Please run 'composer install' first.${NC}"
     exit 1
 fi
@@ -56,7 +56,7 @@ fi
 echo -e "${GREEN}Installing PHPUnit 9 (required for WordPress tests)...${NC}"
 composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0' 'yoast/phpunit-polyfills:^3.0' --quiet
 
-if [ -f "${WP_TESTS_DIR}/includes/bootstrap.php" ] && [ -f "${WP_CORE_DIR}/wp-load.php" ]; then
+if [[ -f "${WP_TESTS_DIR}/includes/bootstrap.php" ]] && [[ -f "${WP_CORE_DIR}/wp-load.php" ]]; then
     echo -e "${GREEN}WordPress test suite already installed, skipping...${NC}"
 else
     echo -e "${GREEN}Installing WordPress test suite...${NC}"
@@ -67,7 +67,7 @@ echo ""
 echo -e "${GREEN}=== Running WordPress Tests ===${NC}"
 echo ""
 
-if [ "$1" == "--coverage" ]; then
+if [[ "$1" == "--coverage" ]]; then
     echo -e "${GREEN}Running tests with coverage...${NC}"
     composer run test:wordPress:coverage
 else
