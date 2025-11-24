@@ -59,6 +59,32 @@ require __DIR__ . '/vendor/autoload.php';
 
 🎉 You have nothing more to do, you can use the library now! Not even need to configure database accesses because it's the `wpdb` connection that is used.
 
+## Testing
+
+🐞 This project includes two types of tests:
+
+- **Unit tests** - Isolated tests without WordPress dependencies (PHPUnit 11)
+- **WordPress tests** - Integration tests with WordPress core (PHPUnit 9)
+
+**Running tests:**
+
+```bash
+# Unit tests
+composer run test:unit
+
+# WordPress tests (requires Docker)
+./run-wp-tests.sh
+
+# With coverage
+./run-wp-tests.sh --coverage
+```
+
+**Local setup:**
+
+WordPress tests require Docker and Subversion. The `run-wp-tests.sh` script automatically sets up a MySQL container and installs WordPress test environment. WordPress files are cached in `var/testings/` for faster subsequent runs.
+
+See [TESTING.md](TESTING.md) for detailed setup instructions and troubleshooting.
+
 ## Contributing
 
-We encourage you to contribute to this repository, so everyone can benefit from new features, bug fixes, and any other improvements. Have a look at our [contributing guidelines](CONTRIBUTING.md) to find out how to raise a pull request.
+💕 🦄 We encourage you to contribute to this repository, so everyone can benefit from new features, bug fixes, and any other improvements. Have a look at our [contributing guidelines](CONTRIBUTING.md) to find out how to raise a pull request.

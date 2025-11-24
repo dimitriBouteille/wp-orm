@@ -7,3 +7,4 @@ composer.lock
 web
 /package-lock.json
 build/
+.env
