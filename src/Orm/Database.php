@@ -23,10 +23,8 @@ use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
  */
 class Database extends Connection
 {
-    /**
-     * @var \wpdb
-     */
     protected \wpdb $db;
+    protected ?bool $isMariaDb = null;
 
     /**
      * Count of active transactions.
@@ -87,15 +85,6 @@ class Database extends Connection
         add_action('switch_blog', function () {
             self::$instance = null;
         }, 1);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function table($table, $as = null): Builder
-    {
-        $table = $this->getTablePrefix() . $table;
-        return $this->query()->from($table, $as);
     }
 
     /**
@@ -497,5 +486,35 @@ class Database extends Connection
     protected function getDefaultQueryGrammar(): WordPressGrammar
     {
         return new WordPressGrammar($this);
+    }
+
+    /**
+     * Determine if the connected database is a MariaDB database.
+     *
+     * @return bool
+     */
+    public function isMaria(): bool
+    {
+        if (is_bool($this->isMariaDb)) {
+            return $this->isMariaDb;
+        }
+
+        $serverInfo = $this->db->db_server_info();
+        $this->isMariaDb = str_contains(strtolower($serverInfo), 'mariadb');
+        return $this->isMariaDb;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws WpOrmException
+     */
+    public function getServerVersion(): string
+    {
+        $version = $this->db->db_version();
+        if ($version === null || $version === '') {
+            throw new WpOrmException('Unable to retrieve the server version.');
+        }
+
+        return $version;
     }
 }

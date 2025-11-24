@@ -19,7 +19,7 @@ class WordPressBuilderTest extends TestCase
     private WordPressBuilder $schema;
 
     /**
-     * @return void
+     * @inheritDoc
      */
     public static function setUpBeforeClass(): void
     {
@@ -32,7 +32,7 @@ class WordPressBuilderTest extends TestCase
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
     public function setUp(): void
     {

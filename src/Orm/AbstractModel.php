@@ -25,7 +25,7 @@ abstract class AbstractModel extends Model
     protected $guarded = [];
 
     /**
-     * Indicates if the model should use base prefix for multisite shared tables.
+     * Indicates if the model should use a base prefix for multisite shared tables.
      * @var bool
      */
     protected bool $useBasePrefix = false;
@@ -42,7 +42,7 @@ abstract class AbstractModel extends Model
     /**
      * @inheritDoc
      */
-    public function getTable(): ?string
+    public function _getTable(): ?string
     {
         /** @var Database $connection */
         $connection = $this->getConnection();
