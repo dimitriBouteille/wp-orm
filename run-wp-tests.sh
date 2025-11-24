@@ -48,7 +48,7 @@ echo -e "${GREEN}Database ready!${NC}"
 echo ""
 
 if [[ ! -d "vendor" ]]; then
-    echo -e "${RED}Error: vendor directory not found. Please run 'composer install' first.${NC}"
+    echo -e "${RED}Error: vendor directory not found. Please run 'composer install' first.${NC}" >&2
     exit 1
 fi
 
