@@ -51,7 +51,7 @@ trait HasMetas
     ];
 
     /**
-     * The cache of the converted meta cast types.
+     * The cache of the converted meta-cast types.
      *
      * @var array
      */

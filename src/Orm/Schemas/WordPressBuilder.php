@@ -25,7 +25,7 @@ class WordPressBuilder extends MySqlBuilder
     public function getColumns($table): array
     {
         /**
-         * Never add prefix table because the model::getTable contain the prefix
+         * Never add a prefix table because the model::getTable contain the prefix
          * @see AbstractModel::getTable()
          */
         $results = $this->connection->selectFromWriteConnection(
