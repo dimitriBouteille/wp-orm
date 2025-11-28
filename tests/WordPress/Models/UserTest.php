@@ -71,7 +71,7 @@ class UserTest extends TestCase
     public function testComments(): void
     {
         /**
-         * Create fake comment with any relation with user
+         * Create a fake comment with any relation with user
          */
         self::factory()->comment->create([
             'user_id' => self::$fakeUserId,
@@ -95,7 +95,7 @@ class UserTest extends TestCase
     public function testPosts(): void
     {
         /**
-         * Create fake post with any relation with user
+         * Create a fake post with any relation with user
          */
         self::factory()->post->create([
             'user_id' => self::$fakeUserId,

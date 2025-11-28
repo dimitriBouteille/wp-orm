@@ -148,7 +148,7 @@ class PostTest extends TestCase
     public function testComments(): void
     {
         /**
-         * Create fake post with any relation with post
+         * Create a fake post with any relation with post
          */
         self::factory()->comment->create([
             'comment_post_ID' => 1585,
