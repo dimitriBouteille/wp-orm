@@ -242,14 +242,20 @@ class IsStatusTapTest extends TestCase
             ->tap(new IsStatusTap(PostStatus::Pending))
             ->get();
 
+        /** @var Post $first */
+        $first = $publishedPosts->first();
         $this->assertCount(1, $publishedPosts->toArray());
-        $this->assertEquals('publish', $publishedPosts->first()->getPostStatus());
+        $this->assertEquals('publish', $first->getPostStatus());
 
+        /** @var Post $first */
+        $first = $draftPosts->first();
         $this->assertCount(1, $draftPosts->toArray());
-        $this->assertEquals('draft', $draftPosts->first()->getPostStatus());
+        $this->assertEquals('draft', $first->getPostStatus());
 
+        /** @var Post $first */
+        $first = $pendingPosts->first();
         $this->assertCount(1, $pendingPosts->toArray());
-        $this->assertEquals('pending', $pendingPosts->first()->getPostStatus());
+        $this->assertEquals('pending', $first->getPostStatus());
     }
 
     /**
