@@ -42,25 +42,6 @@ abstract class AbstractModel extends Model
     /**
      * @inheritDoc
      */
-    public function _getTable(): ?string
-    {
-        /** @var Database $connection */
-        $connection = $this->getConnection();
-        $prefix = $this->useBasePrefix
-            ? $connection->getBaseTablePrefix()
-            : $connection->getTablePrefix();
-
-        if ($this->table !== null && $this->table !== '') {
-            return str_starts_with($this->table, $prefix) ? $this->table : $prefix . $this->table;
-        }
-
-        // Add WordPress table prefix
-        return $prefix . parent::getTable();
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function newBaseQueryBuilder(): Builder
     {
         $connection = $this->getConnection();
