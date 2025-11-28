@@ -31,7 +31,7 @@ class IsAuthorTapTest extends TestCase
 
         $author2 = self::factory()->user->create([
             'user_login' => 'jane_doe',
-            'user_email' => 'jane@example.com',
+            'user_email' => 'jane-1@example.com',
         ]);
 
         $expectedId = self::factory()->post->create([
@@ -71,7 +71,7 @@ class IsAuthorTapTest extends TestCase
 
         $author2 = self::factory()->user->create([
             'user_login' => 'jane_doe',
-            'user_email' => 'jane@example.com',
+            'user_email' => 'jane-2@example.com',
         ]);
 
         $expectedId = self::factory()->post->create([
@@ -113,7 +113,7 @@ class IsAuthorTapTest extends TestCase
 
         $author2 = self::factory()->user->create([
             'user_login' => 'jane_doe',
-            'user_email' => 'jane@example.com',
+            'user_email' => 'jane-3@example.com',
         ]);
 
         $expectedIds = [];
@@ -160,7 +160,7 @@ class IsAuthorTapTest extends TestCase
 
         $author2 = self::factory()->user->create([
             'user_login' => 'jane_doe',
-            'user_email' => 'jane@example.com',
+            'user_email' => 'jane-4@example.com',
         ]);
 
         self::factory()->post->create([
