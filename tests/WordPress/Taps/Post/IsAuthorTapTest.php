@@ -15,6 +15,8 @@ use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class IsAuthorTapTest extends TestCase
 {
+    private const EMAIL_JOHN = 'john@example.com';
+
     /**
      * @return void
      * @covers IsAuthorTap::__construct
@@ -24,7 +26,7 @@ class IsAuthorTapTest extends TestCase
     {
         $author1 = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         $author2 = self::factory()->user->create([
@@ -64,7 +66,7 @@ class IsAuthorTapTest extends TestCase
     {
         $author1 = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         $author2 = self::factory()->user->create([
@@ -106,7 +108,7 @@ class IsAuthorTapTest extends TestCase
     {
         $author1 = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         $author2 = self::factory()->user->create([
@@ -153,7 +155,7 @@ class IsAuthorTapTest extends TestCase
     {
         $author1 = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         $author2 = self::factory()->user->create([
@@ -182,7 +184,7 @@ class IsAuthorTapTest extends TestCase
     {
         $author = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         self::factory()->post->create([
@@ -242,7 +244,7 @@ class IsAuthorTapTest extends TestCase
     {
         $authorId = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         $user = User::find($authorId);
@@ -315,7 +317,7 @@ class IsAuthorTapTest extends TestCase
     {
         $author = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         $postId = self::factory()->post->create([
@@ -353,7 +355,7 @@ class IsAuthorTapTest extends TestCase
     {
         $author = self::factory()->user->create([
             'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
+            'user_email' => self::EMAIL_JOHN,
         ]);
 
         self::factory()->post->create([

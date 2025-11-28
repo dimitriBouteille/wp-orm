@@ -14,6 +14,8 @@ use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class IsMimeTypeTapTest extends TestCase
 {
+    private const MIME_JPEG = 'image/jpeg';
+
     /**
      * @return void
      * @covers IsMimeTypeTap::__construct
@@ -23,7 +25,7 @@ class IsMimeTypeTapTest extends TestCase
     {
         $jpegId = self::factory()->post->create([
             'post_type' => 'attachment',
-            'post_mime_type' => 'image/jpeg',
+            'post_mime_type' => self::MIME_JPEG,
         ]);
 
         self::factory()->post->create([
@@ -37,14 +39,14 @@ class IsMimeTypeTapTest extends TestCase
         ]);
 
         $attachments = Attachment::query()
-            ->tap(new IsMimeTypeTap('image/jpeg'))
+            ->tap(new IsMimeTypeTap(self::MIME_JPEG))
             ->get();
 
         /** @var Attachment $first */
         $first = $attachments->first();
 
         $this->assertCount(1, $attachments->toArray());
-        $this->assertEquals('image/jpeg', $first->getPostMimeType());
+        $this->assertEquals(self::MIME_JPEG, $first->getPostMimeType());
         $this->assertEquals($jpegId, $first->getId());
     }
 
@@ -56,7 +58,7 @@ class IsMimeTypeTapTest extends TestCase
     {
         self::factory()->post->create([
             'post_type' => 'attachment',
-            'post_mime_type' => 'image/jpeg',
+            'post_mime_type' => self::MIME_JPEG,
         ]);
 
         self::factory()->post->create([
@@ -79,23 +81,23 @@ class IsMimeTypeTapTest extends TestCase
     {
         self::factory()->post->create([
             'post_type' => 'attachment',
-            'post_mime_type' => 'image/jpeg',
+            'post_mime_type' => self::MIME_JPEG,
             'post_title' => 'First JPEG',
         ]);
 
         $secondJpegId = self::factory()->post->create([
             'post_type' => 'attachment',
-            'post_mime_type' => 'image/jpeg',
+            'post_mime_type' => self::MIME_JPEG,
             'post_title' => 'Second JPEG',
         ]);
 
         self::factory()->post->create([
             'post_type' => 'attachment',
-            'post_mime_type' => 'image/png',
+            'post_mime_type' => self::MIME_JPEG,
         ]);
 
         $attachments = Attachment::query()
-            ->tap(new IsMimeTypeTap('image/jpeg'))
+            ->tap(new IsMimeTypeTap(self::MIME_JPEG))
             ->where('post_title', 'Second JPEG')
             ->get();
 
@@ -104,7 +106,7 @@ class IsMimeTypeTapTest extends TestCase
 
         $this->assertCount(1, $attachments->toArray());
         $this->assertEquals($secondJpegId, $first->getId());
-        $this->assertEquals('image/jpeg', $first->getPostMimeType());
+        $this->assertEquals(self::MIME_JPEG, $first->getPostMimeType());
         $this->assertEquals('Second JPEG', $first->getPostTitle());
     }
 
@@ -116,7 +118,7 @@ class IsMimeTypeTapTest extends TestCase
     {
         $attachmentId = self::factory()->post->create([
             'post_type' => 'attachment',
-            'post_mime_type' => 'image/jpeg',
+            'post_mime_type' => self::MIME_JPEG,
         ]);
 
         self::factory()->post->create([
@@ -124,7 +126,7 @@ class IsMimeTypeTapTest extends TestCase
         ]);
 
         $attachments = Attachment::query()
-            ->tap(new IsMimeTypeTap('image/jpeg'))
+            ->tap(new IsMimeTypeTap(self::MIME_JPEG))
             ->get();
 
         /** @var Attachment $first */
@@ -142,7 +144,7 @@ class IsMimeTypeTapTest extends TestCase
     public function testGeneratesCorrectSqlQuery(): void
     {
         Attachment::query()
-            ->tap(new IsMimeTypeTap('image/jpeg'))
+            ->tap(new IsMimeTypeTap(self::MIME_JPEG))
             ->get();
 
         $this->assertLastQueryEquals(
