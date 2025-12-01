@@ -21,19 +21,6 @@ class WordPressBuilderTest extends TestCase
     /**
      * @inheritDoc
      */
-    public static function setUpBeforeClass(): void
-    {
-        Database::getInstance()->getSchemaBuilder()->create('project', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('author');
-            $table->string('address');
-        });
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function setUp(): void
     {
         $this->database = Database::getInstance();
@@ -52,21 +39,22 @@ class WordPressBuilderTest extends TestCase
      */
     public function testCreate(): void
     {
-        $this->schema->create('architect', function (Blueprint $table) {
+        $tableName = 'architect';
+        $this->schema->create($tableName, function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug');
             $table->json('data')->nullable();
         });
 
-        $this->assertTrue($this->schema->hasTable('architect'));
-        $table = $this->database->getTablePrefix() . 'architect';
-        $columns = $this->schema->getColumns($table);
+        $this->assertTrue($this->schema->hasTable($tableName));
+        $columns = $this->schema->getColumns($tableName);
+
         $this->assertCount(4, $columns);
-        $this->assertTrue($this->schema->hasColumn($table, 'id'));
-        $this->assertTrue($this->schema->hasColumn($table, 'name'));
-        $this->assertTrue($this->schema->hasColumn($table, 'slug'));
-        $this->assertTrue($this->schema->hasColumn($table, 'data'));
+        $this->assertTrue($this->schema->hasColumn($tableName, 'id'));
+        $this->assertTrue($this->schema->hasColumn($tableName, 'name'));
+        $this->assertTrue($this->schema->hasColumn($tableName, 'slug'));
+        $this->assertTrue($this->schema->hasColumn($tableName, 'data'));
     }
 
     /**
@@ -76,14 +64,22 @@ class WordPressBuilderTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $this->schema->table('project', function (Blueprint $table) {
+        $tableName = 'projects';
+        $this->schema->create($tableName, function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('author');
+            $table->string('address');
+        });
+
+        $this->assertTrue($this->schema->hasTable($tableName));
+        $this->schema->table($tableName, function (Blueprint $table) {
             $table->string('country');
             $table->boolean('finish');
         });
 
-        $table = $this->database->getTablePrefix() . 'project';
-        $this->assertTrue($this->schema->hasColumn($table, 'country'));
-        $this->assertTrue($this->schema->hasColumn($table, 'finish'));
+        $this->assertTrue($this->schema->hasColumn($tableName, 'country'));
+        $this->assertTrue($this->schema->hasColumn($tableName, 'finish'));
     }
 
     /**
@@ -109,7 +105,8 @@ class WordPressBuilderTest extends TestCase
      */
     public function testDropColumn(): void
     {
-        $this->schema->create('address', function (Blueprint $table) {
+        $tableName = 'address';
+        $this->schema->create($tableName, function (Blueprint $table) {
             $table->id();
             $table->string('firstname');
             $table->string('lastname');
@@ -118,14 +115,13 @@ class WordPressBuilderTest extends TestCase
             $table->string('street_3');
         });
 
-        $table = $this->database->getTablePrefix() . 'address';
-        $columns = $this->schema->getColumns($table);
+        $columns = $this->schema->getColumns($tableName);
         $this->assertCount(6, $columns);
 
         $this->schema->dropColumns('address', ['street_3']);
-        $columns = $this->schema->getColumns($table);
+        $columns = $this->schema->getColumns($tableName);
         $this->assertCount(5, $columns);
-        $this->assertFalse($this->schema->hasColumn($table, 'street_3'));
+        $this->assertFalse($this->schema->hasColumn($tableName, 'street_3'));
 
     }
 }
