@@ -13,6 +13,7 @@ use Dbout\WpOrm\Models\Post;
 use Illuminate\Support\Collection;
 
 /**
+ * @method static|$this assertNotNull(mixed $object, string $message = '')
  * @method static|$this assertEquals(mixed $expectedValue, mixed $checkValue, string $message = '')
  * @method static|$this assertInstanceOf(string $className, mixed $object, string $message = '')
  * @method static|$this expectExceptionMessageMatches(string $pattern, string $message = '')

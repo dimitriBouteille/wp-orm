@@ -25,7 +25,7 @@ abstract class AbstractModel extends Model
     protected $guarded = [];
 
     /**
-     * Indicates if the model should use base prefix for multisite shared tables.
+     * Indicates if the model should use a base prefix for multisite shared tables.
      * @var bool
      */
     protected bool $useBasePrefix = false;
@@ -37,25 +37,6 @@ abstract class AbstractModel extends Model
     {
         static::$resolver = new Resolver();
         parent::__construct($attributes);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTable(): ?string
-    {
-        /** @var Database $connection */
-        $connection = $this->getConnection();
-        $prefix = $this->useBasePrefix
-            ? $connection->getBaseTablePrefix()
-            : $connection->getTablePrefix();
-
-        if ($this->table !== null && $this->table !== '') {
-            return str_starts_with($this->table, $prefix) ? $this->table : $prefix . $this->table;
-        }
-
-        // Add WordPress table prefix
-        return $prefix . parent::getTable();
     }
 
     /**

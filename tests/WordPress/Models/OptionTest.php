@@ -40,4 +40,28 @@ class OptionTest extends TestCase
         $option = Option::findOneByName('my_custom_option_fake');
         $this->assertNull($option);
     }
+
+    /**
+     * @return void
+     * @covers Option::save
+     * @covers Option::setOptionName
+     * @covers Option::setOptionValue
+     * @covers Option::getOptionValue
+     * @covers Option::getOptionName
+     * @covers Option::getId
+     */
+    public function testSave(): void
+    {
+        $option = new Option();
+        $option->setOptionName('my_custom_option');
+        $option->setOptionValue('option_value');
+
+        $this->assertTrue($option->save());
+
+        $loadedObject = Option::find($option->getId());
+        $this->assertInstanceOf(Option::class, $loadedObject);
+        $this->assertEquals('option_value', $loadedObject->getOptionValue());
+        $this->assertEquals('my_custom_option', $loadedObject->getOptionName());
+        $this->assertEquals($option->getId(), $loadedObject->getId());
+    }
 }

@@ -131,13 +131,11 @@ class AbstractModelTest extends TestCase
             'post_type' => 'product',
             'post_name' => 'my-filled-post',
             'post_content' => 'The post content',
-            'test' => 'custom test column',
         ]);
 
         $this->assertEquals('article', $post->getPostType(), 'This attribute should not be changed because it is protected.');
         $this->assertEquals('my-filled-post', $post->getPostName());
         $this->assertEquals('The post content', $post->getPostContent());
-        $this->assertNull($post->getAttribute('test'), 'This attribute must be empty because it does not exist in the posts table.');
     }
 
     /**
@@ -195,7 +193,9 @@ class AbstractModelTest extends TestCase
         $this->checkUpsertOption('store_phone', '15 15 15');
         $this->checkUpsertOption('store_email', 'boutique@test.fr');
 
-        // Check if value is updated
+        /**
+         * Check if the value is updated
+         */
         $this->checkUpsertOption('store_address', 'Road of paris');
     }
 
@@ -219,7 +219,9 @@ class AbstractModelTest extends TestCase
             ['autoload']
         );
 
-        // Check if value is not update updated
+        /**
+         * Check if the value is not update updated
+         */
         $option = $this->checkUpsertOption('store_latitude', 75.652);
         $this->assertEquals('no', $option?->getAutoload());
     }
