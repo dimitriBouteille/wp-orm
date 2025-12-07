@@ -8,11 +8,12 @@
 
 namespace Dbout\WpOrm\Tests\Unit\Concerns;
 
+use Dbout\WpOrm\Concerns\HasMetas;
 use Dbout\WpOrm\Models\Post;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 
-#[CoversTrait(Post::class)]
+#[CoversTrait(HasMetas::class)]
 class HasMetasTest extends TestCase
 {
     /**
