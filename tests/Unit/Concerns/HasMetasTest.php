@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(HasMetas::class)]
+#[CoversClass(Post::class)]
 class HasMetasTest extends TestCase
 {
     /**
