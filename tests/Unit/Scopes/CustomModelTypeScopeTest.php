@@ -43,7 +43,7 @@ class CustomModelTypeScopeTest extends TestCase
     public function testThrowsExceptionWhenModelDoesNotImplementInterface(): void
     {
         $model = new Option();
-        $builder = $this->createMock(Builder::class);
+        $builder = $this->createStub(Builder::class);
 
         $this->expectException(WpOrmException::class);
         $this->expectExceptionMessage(sprintf(
@@ -62,10 +62,10 @@ class CustomModelTypeScopeTest extends TestCase
     public function testAppliesWhereClauseForAttachmentModel(): void
     {
         $model = new Attachment();
-        $connection = $this->createMock(\Illuminate\Database\MySqlConnection::class);
+        $connection = $this->createStub(\Illuminate\Database\MySqlConnection::class);
         $query = new \Illuminate\Database\Query\Builder(
             $connection,
-            new Grammar($this->createMock(Connection::class)),
+            new Grammar($this->createStub(Connection::class)),
             new Processor()
         );
         $builder = new PostBuilder($query);
@@ -112,10 +112,10 @@ class CustomModelTypeScopeTest extends TestCase
             protected string $_type = 'review';
         };
 
-        $connection = $this->createMock(\Illuminate\Database\MySqlConnection::class);
+        $connection = $this->createStub(\Illuminate\Database\MySqlConnection::class);
         $query = new \Illuminate\Database\Query\Builder(
             $connection,
-            new Grammar($this->createMock(Connection::class)),
+            new Grammar($this->createStub(Connection::class)),
             new Processor()
         );
         $builder = new CommentBuilder($query);
@@ -146,10 +146,10 @@ class CustomModelTypeScopeTest extends TestCase
             }
         };
 
-        $connection = $this->createMock(\Illuminate\Database\MySqlConnection::class);
+        $connection = $this->createStub(\Illuminate\Database\MySqlConnection::class);
         $query = new \Illuminate\Database\Query\Builder(
             $connection,
-            new Grammar($this->createMock(Connection::class)),
+            new Grammar($this->createStub(Connection::class)),
             new Processor()
         );
         $builder = new PostBuilder($query);
@@ -166,7 +166,7 @@ class CustomModelTypeScopeTest extends TestCase
     public function testExceptionMessageContainsCorrectClassName(): void
     {
         $model = new Post();
-        $builder = $this->createMock(Builder::class);
+        $builder = $this->createStub(Builder::class);
 
         try {
             $this->scope->apply($builder, $model);
