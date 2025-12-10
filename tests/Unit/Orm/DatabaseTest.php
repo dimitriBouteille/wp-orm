@@ -117,7 +117,7 @@ class DatabaseTest extends TestCase
      */
     private function createDatabaseWithMockedWpdb(array $config): Database
     {
-        $wpdb = $this->createMock(\wpdb::class);
+        $wpdb = $this->createStub(\wpdb::class);
 
         if (isset($config['db_server_info'])) {
             $wpdb->method('db_server_info')->willReturn($config['db_server_info']);

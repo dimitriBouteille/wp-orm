@@ -12,13 +12,9 @@ use Dbout\WpOrm\Exceptions\CannotOverrideCustomTypeException;
 use Dbout\WpOrm\Exceptions\NotAllowedException;
 use Dbout\WpOrm\Models\CustomComment;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CustomComment::class)]
-#[CoversMethod(CustomComment::class, 'setCommentType')]
-#[CoversMethod(CustomComment::class, 'getCommentType')]
-#[CoversMethod(CustomComment::class, 'setAttribute')]
 class CustomCommentTest extends TestCase
 {
     /**

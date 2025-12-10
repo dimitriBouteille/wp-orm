@@ -40,7 +40,7 @@ You can find all the documentation in [the wiki](https://github.com/dimitriBoute
 
 The server requirements are basically the same as for [WordPress](https://wordpress.org/about/requirements/) with the addition of a few ones :
 
-- PHP >= 8.2
+- PHP >= 8.3
 - [Composer](https://getcomposer.org/)
 
 **Installation**
