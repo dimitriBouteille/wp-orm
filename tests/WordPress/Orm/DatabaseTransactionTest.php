@@ -173,7 +173,7 @@ class DatabaseTransactionTest extends TestCase
         $firstQuery = reset($query)[0] ?? '';
         $lastQuery = end($query)[0] ?? '';
         $this->assertEquals('START TRANSACTION;', $firstQuery);
-        $this->assertEquals(0, $this->db->transactionCount);
+        $this->assertEquals(0, $this->db->transactionLevel());
 
         if ($mode === 'commit') {
             $this->assertEquals('COMMIT;', $lastQuery);
