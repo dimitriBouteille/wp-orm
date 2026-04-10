@@ -24,6 +24,8 @@ use Illuminate\Support\Collection;
  * @method static|$this assertCount(int $expectedCount, array $array, string $message = '')
  * @method static|$this assertIsNumeric(mixed $vale, string $message = '')
  * @method static|$this assertEqualsCanonicalizing(mixed $expected, mixed $actual, string $message = '')
+ * @method static|$this assertSame(mixed $expected, mixed $actual, string $message = '')
+ * @method static|$this assertIsArray(mixed $value, string $message = '')
  * @method static mixed factory()
  */
 abstract class TestCase extends \WP_UnitTestCase
