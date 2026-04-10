@@ -28,7 +28,7 @@ return $config
         '@PSR12' => true,
         '@PHP81Migration' => true,
         'strict_param' => true,
-        'declare_strict_types' => true,
+        'declare_strict_types' => false,
         'array_syntax' => ['syntax' => 'short'],
         'octal_notation' => false,
         'trim_array_spaces' => true,

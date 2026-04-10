@@ -3,7 +3,6 @@
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  */
-declare(strict_types=1);
 if (!function_exists('event')) {
     /**
      * Dispatch an event and call the listeners.
