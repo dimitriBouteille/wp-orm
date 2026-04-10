@@ -9,6 +9,7 @@
 namespace Dbout\WpOrm\Models;
 
 use Dbout\WpOrm\Builders\OptionBuilder;
+use Dbout\WpOrm\Casts\WpSerializedCast;
 use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Orm\AbstractModel;
 
@@ -42,6 +43,16 @@ class Option extends AbstractModel
      * @inheritDoc
      */
     public $timestamps = false;
+
+    /**
+     * @inheritDoc
+     */
+    protected function casts(): array
+    {
+        return [
+            self::VALUE => WpSerializedCast::class,
+        ];
+    }
 
     /**
      * @inheritDoc
