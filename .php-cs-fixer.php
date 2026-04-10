@@ -17,8 +17,6 @@ $finder = \PhpCsFixer\Finder::create()
 $header = <<<EOF
     Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
     See LICENSE.txt for license details.
-
-    Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
     EOF;
 
 $config = new \PhpCsFixer\Config();
@@ -30,6 +28,7 @@ return $config
         '@PSR12' => true,
         '@PHP81Migration' => true,
         'strict_param' => true,
+        'declare_strict_types' => false,
         'array_syntax' => ['syntax' => 'short'],
         'octal_notation' => false,
         'trim_array_spaces' => true,
@@ -45,6 +44,6 @@ return $config
             'header' => $header,
             'comment_type' => 'PHPDoc',
             'location' => 'after_open',
-            'separate' => 'bottom',
+            'separate' => 'none',
         ],
     ]);
