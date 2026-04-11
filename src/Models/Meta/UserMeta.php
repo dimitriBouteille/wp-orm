@@ -7,7 +7,7 @@
 namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Models\User;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read User|null $user
@@ -33,10 +33,10 @@ class UserMeta extends AbstractMeta
     protected bool $useBasePrefix = true;
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
+        return $this->belongsTo(User::class, self::USER_ID, User::USER_ID);
     }
 }
