@@ -84,22 +84,6 @@ jobs:
       - name: "Create test database"
         run: mysql -uroot -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
 
-      - name: "Debug DB connection"
-        env:
-          DB_HOST: "127.0.0.1:3306"
-          DB_USER: "root"
-          MYSQL_ROOT_PASSWORD: ""
-          MYSQL_DATABASE: "wordpress_test"
-        run: |
-          mysql -uroot -h 127.0.0.1 -e "SELECT 1;" && echo "✅ DB connection OK" || echo "❌ DB connection FAILED"
-          php -r "
-            echo 'DB_HOST: [' . (getenv('DB_HOST') ?: '127.0.0.1:3307') . ']\n';
-            echo 'DB_USER: [' . (getenv('DB_USER') ?: 'root') . ']\n';
-            echo 'DB_PASSWORD: [' . (getenv('MYSQL_ROOT_PASSWORD') !== false ? getenv('MYSQL_ROOT_PASSWORD') : 'root') . ']\n';
-            echo 'DB_NAME: [' . (getenv('MYSQL_DATABASE') ?: 'wordpress_test') . ']\n';
-            echo 'ABSPATH: [' . realpath(__DIR__ . '/web/wordpress/') . ']\n';
-          "
-
       - name: "Run WordPress tests with coverage"
         env:
           DB_HOST: "127.0.0.1:3306"
