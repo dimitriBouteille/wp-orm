@@ -75,7 +75,11 @@ jobs:
       - name: "Install PHPUnit v9 and WordPress ${{ matrix.wp_version }}"
         run: |
           composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0' 'yoast/phpunit-polyfills:^3.0'
-          composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:${{ matrix.wp_version }}.*' 'roots/wordpress:${{ matrix.wp_version }}.*'
+          if [ "${{ matrix.wp_version }}" = "latest" ]; then
+            composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:*' 'roots/wordpress:*'
+          else
+            composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:${{ matrix.wp_version }}.*' 'roots/wordpress:${{ matrix.wp_version }}.*'
+          fi
 
       - name: "Create test database"
         run: mysql -uroot -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
