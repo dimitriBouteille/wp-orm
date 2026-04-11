@@ -124,7 +124,7 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
             $join->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->columnKey),
                 '=',
-                Database::getInstance()->raw(sprintf("'%s'", $metaKey))
+                Database::getInstance()->raw(sprintf("'%s'", esc_sql($metaKey)))
             )->on(
                 sprintf('%s.%s', $metaKey, $this->metaConfig?->foreignKey),
                 '=',
