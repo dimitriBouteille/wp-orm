@@ -39,6 +39,7 @@ trait HasMetas
         'datetime',
         'double',
         'float',
+        'real',
         'immutable_date',
         'int',
         'integer',
