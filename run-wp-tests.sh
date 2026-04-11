@@ -17,17 +17,9 @@ fi
 # Default values
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
 MYSQL_DATABASE=${MYSQL_DATABASE:-wordpress_test}
-WP_VERSION=${WP_VERSION:-latest}
-DB_HOST="127.0.0.1:3307"
-
-# Set WordPress test directories (local to project)
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export WP_TESTS_DIR="${PROJECT_DIR}/var/testings/tests-wp"
-export WP_CORE_DIR="${PROJECT_DIR}/var/testings/wordpress"
 
 echo -e "${GREEN}=== WordPress Test Environment Setup ===${NC}"
 echo -e "Database: ${YELLOW}${MYSQL_DATABASE}${NC}"
-echo -e "WordPress Version: ${YELLOW}${WP_VERSION}${NC}"
 echo ""
 
 echo -e "${GREEN}Starting MySQL container...${NC}"
@@ -55,13 +47,6 @@ fi
 # Install PHPUnit 9 (required for WordPress tests)
 echo -e "${GREEN}Installing PHPUnit 9 (required for WordPress tests)...${NC}"
 composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0' 'yoast/phpunit-polyfills:^3.0' --quiet
-
-if [[ -f "${WP_TESTS_DIR}/includes/bootstrap.php" ]] && [[ -f "${WP_CORE_DIR}/wp-load.php" ]]; then
-    echo -e "${GREEN}WordPress test suite already installed, skipping...${NC}"
-else
-    echo -e "${GREEN}Installing WordPress test suite...${NC}"
-    ./config/scripts/install-wp-tests.sh ${MYSQL_DATABASE} root ${MYSQL_ROOT_PASSWORD} ${DB_HOST} ${WP_VERSION} true
-fi
 
 echo ""
 echo -e "${GREEN}=== Running WordPress Tests ===${NC}"

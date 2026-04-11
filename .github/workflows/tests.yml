@@ -57,9 +57,6 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
 
     steps:
-      - name: "Install subversion"
-        run: sudo apt-get install -y subversion
-
       - name: "Checkout repo"
         uses: actions/checkout@v4
 
@@ -73,18 +70,26 @@ jobs:
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
 
-      # WordPress tests works only with PHPUnit 9.x :(
+      # WordPress tests works only with PHPUnit 9.x
       # https://make.wordpress.org/core/handbook/references/phpunit-compatibility-and-wordpress-versions/
-      - name: "Install PHPUnit v9"
+      - name: "Install PHPUnit v9 and WordPress ${{ matrix.wp_version }}"
         run: |
-          composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0'
-          composer require --dev --update-with-all-dependencies 'yoast/phpunit-polyfills:^3.0'
+          composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0' 'yoast/phpunit-polyfills:^3.0'
+          if [ "${{ matrix.wp_version }}" = "latest" ]; then
+            composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:*' 'roots/wordpress:*'
+          else
+            composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:${{ matrix.wp_version }}.*' 'roots/wordpress:${{ matrix.wp_version }}.*'
+          fi
 
-      - name: "Install WP"
-        shell: bash
-        run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 ${{ matrix.wp_version }}
+      - name: "Create test database"
+        run: mysql -uroot -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
 
       - name: "Run WordPress tests with coverage"
+        env:
+          DB_HOST: "127.0.0.1:3306"
+          DB_USER: "root"
+          MYSQL_ROOT_PASSWORD: ""
+          MYSQL_DATABASE: "wordpress_test"
         run: composer run test:wordPress:coverage
 
       - name: "Send coverage to Coveralls"
