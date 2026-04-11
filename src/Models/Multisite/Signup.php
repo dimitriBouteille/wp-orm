@@ -9,7 +9,7 @@ namespace Dbout\WpOrm\Models\Multisite;
 use Carbon\Carbon;
 use Dbout\WpOrm\Models\User;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method string getDomain()
@@ -64,8 +64,8 @@ class Signup extends AbstractModel
         self::ACTIVE => 'bool',
     ];
 
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, User::EMAIL, self::USER_EMAIL);
+        return $this->belongsTo(User::class, self::USER_EMAIL, User::EMAIL);
     }
 }

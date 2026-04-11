@@ -7,7 +7,7 @@
 namespace Dbout\WpOrm\Models\Multisite;
 
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method int getSiteId()
@@ -30,8 +30,8 @@ class SiteMeta extends AbstractMeta
 
     protected $primaryKey = self::META_ID;
 
-    public function site(): HasOne
+    public function site(): BelongsTo
     {
-        return $this->hasOne(Site::class, Site::ID, self::SITE_ID);
+        return $this->belongsTo(Site::class, self::SITE_ID, Site::ID);
     }
 }

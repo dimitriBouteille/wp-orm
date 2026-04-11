@@ -24,6 +24,8 @@ use Illuminate\Support\Collection;
  * @method static|$this assertEqualsCanonicalizing(mixed $expected, mixed $actual, string $message = '')
  * @method static|$this assertSame(mixed $expected, mixed $actual, string $message = '')
  * @method static|$this assertIsArray(mixed $value, string $message = '')
+ * @method static|$this assertContains(mixed $needle, array $haystack, string $message = '')
+ * @method static|$this assertNotContains(mixed $needle, array $haystack, string $message = '')
  * @method static mixed factory()
  */
 abstract class TestCase extends \WP_UnitTestCase
@@ -119,6 +121,25 @@ abstract class TestCase extends \WP_UnitTestCase
         $this->assertLastQueryEquals(
             sprintf(
                 "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = %3\$s and `%1\$s`.`%2\$s` is not null limit 1",
+                $table,
+                $pkColumn,
+                $pkValue
+            )
+        );
+    }
+
+    /**
+     * @param string $table
+     * @param string $pkColumn
+     * @param string $pkValue
+     * @return void
+     */
+    public function assertLastQueryBelongsToRelation(string $table, string $pkColumn, string $pkValue): void
+    {
+        $table = sprintf('#TABLE_PREFIX#%s', $table);
+        $this->assertLastQueryEquals(
+            sprintf(
+                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = %3\$s limit 1",
                 $table,
                 $pkColumn,
                 $pkValue

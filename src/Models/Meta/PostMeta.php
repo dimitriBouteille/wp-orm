@@ -7,7 +7,7 @@
 namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Models\Post;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read Post|null $post
@@ -28,10 +28,10 @@ class PostMeta extends AbstractMeta
     protected $primaryKey = self::META_ID;
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function post(): HasOne
+    public function post(): BelongsTo
     {
-        return $this->hasOne(Post::class, Post::POST_ID, self::POST_ID);
+        return $this->belongsTo(Post::class, self::POST_ID, Post::POST_ID);
     }
 }

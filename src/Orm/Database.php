@@ -28,7 +28,7 @@ class Database extends Connection
      * Count of active transactions.
      * @var int
      */
-    public int $transactionCount = 0;
+    protected int $transactionCount = 0;
 
     /**
      * @var Database|null

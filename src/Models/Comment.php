@@ -9,7 +9,7 @@ namespace Dbout\WpOrm\Models;
 use Carbon\Carbon;
 use Dbout\WpOrm\Builders\CommentBuilder;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method Comment setCommentAuthor(?string $author)
@@ -89,27 +89,27 @@ class Comment extends AbstractModel
     ];
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
+        return $this->belongsTo(User::class, self::USER_ID, User::USER_ID);
     }
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function post(): HasOne
+    public function post(): BelongsTo
     {
-        return $this->hasOne(Post::class, Post::POST_ID, self::POST_ID);
+        return $this->belongsTo(Post::class, self::POST_ID, Post::POST_ID);
     }
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function parent(): HasOne
+    public function parent(): BelongsTo
     {
-        return $this->hasOne(Comment::class, Comment::COMMENT_ID, self::PARENT);
+        return $this->belongsTo(Comment::class, self::PARENT, Comment::COMMENT_ID);
     }
 
     /**
