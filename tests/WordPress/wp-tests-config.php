@@ -9,7 +9,7 @@ define('ABSPATH', dirname(__DIR__, 2) . '/web/wordpress/');
 /** Test database settings */
 define('DB_NAME', getenv('MYSQL_DATABASE') ?: 'wordpress_test');
 define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASSWORD', getenv('MYSQL_ROOT_PASSWORD') ?: 'root');
+define('DB_PASSWORD', getenv('MYSQL_ROOT_PASSWORD') !== false ? getenv('MYSQL_ROOT_PASSWORD') : 'root');
 define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1:3307');
 define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
