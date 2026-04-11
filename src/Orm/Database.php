@@ -131,7 +131,7 @@ class Database extends Connection
     }
 
     /**
-     * A hacky way to emulate bind parameters into SQL query.
+     * Bind parameters into SQL query using $wpdb->prepare().
      *
      * @param string|null $query
      * @param array $bindings
@@ -139,24 +139,38 @@ class Database extends Connection
      */
     private function bindParams(?string $query, array $bindings): string
     {
-        $query = \str_replace('"', '`', (string)$query);
+        $query = (string) $query;
         $bindings = $this->prepareBindings($bindings);
         if ($bindings === []) {
             return $query;
         }
 
-        $bindings = \array_map(function ($replace) {
-            if (\is_string($replace)) {
-                $replace = "'" . esc_sql($replace) . "'";
-            } elseif ($replace === null) {
-                $replace = "null";
+        $parts = \explode('?', \str_replace('%', '%%', $query));
+        $sql = $parts[0];
+        $prepareBindings = [];
+
+        foreach ($bindings as $index => $value) {
+            if ($value === null) {
+                $sql .= 'null';
+            } elseif (\is_int($value)) {
+                $sql .= '%d';
+                $prepareBindings[] = $value;
+            } elseif (\is_float($value)) {
+                $sql .= '%f';
+                $prepareBindings[] = $value;
+            } else {
+                $sql .= '%s';
+                $prepareBindings[] = $value;
             }
 
-            return $replace;
-        }, $bindings);
+            $sql .= $parts[$index + 1] ?? '';
+        }
 
-        $query = \str_replace(['%', '?'], ['%%', '%s'], $query);
-        return \vsprintf($query, $bindings);
+        if ($prepareBindings === []) {
+            return $sql;
+        }
+
+        return $this->db->prepare($sql, $prepareBindings);
     }
 
     /**
