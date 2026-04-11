@@ -127,6 +127,25 @@ abstract class TestCase extends \WP_UnitTestCase
     }
 
     /**
+     * @param string $table
+     * @param string $pkColumn
+     * @param string $pkValue
+     * @return void
+     */
+    public function assertLastQueryBelongsToRelation(string $table, string $pkColumn, string $pkValue): void
+    {
+        $table = sprintf('#TABLE_PREFIX#%s', $table);
+        $this->assertLastQueryEquals(
+            sprintf(
+                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = %3\$s limit 1",
+                $table,
+                $pkColumn,
+                $pkValue
+            )
+        );
+    }
+
+    /**
      * @param string $query
      * @param string $message
      * @return void
