@@ -13,8 +13,8 @@ use Dbout\WpOrm\Concerns\HasMetas;
 use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Orm\AbstractModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 
 /**
@@ -122,11 +122,11 @@ class Post extends AbstractModel implements WithMetaModelInterface
     protected $table = 'posts';
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function author(): HasOne
+    public function author(): BelongsTo
     {
-        return $this->hasOne(User::class, User::USER_ID, self::AUTHOR);
+        return $this->belongsTo(User::class, self::AUTHOR, User::USER_ID);
     }
 
     /**
@@ -138,11 +138,11 @@ class Post extends AbstractModel implements WithMetaModelInterface
     }
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function parent(): HasOne
+    public function parent(): BelongsTo
     {
-        return $this->hasOne(Post::class, Post::POST_ID, self::PARENT);
+        return $this->belongsTo(Post::class, self::PARENT, Post::POST_ID);
     }
 
     /**
