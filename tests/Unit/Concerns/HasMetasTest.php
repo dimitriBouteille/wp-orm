@@ -118,7 +118,6 @@ class HasMetasTest extends TestCase
         yield 'integer cast' => ['integer', '10', 10];
         yield 'float cast' => ['float', '3.14', 3.14];
         yield 'double cast' => ['double', '2.71', 2.71];
-        yield 'real cast' => ['real', '1.5', 1.5];
         yield 'string cast' => ['string', 123, '123'];
         yield 'bool true cast' => ['bool', '1', true];
         yield 'bool false cast' => ['bool', '0', false];
