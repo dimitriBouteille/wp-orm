@@ -318,7 +318,7 @@ trait HasMetas
      * @param string|null $types
      * @return bool
      */
-    public function metaHasCast(string $key, string $types = null): bool
+    public function metaHasCast(string $key, ?string $types = null): bool
     {
         if (array_key_exists($key, $this->getMetaCasts())) {
             return !$types || in_array($this->getMetaCastType($key), (array)$types, true);
