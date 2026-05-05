@@ -253,4 +253,66 @@ class PostBuilderTest extends TestCase
 
         $this->assertCount(2, $results);
     }
+
+    /**
+     * @covers PostBuilder::joinToMeta
+     * @return void
+     */
+    public function testJoinToMetaRejectsInvalidIdentifier(): void
+    {
+        $this->expectException(WpOrmException::class);
+        $this->expectExceptionMessageMatches('/Invalid meta key/');
+
+        Post::query()->joinToMeta("color'; DROP TABLE wp_posts; --");
+    }
+
+    /**
+     * @covers PostBuilder::addMetaToSelect
+     * @return void
+     */
+    public function testAddMetaToSelectRejectsInvalidAlias(): void
+    {
+        $this->expectException(WpOrmException::class);
+        $this->expectExceptionMessageMatches('/Invalid meta select alias/');
+
+        Post::query()->addMetaToSelect('color', 'bad alias');
+    }
+
+    /**
+     * @covers PostBuilder::addMetaToFilter
+     * @return void
+     */
+    public function testAddMetaToFilterRejectsInvalidIdentifier(): void
+    {
+        $this->expectException(WpOrmException::class);
+        $this->expectExceptionMessageMatches('/Invalid meta key/');
+
+        Post::query()->addMetaToFilter('1invalid', 'value');
+    }
+
+    /**
+     * @covers PostBuilder::joinToMeta
+     * @return void
+     */
+    public function testJoinToMetaUsesBoundMetaKeyValue(): void
+    {
+        $post = new Post();
+        $post->setPostTitle('Bound binding test');
+        $post->setPostName('bound-binding-test');
+        $post->setPostType('post');
+        $this->assertTrue($post->save());
+        $post->setMeta('color', "red'; DROP TABLE wp_postmeta; --");
+
+        $results = Post::query()
+            ->addMetaToSelect('color')
+            ->where(Post::POST_ID, $post->getId())
+            ->get();
+
+        $first = $results->first();
+        $this->assertNotNull($first);
+        $this->assertEquals(
+            "red'; DROP TABLE wp_postmeta; --",
+            $first->getAttribute('color_value')
+        );
+    }
 }
