@@ -234,6 +234,60 @@ class HasMetasTest extends TestCase
      * @covers HasMetas::getMetaValue
      * @uses Post
      */
+    public function testGetMetaValueWithDecimalCast(): void
+    {
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'price' => 'decimal:2',
+                'ratio' => 'decimal:4',
+            ];
+        };
+
+        $model = new $object();
+        $model->setPostTitle(__FUNCTION__);
+        $model->save();
+        $model->setMeta('price', '12.3456');
+        $model->setMeta('ratio', '0.5');
+
+        $this->assertSame('12.35', $model->getMetaValue('price'));
+        $this->assertSame('0.5000', $model->getMetaValue('ratio'));
+    }
+
+    /**
+     * @return void
+     * @covers HasMetas::getMetaValue
+     * @uses Post
+     */
+    public function testGetMetaValueWithCustomDatetimeCasts(): void
+    {
+        $object = new class () extends Post {
+            protected array $metaCasts = [
+                'published_at' => 'datetime:Y-m-d',
+                'archived_at' => 'immutable_datetime:Y-m-d H:i:s',
+            ];
+        };
+
+        $model = new $object();
+        $model->setPostTitle(__FUNCTION__);
+        $model->save();
+        $model->setMeta('published_at', '2024-03-12 14:25:00');
+        $model->setMeta('archived_at', '2024-04-01 09:00:00');
+
+        /** @var Carbon $published */
+        $published = $model->getMetaValue('published_at');
+        $this->assertInstanceOf(Carbon::class, $published);
+        $this->assertEquals('2024-03-12 14:25:00', $published->format('Y-m-d H:i:s'));
+
+        $archived = $model->getMetaValue('archived_at');
+        $this->assertInstanceOf(\Carbon\CarbonImmutable::class, $archived);
+        $this->assertEquals('2024-04-01 09:00:00', $archived->format('Y-m-d H:i:s'));
+    }
+
+    /**
+     * @return void
+     * @covers HasMetas::getMetaValue
+     * @uses Post
+     */
     public function testGetMetaValueWithInvalidCasts(): void
     {
         $object = new class () extends Post {
