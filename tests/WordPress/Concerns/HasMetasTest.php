@@ -35,7 +35,52 @@ class HasMetasTest extends TestCase
         $this->assertEquals($createMeta->getId(), $meta->getId());
         $this->assertEquals($createMeta->getValue(), $meta->getValue());
         $this->assertEquals('Norman FOSTER', $meta->getValue());
+        $this->assertEquals('author', $meta->getMetaKey());
+    }
+
+    /**
+     * @return void
+     * @covers AbstractMeta::getMetaKey
+     * @covers AbstractMeta::setMetaKey
+     * @uses Post
+     */
+    public function testGetAndSetMetaKey(): void
+    {
+        $model = new Post();
+        $model->setPostTitle(__FUNCTION__);
+        $model->save();
+        $model->setMeta('author', 'Norman FOSTER');
+
+        $meta = $model->getMeta('author');
+        $this->assertInstanceOf(AbstractMeta::class, $meta);
+        $this->assertEquals('author', $meta->getMetaKey());
+
+        $meta->setMetaKey('renamed_author');
+        $this->assertEquals('renamed_author', $meta->getMetaKey());
+    }
+
+    /**
+     * @return void
+     * @covers AbstractMeta::getKey
+     * @covers AbstractMeta::setKey
+     * @uses Post
+     */
+    public function testDeprecatedGetAndSetKeyStillWork(): void
+    {
+        $model = new Post();
+        $model->setPostTitle(__FUNCTION__);
+        $model->save();
+        $model->setMeta('author', 'Norman FOSTER');
+
+        $meta = $model->getMeta('author');
+        $this->assertInstanceOf(AbstractMeta::class, $meta);
+
+        // Deprecated API must keep returning the meta key for BC.
         $this->assertEquals('author', $meta->getKey());
+
+        $meta->setKey('renamed_author');
+        $this->assertEquals('renamed_author', $meta->getKey());
+        $this->assertEquals('renamed_author', $meta->getMetaKey());
     }
 
     /**
