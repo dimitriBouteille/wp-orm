@@ -233,7 +233,6 @@ trait HasMetas
             case 'int':
             case 'integer':
                 return (int)$value;
-            case 'real':
             case 'float':
             case 'double':
                 return (float)$value;
