@@ -122,6 +122,9 @@ class HasMetasTest extends TestCase
         yield 'bool true cast' => ['bool', '1', true];
         yield 'bool false cast' => ['bool', '0', false];
         yield 'boolean cast' => ['boolean', '1', true];
+        yield 'decimal cast (2 digits)' => ['decimal:2', '3.14159', '3.14'];
+        yield 'decimal cast (4 digits)' => ['decimal:4', '3.1', '3.1000'];
+        yield 'decimal cast (0 digits)' => ['decimal:0', '3.7', '4'];
     }
 
     /**
@@ -169,6 +172,10 @@ class HasMetasTest extends TestCase
         yield 'date' => ['date'];
         yield 'datetime' => ['datetime'];
         yield 'immutable_date' => ['immutable_date'];
+        yield 'immutable_datetime' => ['immutable_datetime'];
         yield 'timestamp' => ['timestamp'];
+        yield 'decimal' => ['decimal:2'];
+        yield 'custom_datetime' => ['datetime:Y-m-d'];
+        yield 'immutable_custom_datetime' => ['immutable_datetime:Y-m-d'];
     }
 }

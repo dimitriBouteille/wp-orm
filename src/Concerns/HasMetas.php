@@ -35,12 +35,16 @@ trait HasMetas
         'bool',
         'boolean',
         'collection',
+        'custom_datetime',
         'date',
         'datetime',
+        'decimal',
         'double',
         'float',
         'real',
+        'immutable_custom_datetime',
         'immutable_date',
+        'immutable_datetime',
         'int',
         'integer',
         'json',
@@ -236,6 +240,8 @@ trait HasMetas
             case 'float':
             case 'double':
                 return (float)$value;
+            case 'decimal':
+                return $this->asDecimal($value, (int)(explode(':', (string)$this->getMetaCasts()[$key], 2)[1] ?? 0));
             case 'string':
                 return (string)$value;
             case 'bool':
@@ -251,9 +257,13 @@ trait HasMetas
             case 'date':
                 return $this->asDate($value);
             case 'datetime':
+            case 'custom_datetime':
                 return $this->asDateTime($value);
             case 'immutable_date':
                 return $this->asDate($value)->toImmutable();
+            case 'immutable_datetime':
+            case 'immutable_custom_datetime':
+                return $this->asDateTime($value)->toImmutable();
             case 'timestamp':
                 return $this->asTimestamp($value);
         }
