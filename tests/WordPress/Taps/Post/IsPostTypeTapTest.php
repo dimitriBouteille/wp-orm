@@ -176,21 +176,6 @@ class IsPostTypeTapTest extends TestCase
      * @return void
      * @covers IsPostTypeTap::__invoke
      */
-    public function testGeneratesCorrectSqlQuery(): void
-    {
-        Post::query()
-            ->tap(new IsPostTypeTap('product'))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `post_type` = 'product'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsPostTypeTap::__invoke
-     */
     public function testDistinguishesBetweenDifferentPostTypes(): void
     {
         self::factory()->post->create([

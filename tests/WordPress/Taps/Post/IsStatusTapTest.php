@@ -178,36 +178,6 @@ class IsStatusTapTest extends TestCase
      * @return void
      * @covers IsStatusTap::__invoke
      */
-    public function testGeneratesCorrectSqlQueryForPublishWithEnum(): void
-    {
-        Post::query()
-            ->tap(new IsStatusTap(PostStatus::Publish))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `post_status` = 'publish'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsStatusTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryForPublishWithString(): void
-    {
-        Post::query()
-            ->tap(new IsStatusTap('publish'))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `post_status` = 'publish'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsStatusTap::__invoke
-     */
     public function testDistinguishesBetweenDifferentStatuses(): void
     {
         self::factory()->post->create([

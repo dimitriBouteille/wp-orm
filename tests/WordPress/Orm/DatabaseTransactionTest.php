@@ -8,11 +8,15 @@ namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Orm\Database;
+use Dbout\WpOrm\Tests\WordPress\Support\CreatesCustomTable;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Blueprint;
 
 class DatabaseTransactionTest extends TestCase
 {
+    use CreatesCustomTable;
+
     private string $tableName = '';
     private AbstractModel $model;
     private Database $db;
@@ -22,19 +26,13 @@ class DatabaseTransactionTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        global $wpdb;
+        parent::setUpBeforeClass();
 
-        $tableName = $wpdb->prefix . 'document';
-        $sql = "CREATE TABLE $tableName (
-            id INT NOT NULL AUTO_INCREMENT,
-            name varchar(100) NOT NULL,
-            url varchar(55) DEFAULT '' NOT NULL,
-            PRIMARY KEY  (id)
-        );";
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta($sql);
-        define('SAVEQUERIES', true);
+        self::createCustomTable('document', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->string('url', 55)->default('');
+        });
     }
 
     /**
@@ -133,8 +131,12 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testBeginTransaction(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
-        $this->assertLastQueryEquals('START TRANSACTION;');
+        $this->assertSame($startLevel + 1, $this->db->transactionLevel());
+
+        // Clean up so the next test does not inherit an open transaction.
+        $this->db->rollBack();
     }
 
     /**
@@ -144,9 +146,10 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testRollback(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
         $this->db->rollBack();
-        $this->assertLastQueryEquals('ROLLBACK;');
+        $this->assertSame($startLevel, $this->db->transactionLevel());
     }
 
     /**
@@ -156,9 +159,10 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testCommit(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
         $this->db->commit();
-        $this->assertLastQueryEquals('COMMIT;');
+        $this->assertSame($startLevel, $this->db->transactionLevel());
     }
 
     /**

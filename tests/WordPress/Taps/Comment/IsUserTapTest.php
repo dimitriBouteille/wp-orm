@@ -288,45 +288,6 @@ class IsUserTapTest extends TestCase
      * @return void
      * @covers IsUserTap::__invoke
      */
-    public function testGeneratesCorrectSqlQueryWithInteger(): void
-    {
-        $userId = 42;
-
-        Comment::query()
-            ->tap(new IsUserTap($userId))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `user_id` = 42"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsUserTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryWithUserModel(): void
-    {
-        $userId = self::factory()->user->create([
-            'user_login' => 'john_doe',
-            'user_email' => 'john@example.com',
-        ]);
-
-        $user = User::find($userId);
-
-        Comment::query()
-            ->tap(new IsUserTap($user))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            sprintf("select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `user_id` = %d", $userId)
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsUserTap::__invoke
-     */
     public function testDistinguishesBetweenDifferentUsers(): void
     {
         $user1Id = self::factory()->user->create([

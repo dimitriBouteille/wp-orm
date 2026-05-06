@@ -196,36 +196,6 @@ class UserBuilderTest extends TestCase
 
     /**
      * @return void
-     * @covers UserBuilder::whereEmail
-     */
-    public function testWhereEmailGeneratesCorrectSql(): void
-    {
-        User::query()
-            ->whereEmail('john@example.com')
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#users`.* from `#TABLE_PREFIX#users` where `user_email` = 'john@example.com'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers UserBuilder::whereLogin
-     */
-    public function testWhereLoginGeneratesCorrectSql(): void
-    {
-        User::query()
-            ->whereLogin('john_doe')
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#users`.* from `#TABLE_PREFIX#users` where `user_login` = 'john_doe'"
-        );
-    }
-
-    /**
-     * @return void
      * @covers UserBuilder::whereEmails
      */
     public function testWhereEmailsWithSingleEmail(): void

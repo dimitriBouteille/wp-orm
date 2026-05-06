@@ -91,72 +91,21 @@ abstract class TestCase extends \WP_UnitTestCase
     }
 
     /**
-     * @param string $table
-     * @param string $whereColumn
-     * @param string $whereValue
-     * @return void
-     */
-    protected function assertFindLastQuery(string $table, string $whereColumn, string $whereValue): void
-    {
-        $this->assertLastQueryEquals(
-            sprintf(
-                "select `#TABLE_PREFIX#%s`.* from `#TABLE_PREFIX#%s` where `%s` = '%s' limit 1",
-                $table,
-                $table,
-                $whereColumn,
-                $whereValue
-            )
-        );
-    }
-
-    /**
-     * @param string $table
-     * @param string $pkColumn
-     * @param string $pkValue
-     * @return void
-     */
-    public function assertLastQueryHasOneRelation(string $table, string $pkColumn, string $pkValue): void
-    {
-        $table = sprintf('#TABLE_PREFIX#%s', $table);
-        $this->assertLastQueryEquals(
-            sprintf(
-                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = %3\$s and `%1\$s`.`%2\$s` is not null limit 1",
-                $table,
-                $pkColumn,
-                $pkValue
-            )
-        );
-    }
-
-    /**
-     * @param string $table
-     * @param string $pkColumn
-     * @param string $pkValue
-     * @return void
-     */
-    public function assertLastQueryBelongsToRelation(string $table, string $pkColumn, string $pkValue): void
-    {
-        $table = sprintf('#TABLE_PREFIX#%s', $table);
-        $this->assertLastQueryEquals(
-            sprintf(
-                "select `%1\$s`.* from `%1\$s` where `%1\$s`.`%2\$s` = %3\$s limit 1",
-                $table,
-                $pkColumn,
-                $pkValue
-            )
-        );
-    }
-
-    /**
-     * @param string $query
+     * Assert that the last executed SQL contains a substring.
+     *
+     * Use this only when the SQL shape is itself part of the contract
+     * (custom grammar, security regression tests). For most tests, prefer
+     * asserting on the result rows — see TESTS_AUDIT.md point #1.
+     *
+     * @param string $needle
      * @param string $message
      * @return void
      */
-    public function assertLastQueryEquals(string $query, string $message = ''): void
+    public function assertLastQueryContains(string $needle, string $message = ''): void
     {
         global $wpdb;
-        $query = str_replace('#TABLE_PREFIX#', $wpdb->prefix, $query);
-        self::assertEquals($query, $wpdb->last_query, $message);
+        $needle = str_replace('#TABLE_PREFIX#', $wpdb->prefix, $needle);
+        self::assertStringContainsString($needle, (string) $wpdb->last_query, $message);
     }
 
     /**

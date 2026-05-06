@@ -221,45 +221,6 @@ class IsAuthorTapTest extends TestCase
      * @return void
      * @covers IsAuthorTap::__invoke
      */
-    public function testGeneratesCorrectSqlQueryWithInteger(): void
-    {
-        $authorId = 42;
-
-        Post::query()
-            ->tap(new IsAuthorTap($authorId))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `post_author` = 42"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsAuthorTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryWithUserModel(): void
-    {
-        $authorId = self::factory()->user->create([
-            'user_login' => 'john_doe',
-            'user_email' => self::EMAIL_JOHN,
-        ]);
-
-        $user = User::find($authorId);
-
-        Post::query()
-            ->tap(new IsAuthorTap($user))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            sprintf("select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `post_author` = %d", $authorId)
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsAuthorTap::__invoke
-     */
     public function testDistinguishesBetweenDifferentAuthors(): void
     {
         $author1 = self::factory()->user->create([

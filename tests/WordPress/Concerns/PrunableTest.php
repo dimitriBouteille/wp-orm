@@ -8,19 +8,23 @@ namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
 use Carbon\Carbon;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Dbout\WpOrm\Orm\Database;
+use Dbout\WpOrm\Tests\WordPress\Support\CreatesCustomTable;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Schema\Blueprint;
 
 class PrunableTest extends TestCase
 {
+    use CreatesCustomTable;
+
     /**
      * @inheritDoc
      */
     public static function setUpBeforeClass(): void
     {
-        Database::getInstance()->getSchemaBuilder()->create('sales_payment', function (Blueprint $table) {
+        parent::setUpBeforeClass();
+
+        self::createCustomTable('sales_payment', function (Blueprint $table) {
             $table->id();
             $table->date('created_at');
             $table->string('method');

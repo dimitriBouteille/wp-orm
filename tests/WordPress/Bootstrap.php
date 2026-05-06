@@ -24,6 +24,15 @@ class Bootstrap
         }
 
         /**
+         * Enable wpdb query logging so tests can introspect $wpdb->last_query
+         * and $wpdb->queries regardless of the order in which test classes run.
+         * @see https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/#savequeries
+         */
+        if (!defined('SAVEQUERIES')) {
+            define('SAVEQUERIES', true);
+        }
+
+        /**
          * Load PHPUnit Polyfills for the WP testing suite.
          * @see https://github.com/WordPress/wordpress-develop/pull/1563/
          */

@@ -93,6 +93,82 @@ The WordPress test environment is managed entirely through Composer:
 
 Each test runs inside a database transaction that is rolled back after the test completes, ensuring full isolation between tests.
 
+## Writing assertions
+
+Tests should assert on **observable behavior** (returned models, attribute values, row counts), not on the SQL string Eloquent emits. Tying tests to a specific generated SQL string makes them fragile across Eloquent grammar changes without catching real regressions.
+
+`TestCase` exposes a single SQL-introspection helper, `assertLastQueryContains(string $needle)`, intended for the rare cases where the SQL shape is itself part of the contract:
+
+- **Custom grammar overrides** — e.g. the `WordPressGrammar::wrapJsonSelector` idiom (`json_unquote(json_extract(...))`) must be pinned because it *is* what the class promises to produce.
+- **Security regression tests** — pinning that a value reaches the SQL via a binding rather than as a literal.
+
+For everything else, prefer fixture-based assertions:
+
+```php
+// ❌ Couples the test to grammar formatting
+$this->assertLastQueryContains("where `post_type` = 'product'");
+
+// ✅ Asserts the actual filtering contract
+$productId = self::factory()->post->create(['post_type' => 'product']);
+self::factory()->post->create(['post_type' => 'page']);
+
+$results = Post::query()->tap(new IsPostTypeTap('product'))->get();
+$this->assertCount(1, $results);
+$this->assertEquals($productId, $results->first()->getId());
+```
+
+## Test groups
+
+A handful of cross-cutting `@group` annotations are in place so subsets of
+the suite can be targeted in isolation:
+
+- `@group security` — regression tests pinning hardening (SQL injection
+  rejection in `joinToMeta` / `addMetaTo*`, bound parameter usage).
+- `@group multisite` — tests that require the suite to be booted with
+  `WP_MULTISITE=1`. Also auto-skipped when not in multisite mode via the
+  `RunsInMultisite` trait.
+
+Run a single group locally:
+
+```bash
+vendor/bin/phpunit -c phpunit-wp.xml --group security
+```
+
+## Multisite
+
+Multisite is currently **not supported** at the ORM level (see README and
+the v6 milestone). The test suite still has scaffolding so that
+multisite-only tests can be written and so the package is exercised
+against a multisite WordPress install in CI.
+
+To run the suite in multisite mode locally:
+
+```bash
+WP_MULTISITE=1 ./run-wp-tests.sh
+```
+
+A test class that should run only in multisite mode adds the
+`RunsInMultisite` trait — single-site runs auto-skip:
+
+```php
+use Dbout\WpOrm\Tests\WordPress\Support\RunsInMultisite;
+use Dbout\WpOrm\Tests\WordPress\TestCase;
+
+class MyMultisiteTest extends TestCase
+{
+    use RunsInMultisite;
+
+    public function testInsideASubsite(): void
+    {
+        $value = $this->inBlog($subsiteId, fn () => get_option('blogname'));
+        $this->assertSame('subsite', $value);
+    }
+}
+```
+
+The dedicated `wp-test-multisite` CI job runs the full WP test suite on
+WordPress latest with `WP_MULTISITE=1`.
+
 ## Important Notes
 
 - WordPress tests require **PHPUnit 9** only (WordPress limitation)

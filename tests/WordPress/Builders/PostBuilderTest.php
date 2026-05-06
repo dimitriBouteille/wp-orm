@@ -9,109 +9,84 @@ namespace Dbout\WpOrm\Tests\WordPress\Builders;
 use Dbout\WpOrm\Builders\PostBuilder;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Models\Post;
+use Dbout\WpOrm\Tests\WordPress\Support\BuildsTestPost;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 
 class PostBuilderTest extends TestCase
 {
+    use BuildsTestPost;
+
     /**
+     * @param string|null $alias
+     * @param string $expectedAttribute
      * @covers PostBuilder::joinToMeta
      * @covers PostBuilder::addMetaToSelect
+     * @dataProvider providerAddMetaToSelect
      * @throws WpOrmException
      * @return void
      */
-    public function testAddMetaToSelect(): void
+    public function testAddMetaToSelect(?string $alias, string $expectedAttribute): void
     {
-        $post = new Post();
-        $post->setPostTitle('Meta select test');
-        $post->setPostName('meta-select-test');
-        $post->setPostType('post');
-        $this->assertTrue($post->save());
-        $post->setMeta('color', 'blue');
+        $post = $this->aPostWithMetas(['color' => 'blue'], 'Add meta to select');
 
         /** @var Post $result */
         $result = Post::query()
-            ->addMetaToSelect('color')
+            ->addMetaToSelect('color', $alias)
             ->where(Post::POST_ID, $post->getId())
             ->first();
 
         $this->assertNotNull($result);
-        $this->assertEquals('blue', $result->getAttribute('color_value'));
+        $this->assertEquals('blue', $result->getAttribute($expectedAttribute));
     }
 
     /**
-     * @covers PostBuilder::addMetaToSelect
-     * @throws WpOrmException
-     * @return void
+     * @return \Generator<string, array{?string, string}>
      */
-    public function testAddMetaToSelectWithAlias(): void
+    public static function providerAddMetaToSelect(): \Generator
     {
-        $post = new Post();
-        $post->setPostTitle('Meta alias test');
-        $post->setPostName('meta-alias-test');
-        $post->setPostType('post');
-        $this->assertTrue($post->save());
-        $post->setMeta('color', 'red');
-
-        /** @var Post $result */
-        $result = Post::query()
-            ->addMetaToSelect('color', 'my_color')
-            ->where(Post::POST_ID, $post->getId())
-            ->first();
-
-        $this->assertNotNull($result);
-        $this->assertEquals('red', $result->getAttribute('my_color'));
+        yield 'default alias' => [null, 'color_value'];
+        yield 'custom alias'  => ['my_color', 'my_color'];
     }
 
     /**
+     * @param array<int|string, string> $argument
+     * @param array<string, string> $aliasFor
      * @covers PostBuilder::addMetasToSelect
+     * @dataProvider providerAddMetasToSelect
      * @throws WpOrmException
      * @return void
      */
-    public function testAddMetasToSelect(): void
+    public function testAddMetasToSelect(array $argument, array $aliasFor): void
     {
-        $post = new Post();
-        $post->setPostTitle('Multi meta test');
-        $post->setPostName('multi-meta-test');
-        $post->setPostType('post');
-        $this->assertTrue($post->save());
-        $post->setMeta('color', 'green');
-        $post->setMeta('size', 'large');
+        $post = $this->aPostWithMetas([
+            'color' => 'green',
+            'size' => 'large',
+        ], 'Add metas to select');
 
         /** @var Post $result */
         $result = Post::query()
-            ->addMetasToSelect(['color', 'size'])
+            ->addMetasToSelect($argument)
             ->where(Post::POST_ID, $post->getId())
             ->first();
 
         $this->assertNotNull($result);
-        $this->assertEquals('green', $result->getAttribute('color_value'));
-        $this->assertEquals('large', $result->getAttribute('size_value'));
+        $this->assertEquals('green', $result->getAttribute($aliasFor['color']));
+        $this->assertEquals('large', $result->getAttribute($aliasFor['size']));
     }
 
     /**
-     * @covers PostBuilder::addMetasToSelect
-     * @throws WpOrmException
-     * @return void
+     * @return \Generator<string, array{array<int|string, string>, array<string, string>}>
      */
-    public function testAddMetasToSelectWithAliases(): void
+    public static function providerAddMetasToSelect(): \Generator
     {
-        $post = new Post();
-        $post->setPostTitle('Multi meta alias test');
-        $post->setPostName('multi-meta-alias-test');
-        $post->setPostType('post');
-        $this->assertTrue($post->save());
-        $post->setMeta('color', 'yellow');
-        $post->setMeta('size', 'small');
-
-        /** @var Post $result */
-        $result = Post::query()
-            ->addMetasToSelect(['my_color' => 'color', 'my_size' => 'size'])
-            ->where(Post::POST_ID, $post->getId())
-            ->first();
-
-        $this->assertNotNull($result);
-        $this->assertEquals('yellow', $result->getAttribute('my_color'));
-        $this->assertEquals('small', $result->getAttribute('my_size'));
+        yield 'list (default aliases)' => [
+            ['color', 'size'],
+            ['color' => 'color_value', 'size' => 'size_value'],
+        ];
+        yield 'map (custom aliases)' => [
+            ['my_color' => 'color', 'my_size' => 'size'],
+            ['color' => 'my_color', 'size' => 'my_size'],
+        ];
     }
 
     /**
@@ -122,27 +97,16 @@ class PostBuilderTest extends TestCase
      */
     public function testAddMetaToFilter(): void
     {
-        $post1 = new Post();
-        $post1->setPostTitle('Filter test 1');
-        $post1->setPostName('filter-test-1');
-        $post1->setPostType('post');
-        $this->assertTrue($post1->save());
-        $post1->setMeta('priority', 'high');
-
-        $post2 = new Post();
-        $post2->setPostTitle('Filter test 2');
-        $post2->setPostName('filter-test-2');
-        $post2->setPostType('post');
-        $this->assertTrue($post2->save());
-        $post2->setMeta('priority', 'low');
+        $highPost = $this->aPostWithMetas(['priority' => 'high'], 'Filter test 1');
+        $lowPost = $this->aPostWithMetas(['priority' => 'low'], 'Filter test 2');
 
         $results = Post::query()
             ->addMetaToFilter('priority', 'high')
             ->get();
 
         $ids = $results->pluck(Post::POST_ID)->toArray();
-        $this->assertContains($post1->getId(), $ids);
-        $this->assertNotContains($post2->getId(), $ids);
+        $this->assertContains($highPost->getId(), $ids);
+        $this->assertNotContains($lowPost->getId(), $ids);
     }
 
     /**
@@ -152,27 +116,16 @@ class PostBuilderTest extends TestCase
      */
     public function testAddMetaToFilterWithOperator(): void
     {
-        $post1 = new Post();
-        $post1->setPostTitle('Operator test 1');
-        $post1->setPostName('operator-test-1');
-        $post1->setPostType('post');
-        $this->assertTrue($post1->save());
-        $post1->setMeta('level', 'B');
-
-        $post2 = new Post();
-        $post2->setPostTitle('Operator test 2');
-        $post2->setPostName('operator-test-2');
-        $post2->setPostType('post');
-        $this->assertTrue($post2->save());
-        $post2->setMeta('level', 'A');
+        $bPost = $this->aPostWithMetas(['level' => 'B'], 'Operator test 1');
+        $aPost = $this->aPostWithMetas(['level' => 'A'], 'Operator test 2');
 
         $results = Post::query()
             ->addMetaToFilter('level', 'A', '>')
             ->get();
 
         $ids = $results->pluck(Post::POST_ID)->toArray();
-        $this->assertContains($post1->getId(), $ids);
-        $this->assertNotContains($post2->getId(), $ids);
+        $this->assertContains($bPost->getId(), $ids);
+        $this->assertNotContains($aPost->getId(), $ids);
     }
 
     /**
@@ -182,12 +135,7 @@ class PostBuilderTest extends TestCase
      */
     public function testJoinToMetaDoesNotDuplicate(): void
     {
-        $post = new Post();
-        $post->setPostTitle('Duplicate join test');
-        $post->setPostName('duplicate-join-test');
-        $post->setPostType('post');
-        $this->assertTrue($post->save());
-        $post->setMeta('color', 'blue');
+        $this->aPostWithMetas(['color' => 'blue'], 'Duplicate join test');
 
         $results = Post::query()
             ->addMetaToSelect('color')
@@ -206,13 +154,10 @@ class PostBuilderTest extends TestCase
      */
     public function testCombineMetaSelectAndFilter(): void
     {
-        $post = new Post();
-        $post->setPostTitle('Combine test');
-        $post->setPostName('combine-test');
-        $post->setPostType('post');
-        $this->assertTrue($post->save());
-        $post->setMeta('color', 'blue');
-        $post->setMeta('size', 'large');
+        $post = $this->aPostWithMetas([
+            'color' => 'blue',
+            'size' => 'large',
+        ], 'Combine test');
 
         $results = Post::query()
             ->addMetaToSelect('size')
@@ -232,18 +177,8 @@ class PostBuilderTest extends TestCase
      */
     public function testJoinToMetaWithLeftJoin(): void
     {
-        $postWith = new Post();
-        $postWith->setPostTitle('With meta');
-        $postWith->setPostName('with-meta');
-        $postWith->setPostType('post');
-        $this->assertTrue($postWith->save());
-        $postWith->setMeta('badge', 'gold');
-
-        $postWithout = new Post();
-        $postWithout->setPostTitle('Without meta');
-        $postWithout->setPostName('without-meta');
-        $postWithout->setPostType('post');
-        $this->assertTrue($postWithout->save());
+        $postWith = $this->aPostWithMetas(['badge' => 'gold'], 'With meta');
+        $postWithout = $this->aPost('Without meta');
 
         /** @var array $results */
         $results = Post::query()
@@ -255,8 +190,9 @@ class PostBuilderTest extends TestCase
     }
 
     /**
-     * @covers PostBuilder::joinToMeta
      * @return void
+     * @covers PostBuilder::joinToMeta
+     * @group security
      */
     public function testJoinToMetaRejectsInvalidIdentifier(): void
     {
@@ -267,8 +203,9 @@ class PostBuilderTest extends TestCase
     }
 
     /**
-     * @covers PostBuilder::addMetaToSelect
      * @return void
+     * @covers PostBuilder::addMetaToSelect
+     * @group security
      */
     public function testAddMetaToSelectRejectsInvalidAlias(): void
     {
@@ -279,8 +216,9 @@ class PostBuilderTest extends TestCase
     }
 
     /**
-     * @covers PostBuilder::addMetaToFilter
      * @return void
+     * @covers PostBuilder::addMetaToFilter
+     * @group security
      */
     public function testAddMetaToFilterRejectsInvalidIdentifier(): void
     {
@@ -291,17 +229,15 @@ class PostBuilderTest extends TestCase
     }
 
     /**
-     * @covers PostBuilder::joinToMeta
      * @return void
+     * @covers PostBuilder::joinToMeta
+     * @group security
      */
     public function testJoinToMetaUsesBoundMetaKeyValue(): void
     {
-        $post = new Post();
-        $post->setPostTitle('Bound binding test');
-        $post->setPostName('bound-binding-test');
-        $post->setPostType('post');
-        $this->assertTrue($post->save());
-        $post->setMeta('color', "red'; DROP TABLE wp_postmeta; --");
+        $post = $this->aPostWithMetas([
+            'color' => "red'; DROP TABLE wp_postmeta; --",
+        ], 'Bound binding test');
 
         $results = Post::query()
             ->addMetaToSelect('color')

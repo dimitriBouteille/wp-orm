@@ -135,18 +135,4 @@ class IsMimeTypeTapTest extends TestCase
         $this->assertEquals($attachmentId, $first->getId());
     }
 
-    /**
-     * @return void
-     * @covers IsMimeTypeTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQuery(): void
-    {
-        Attachment::query()
-            ->tap(new IsMimeTypeTap(self::MIME_JPEG))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `post_mime_type` = 'image/jpeg' and `post_type` = 'attachment'"
-        );
-    }
 }

@@ -5,3 +5,6 @@ parameters:
         - tests
     excludePaths:
         - tests/WordPress/TestCase.php
+        - tests/stubs
+    scanFiles:
+        - tests/stubs/wp-phpunit.php
