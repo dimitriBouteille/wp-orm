@@ -16,7 +16,6 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 
 - ✅ Support core WordPress models: `Comment`, `Option`, `Post`, `Term`, `TermTaxonomy`, `TermRelationship`, `User`, `PostMeta` and `UserMeta`
 - ✅ Support core WordPress post types: `Article`, `Attachment` and `Page`
-- ✅ Support multisite models: `Site`, `Blog`, `BlogVersion`, `SiteMeta`, `Signup` and `RegistrationLog`
 - ✅ Based on core WordPress database connection (`wpdb` class), no configuration required
 - ✅ Custom functions to filter models with meta
 - ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/eloquent-mutators#attribute-casting))
@@ -27,6 +26,7 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 **Not yet developed but planned in a future version:**
 
 - 🗓️ [Create migration tool with Eloquent](https://github.com/dimitriBouteille/wp-orm/issues/28)
+- 🗓️ Multisite support (network-shared tables and `switch_blog()` handling)
 
 ## Documentation
 
@@ -150,8 +150,8 @@ For everything else (eager loading, scopes, transactions, casts…), see [the El
 > ```
 
 > [!WARNING]
-> **Multisite support is partial.**
-> Models flagged with `protected bool $useBasePrefix = true` (`User`, `UserMeta`, `Site`, `Blog`, `BlogVersion`, `SiteMeta`, `Signup`, `RegistrationLog`) point to tables shared across the network and should keep the base prefix even after `switch_blog()`. The flag is not yet honored, so on a subsite these models fall back to the per-blog prefix and the generated queries can target tables that do not exist. Avoid querying these models inside a subsite context until this is wired up.
+> **Multisite is not supported in this release.**
+> The library does not handle network-shared tables or `switch_blog()`. After a `switch_blog()` call, the connection prefix is not refreshed and models targeting shared tables (`User`, `UserMeta`) may produce incorrect queries on subsites. Multisite support is planned for a future release — track [the milestone](https://github.com/dimitriBouteille/wp-orm/issues) for progress.
 
 ## Testing
 
