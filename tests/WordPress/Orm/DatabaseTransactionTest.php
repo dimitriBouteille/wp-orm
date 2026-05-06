@@ -8,11 +8,15 @@ namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Orm\Database;
+use Dbout\WpOrm\Tests\WordPress\Support\CreatesCustomTable;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Blueprint;
 
 class DatabaseTransactionTest extends TestCase
 {
+    use CreatesCustomTable;
+
     private string $tableName = '';
     private AbstractModel $model;
     private Database $db;
@@ -22,18 +26,13 @@ class DatabaseTransactionTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        global $wpdb;
+        parent::setUpBeforeClass();
 
-        $tableName = $wpdb->prefix . 'document';
-        $sql = "CREATE TABLE $tableName (
-            id INT NOT NULL AUTO_INCREMENT,
-            name varchar(100) NOT NULL,
-            url varchar(55) DEFAULT '' NOT NULL,
-            PRIMARY KEY  (id)
-        );";
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta($sql);
+        self::createCustomTable('document', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->string('url', 55)->default('');
+        });
     }
 
     /**
