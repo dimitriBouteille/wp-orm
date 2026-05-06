@@ -65,11 +65,6 @@ class User extends AbstractModel implements WithMetaModelInterface
     protected $table = 'users';
 
     /**
-     * @inheritdoc
-     */
-    protected bool $useBasePrefix = true;
-
-    /**
      * @inheritDoc
      */
     protected $casts = [

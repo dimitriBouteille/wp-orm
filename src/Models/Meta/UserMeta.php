@@ -28,11 +28,6 @@ class UserMeta extends AbstractMeta
     protected $table = 'usermeta';
 
     /**
-     * @inheritdoc
-     */
-    protected bool $useBasePrefix = true;
-
-    /**
      * @return BelongsTo
      */
     public function user(): BelongsTo

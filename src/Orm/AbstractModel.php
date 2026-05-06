@@ -23,12 +23,6 @@ abstract class AbstractModel extends Model
     protected $guarded = [];
 
     /**
-     * Indicates if the model should use a base prefix for multisite shared tables.
-     * @var bool
-     */
-    protected bool $useBasePrefix = false;
-
-    /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
