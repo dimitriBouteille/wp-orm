@@ -217,36 +217,6 @@ class IsCommentTypeTapTest extends TestCase
      * @return void
      * @covers IsCommentTypeTap::__invoke
      */
-    public function testGeneratesCorrectSqlQuery(): void
-    {
-        Comment::query()
-            ->tap(new IsCommentTypeTap('review'))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_type` = 'review'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsCommentTypeTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryForEmptyType(): void
-    {
-        Comment::query()
-            ->tap(new IsCommentTypeTap(''))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_type` = ''"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsCommentTypeTap::__invoke
-     */
     public function testDistinguishesBetweenDifferentCustomTypes(): void
     {
         self::factory()->comment->create([

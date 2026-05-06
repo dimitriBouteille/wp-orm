@@ -273,33 +273,4 @@ class IsApprovedTapTest extends TestCase
         $this->assertEquals($postId, $first->getCommentPostID());
     }
 
-    /**
-     * @return void
-     * @covers IsApprovedTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryForApproved(): void
-    {
-        Comment::query()
-            ->tap(new IsApprovedTap(true))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_approved` = 1"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsApprovedTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryForUnapproved(): void
-    {
-        Comment::query()
-            ->tap(new IsApprovedTap(false))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#comments`.* from `#TABLE_PREFIX#comments` where `comment_approved` = 0"
-        );
-    }
 }

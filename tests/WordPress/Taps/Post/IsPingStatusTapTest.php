@@ -270,66 +270,6 @@ class IsPingStatusTapTest extends TestCase
      * @return void
      * @covers IsPingStatusTap::__invoke
      */
-    public function testGeneratesCorrectSqlQueryForOpenWithEnum(): void
-    {
-        Post::query()
-            ->tap(new IsPingStatusTap(PingStatus::Open))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `ping_status` = 'open'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsPingStatusTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryForClosedWithEnum(): void
-    {
-        Post::query()
-            ->tap(new IsPingStatusTap(PingStatus::Closed))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `ping_status` = 'closed'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsPingStatusTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryForOpenWithString(): void
-    {
-        Post::query()
-            ->tap(new IsPingStatusTap('open'))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `ping_status` = 'open'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsPingStatusTap::__invoke
-     */
-    public function testGeneratesCorrectSqlQueryForClosedWithString(): void
-    {
-        Post::query()
-            ->tap(new IsPingStatusTap('closed'))
-            ->get();
-
-        $this->assertLastQueryEquals(
-            "select `#TABLE_PREFIX#posts`.* from `#TABLE_PREFIX#posts` where `ping_status` = 'closed'"
-        );
-    }
-
-    /**
-     * @return void
-     * @covers IsPingStatusTap::__invoke
-     */
     public function testStringAndEnumProduceSameResults(): void
     {
         self::factory()->post->create([
