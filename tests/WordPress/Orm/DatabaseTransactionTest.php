@@ -132,8 +132,12 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testBeginTransaction(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
-        $this->assertLastQueryEquals('START TRANSACTION;');
+        $this->assertSame($startLevel + 1, $this->db->transactionLevel());
+
+        // Clean up so the next test does not inherit an open transaction.
+        $this->db->rollBack();
     }
 
     /**
@@ -143,9 +147,10 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testRollback(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
         $this->db->rollBack();
-        $this->assertLastQueryEquals('ROLLBACK;');
+        $this->assertSame($startLevel, $this->db->transactionLevel());
     }
 
     /**
@@ -155,9 +160,10 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testCommit(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
         $this->db->commit();
-        $this->assertLastQueryEquals('COMMIT;');
+        $this->assertSame($startLevel, $this->db->transactionLevel());
     }
 
     /**

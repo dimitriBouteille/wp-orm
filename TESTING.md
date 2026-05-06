@@ -93,6 +93,30 @@ The WordPress test environment is managed entirely through Composer:
 
 Each test runs inside a database transaction that is rolled back after the test completes, ensuring full isolation between tests.
 
+## Writing assertions
+
+Tests should assert on **observable behavior** (returned models, attribute values, row counts), not on the SQL string Eloquent emits. Tying tests to a specific generated SQL string makes them fragile across Eloquent grammar changes without catching real regressions.
+
+`TestCase` exposes a single SQL-introspection helper, `assertLastQueryContains(string $needle)`, intended for the rare cases where the SQL shape is itself part of the contract:
+
+- **Custom grammar overrides** — e.g. the `WordPressGrammar::wrapJsonSelector` idiom (`json_unquote(json_extract(...))`) must be pinned because it *is* what the class promises to produce.
+- **Security regression tests** — pinning that a value reaches the SQL via a binding rather than as a literal.
+
+For everything else, prefer fixture-based assertions:
+
+```php
+// ❌ Couples the test to grammar formatting
+$this->assertLastQueryContains("where `post_type` = 'product'");
+
+// ✅ Asserts the actual filtering contract
+$productId = self::factory()->post->create(['post_type' => 'product']);
+self::factory()->post->create(['post_type' => 'page']);
+
+$results = Post::query()->tap(new IsPostTypeTap('product'))->get();
+$this->assertCount(1, $results);
+$this->assertEquals($productId, $results->first()->getId());
+```
+
 ## Important Notes
 
 - WordPress tests require **PHPUnit 9** only (WordPress limitation)
