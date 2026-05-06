@@ -13,17 +13,17 @@ jobs:
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
         with:
           php-version: "8.3"
           tools: composer:v2
           coverage: xdebug
 
       - name: "Cache Composer downloads"
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -42,7 +42,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ github.token }}
         if: ${{ env.COVERALLS_REPO_TOKEN }}
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
           flag-name: "unit"
@@ -69,17 +69,17 @@ jobs:
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
         with:
           php-version: "8.3"
           tools: composer:v2
           coverage: xdebug
 
       - name: "Cache Composer downloads"
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-wp${{ matrix.wp_version }}-${{ hashFiles('**/composer.lock') }}
@@ -116,7 +116,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ github.token }}
         if: ${{ env.COVERALLS_REPO_TOKEN }}
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
           flag-name: wp-test-$
@@ -139,16 +139,16 @@ jobs:
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
         with:
           php-version: "8.3"
           tools: composer:v2
 
       - name: "Cache Composer downloads"
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-wplatest-${{ hashFiles('**/composer.lock') }}
@@ -185,7 +185,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close parallel build
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           parallel-finished: true
           carryforward: "wp-test-1,wp-test-2,wp-test-3,wp-test-4,wp-test-5,wp-test-6,unit"
