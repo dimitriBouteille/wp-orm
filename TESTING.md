@@ -117,6 +117,23 @@ $this->assertCount(1, $results);
 $this->assertEquals($productId, $results->first()->getId());
 ```
 
+## Test groups
+
+A handful of cross-cutting `@group` annotations are in place so subsets of
+the suite can be targeted in isolation:
+
+- `@group security` — regression tests pinning hardening (SQL injection
+  rejection in `joinToMeta` / `addMetaTo*`, bound parameter usage).
+- `@group multisite` — tests that require the suite to be booted with
+  `WP_MULTISITE=1`. Also auto-skipped when not in multisite mode via the
+  `RunsInMultisite` trait.
+
+Run a single group locally:
+
+```bash
+vendor/bin/phpunit -c phpunit-wp.xml --group security
+```
+
 ## Multisite
 
 Multisite is currently **not supported** at the ORM level (see README and

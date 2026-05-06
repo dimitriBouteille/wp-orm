@@ -13,6 +13,8 @@ use Dbout\WpOrm\Tests\WordPress\TestCase;
  * Smoke test that proves the suite is running in multisite mode when the
  * dedicated CI job kicks in. Real ORM-level multisite coverage will land
  * with the v6 multisite implementation.
+ *
+ * @group multisite
  */
 class MultisiteBootTest extends TestCase
 {

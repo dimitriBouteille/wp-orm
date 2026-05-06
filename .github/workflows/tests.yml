@@ -8,7 +8,7 @@ on:
 
 jobs:
   unit-test:
-    name: "Unit tests"
+    name: "PHPStan + unit tests"
     runs-on: ubuntu-latest
 
     steps:
@@ -22,8 +22,18 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
+      - name: "Cache Composer downloads"
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
+
+      - name: "Run PHPStan"
+        run: composer run phpstan
 
       - name: "Run unit tests with coverage"
         run: composer run test:unit:coverage
@@ -42,6 +52,7 @@ jobs:
   wp-test:
     name: "WordPress tests with WP ${{ matrix.wp_version }}"
     runs-on: ubuntu-latest
+    needs: unit-test
 
     strategy:
       matrix:
@@ -66,6 +77,15 @@ jobs:
           php-version: "8.3"
           tools: composer:v2
           coverage: xdebug
+
+      - name: "Cache Composer downloads"
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-wp${{ matrix.wp_version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-wp${{ matrix.wp_version }}-
+            ${{ runner.os }}-composer-
 
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
@@ -106,6 +126,7 @@ jobs:
   wp-test-multisite:
     name: "WordPress tests (multisite, WP latest)"
     runs-on: ubuntu-latest
+    needs: unit-test
 
     services:
       mysql:
@@ -125,6 +146,15 @@ jobs:
         with:
           php-version: "8.3"
           tools: composer:v2
+
+      - name: "Cache Composer downloads"
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-wplatest-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-wplatest-
+            ${{ runner.os }}-composer-
 
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress

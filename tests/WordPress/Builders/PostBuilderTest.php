@@ -192,6 +192,7 @@ class PostBuilderTest extends TestCase
     /**
      * @return void
      * @covers PostBuilder::joinToMeta
+     * @group security
      */
     public function testJoinToMetaRejectsInvalidIdentifier(): void
     {
@@ -204,6 +205,7 @@ class PostBuilderTest extends TestCase
     /**
      * @return void
      * @covers PostBuilder::addMetaToSelect
+     * @group security
      */
     public function testAddMetaToSelectRejectsInvalidAlias(): void
     {
@@ -216,6 +218,7 @@ class PostBuilderTest extends TestCase
     /**
      * @return void
      * @covers PostBuilder::addMetaToFilter
+     * @group security
      */
     public function testAddMetaToFilterRejectsInvalidIdentifier(): void
     {
@@ -228,6 +231,7 @@ class PostBuilderTest extends TestCase
     /**
      * @return void
      * @covers PostBuilder::joinToMeta
+     * @group security
      */
     public function testJoinToMetaUsesBoundMetaKeyValue(): void
     {
