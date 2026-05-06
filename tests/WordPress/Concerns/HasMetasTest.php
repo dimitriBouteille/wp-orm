@@ -7,16 +7,20 @@
 namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Dbout\WpOrm\Concerns\HasMetas;
 use Dbout\WpOrm\Enums\YesNo;
 use Dbout\WpOrm\Models\Meta\AbstractMeta;
 use Dbout\WpOrm\Models\Meta\PostMeta;
 use Dbout\WpOrm\Models\Post;
+use Dbout\WpOrm\Tests\WordPress\Support\BuildsTestPost;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Events\Dispatcher;
 
 class HasMetasTest extends TestCase
 {
+    use BuildsTestPost;
+
     /**
      * @return void
      * @covers HasMetas::getMeta
@@ -24,9 +28,7 @@ class HasMetasTest extends TestCase
      */
     public function testGetMeta(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
+        $model = $this->aPost(__FUNCTION__);
         $createMeta = $model->setMeta('author', 'Norman FOSTER');
 
         $meta = $model->getMeta('author');
@@ -45,10 +47,7 @@ class HasMetasTest extends TestCase
      */
     public function testGetAndSetMetaKey(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('author', 'Norman FOSTER');
+        $model = $this->aPostWithMetas(['author' => 'Norman FOSTER'], __FUNCTION__);
 
         $meta = $model->getMeta('author');
         $this->assertInstanceOf(AbstractMeta::class, $meta);
@@ -66,10 +65,7 @@ class HasMetasTest extends TestCase
      */
     public function testDeprecatedGetAndSetKeyStillWork(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('author', 'Norman FOSTER');
+        $model = $this->aPostWithMetas(['author' => 'Norman FOSTER'], __FUNCTION__);
 
         $meta = $model->getMeta('author');
         $this->assertInstanceOf(AbstractMeta::class, $meta);
@@ -89,9 +85,7 @@ class HasMetasTest extends TestCase
      */
     public function testSetMeta(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
+        $model = $this->aPost(__FUNCTION__);
         $meta = $model->setMeta('build-by', 'John D.');
 
         $this->assertEquals('John D.', get_post_meta($model->getId(), 'build-by', true));
@@ -108,11 +102,7 @@ class HasMetasTest extends TestCase
      */
     public function testHasMeta(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-
-        $model->setMeta('birthday-date', '17/09/1900');
+        $model = $this->aPostWithMetas(['birthday-date' => '17/09/1900'], __FUNCTION__);
         $this->assertTrue($model->hasMeta('birthday-date'));
 
         $wpMetaId = add_post_meta($model->getId(), 'birthday-place', 'France');
@@ -128,47 +118,41 @@ class HasMetasTest extends TestCase
      */
     public function testGetMetaValueWithoutCast(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-
-        $model->save();
-        $model->setMeta('build-by', 'John D.');
+        $model = $this->aPostWithMetas(['build-by' => 'John D.'], __FUNCTION__);
 
         add_post_meta($model->getId(), 'place', 'Lyon, France');
         $this->assertEquals('Lyon, France', $model->getMetaValue('place'));
     }
 
     /**
+     * @param string $castType
+     * @param string $stored
+     * @param mixed $expected
      * @return void
      * @covers HasMetas::getMetaValue
+     * @dataProvider providerGenericCasts
      * @uses Post
      */
-    public function testGetMetaValueWithGenericCasts(): void
+    public function testGetMetaValueWithGenericCast(string $castType, string $stored, mixed $expected): void
     {
-        $object = new class () extends Post {
-            protected array $metaCasts = [
-                'age' => 'int',
-                'year' => 'integer',
-                'is_active' => 'bool',
-                'subscribed' => 'boolean',
-                'data'  => 'json',
-            ];
-        };
+        $model = $this->aPostWithMetaCasts(['value' => $castType], ['value' => $stored]);
+        $this->assertEquals($expected, $model->getMetaValue('value'));
+    }
 
-        $model = new $object();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('age', '18');
-        $model->setMeta('year', '2024');
-        $model->setMeta('is_active', '1');
-        $model->setMeta('subscribed', '0');
-        $model->setMeta('data', '{"firstname":"John","lastname":"Doe"}');
-
-        $this->assertEquals(18, $model->getMetaValue('age'));
-        $this->assertEquals(2024, $model->getMetaValue('year'));
-        $this->assertTrue($model->getMetaValue('is_active'));
-        $this->assertFalse($model->getMetaValue('subscribed'));
-        $this->assertEquals(['firstname' => 'John', 'lastname' => 'Doe'], $model->getMetaValue('data'));
+    /**
+     * @return \Generator<string, array{string, string, mixed}>
+     */
+    public static function providerGenericCasts(): \Generator
+    {
+        yield 'int'        => ['int',     '18',   18];
+        yield 'integer'    => ['integer', '2024', 2024];
+        yield 'bool true'  => ['bool',    '1',    true];
+        yield 'bool false' => ['boolean', '0',    false];
+        yield 'json'       => [
+            'json',
+            '{"firstname":"John","lastname":"Doe"}',
+            ['firstname' => 'John', 'lastname' => 'Doe'],
+        ];
     }
 
     /**
@@ -178,16 +162,10 @@ class HasMetasTest extends TestCase
      */
     public function testGetMetaValueWithEnumCasts(): void
     {
-        $object = new class () extends Post {
-            protected array $metaCasts = [
-                'active' => YesNo::class,
-            ];
-        };
-
-        $model = new $object();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('active', 'yes');
+        $model = $this->aPostWithMetaCasts(
+            ['active' => YesNo::class],
+            ['active' => 'yes'],
+        );
 
         /** @var YesNo $value */
         $value = $model->getMetaValue('active');
@@ -197,88 +175,81 @@ class HasMetasTest extends TestCase
     }
 
     /**
+     * @param string $castType
+     * @param string $stored
+     * @param string $expectedFormatted
+     * @param class-string $expectedClass
      * @return void
      * @covers HasMetas::getMetaValue
+     * @dataProvider providerDatetimeCasts
      * @uses Post
      */
-    public function testGetMetaValueWithDatetimeCasts(): void
-    {
-        $object = new class () extends Post {
-            protected array $metaCasts = [
-                'created_at' => 'datetime',
-                'uploaded_at' => 'date',
-            ];
-        };
+    public function testGetMetaValueWithDatetimeCast(
+        string $castType,
+        string $stored,
+        string $expectedFormatted,
+        string $expectedClass
+    ): void {
+        $model = $this->aPostWithMetaCasts(['value' => $castType], ['value' => $stored]);
 
-        $model = new $object();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('created_at', '2022-09-08 07:30:05');
-        $model->setMeta('uploaded_at', '2024-10-08 10:25:35');
-
-        /** @var Carbon $date */
-        $date = $model->getMetaValue('created_at');
-        $this->assertInstanceOf(Carbon::class, $date);
-        $this->assertEquals('2022-09-08 07:30:05', $date->format('Y-m-d H:i:s'));
-
-        /** @var Carbon $date */
-        $date = $model->getMetaValue('uploaded_at');
-        $this->assertInstanceOf(Carbon::class, $date);
-        $this->assertEquals('2024-10-08 00:00:00', $date->format('Y-m-d H:i:s'), 'The time must be reset to 00:00:00.');
+        $value = $model->getMetaValue('value');
+        $this->assertInstanceOf($expectedClass, $value);
+        $this->assertEquals($expectedFormatted, $value->format('Y-m-d H:i:s'));
     }
 
     /**
-     * @return void
-     * @covers HasMetas::getMetaValue
-     * @uses Post
+     * @return \Generator<string, array{string, string, string, class-string}>
      */
-    public function testGetMetaValueWithDecimalCast(): void
+    public static function providerDatetimeCasts(): \Generator
     {
-        $object = new class () extends Post {
-            protected array $metaCasts = [
-                'price' => 'decimal:2',
-                'ratio' => 'decimal:4',
-            ];
-        };
-
-        $model = new $object();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('price', '12.3456');
-        $model->setMeta('ratio', '0.5');
-
-        $this->assertSame('12.35', $model->getMetaValue('price'));
-        $this->assertSame('0.5000', $model->getMetaValue('ratio'));
+        yield 'datetime' => [
+            'datetime',
+            '2022-09-08 07:30:05',
+            '2022-09-08 07:30:05',
+            Carbon::class,
+        ];
+        yield 'date strips time' => [
+            'date',
+            '2024-10-08 10:25:35',
+            '2024-10-08 00:00:00',
+            Carbon::class,
+        ];
+        yield 'datetime with custom format' => [
+            'datetime:Y-m-d',
+            '2024-03-12 14:25:00',
+            '2024-03-12 14:25:00',
+            Carbon::class,
+        ];
+        yield 'immutable_datetime' => [
+            'immutable_datetime:Y-m-d H:i:s',
+            '2024-04-01 09:00:00',
+            '2024-04-01 09:00:00',
+            CarbonImmutable::class,
+        ];
     }
 
     /**
+     * @param string $castType
+     * @param string $stored
+     * @param string $expected
      * @return void
      * @covers HasMetas::getMetaValue
+     * @dataProvider providerDecimalCasts
      * @uses Post
      */
-    public function testGetMetaValueWithCustomDatetimeCasts(): void
+    public function testGetMetaValueWithDecimalCast(string $castType, string $stored, string $expected): void
     {
-        $object = new class () extends Post {
-            protected array $metaCasts = [
-                'published_at' => 'datetime:Y-m-d',
-                'archived_at' => 'immutable_datetime:Y-m-d H:i:s',
-            ];
-        };
+        $model = $this->aPostWithMetaCasts(['value' => $castType], ['value' => $stored]);
+        $this->assertSame($expected, $model->getMetaValue('value'));
+    }
 
-        $model = new $object();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('published_at', '2024-03-12 14:25:00');
-        $model->setMeta('archived_at', '2024-04-01 09:00:00');
-
-        /** @var Carbon $published */
-        $published = $model->getMetaValue('published_at');
-        $this->assertInstanceOf(Carbon::class, $published);
-        $this->assertEquals('2024-03-12 14:25:00', $published->format('Y-m-d H:i:s'));
-
-        $archived = $model->getMetaValue('archived_at');
-        $this->assertInstanceOf(\Carbon\CarbonImmutable::class, $archived);
-        $this->assertEquals('2024-04-01 09:00:00', $archived->format('Y-m-d H:i:s'));
+    /**
+     * @return \Generator<string, array{string, string, string}>
+     */
+    public static function providerDecimalCasts(): \Generator
+    {
+        yield 'decimal:2 rounds' => ['decimal:2', '12.3456', '12.35'];
+        yield 'decimal:4 pads'   => ['decimal:4', '0.5',     '0.5000'];
     }
 
     /**
@@ -288,17 +259,7 @@ class HasMetasTest extends TestCase
      */
     public function testGetMetaValueWithInvalidCasts(): void
     {
-        $object = new class () extends Post {
-            protected array $metaCasts = [
-                'my_meta' => 'boolean_',
-            ];
-        };
-
-        $model = new $object();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-        $model->setMeta('my_meta', 'yes');
-
+        $model = $this->aPostWithMetaCasts(['my_meta' => 'boolean_'], ['my_meta' => 'yes']);
         $this->assertEquals('yes', $model->getMetaValue('my_meta'));
     }
 
@@ -309,11 +270,7 @@ class HasMetasTest extends TestCase
      */
     public function testDeleteMeta(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-
-        $model->setMeta('architect-name', 'Norman F.');
+        $model = $this->aPostWithMetas(['architect-name' => 'Norman F.'], __FUNCTION__);
 
         $this->assertEquals(1, $model->deleteMeta('architect-name'), 'The function must delete only one line.');
         $this->assertFalse($model->hasMeta('architect-name'), 'The meta must no longer exist.');
@@ -326,11 +283,7 @@ class HasMetasTest extends TestCase
      */
     public function testDeleteUndefinedMeta(): void
     {
-        $model = new Post();
-        $model->setPostTitle(__FUNCTION__);
-        $model->save();
-
-        $model->setMeta('architect-name', 'Norman F.');
+        $model = $this->aPostWithMetas(['architect-name' => 'Norman F.'], __FUNCTION__);
 
         $this->assertEquals(0, $model->deleteMeta('fake-meta'));
         $this->assertTrue($model->hasMeta('architect-name'), 'The unrelated meta must still exist.');
