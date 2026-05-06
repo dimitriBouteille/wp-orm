@@ -160,6 +160,24 @@ abstract class TestCase extends \WP_UnitTestCase
     }
 
     /**
+     * Assert that the last executed SQL contains a substring.
+     *
+     * Use this only when the SQL shape is itself part of the contract
+     * (custom grammar, security regression tests). For most tests, prefer
+     * asserting on the result rows — see TESTS_AUDIT.md point #1.
+     *
+     * @param string $needle
+     * @param string $message
+     * @return void
+     */
+    public function assertLastQueryContains(string $needle, string $message = ''): void
+    {
+        global $wpdb;
+        $needle = str_replace('#TABLE_PREFIX#', $wpdb->prefix, $needle);
+        self::assertStringContainsString($needle, (string) $wpdb->last_query, $message);
+    }
+
+    /**
      * @param Collection $expectedItems
      * @param string $relationProperty
      * @param array $expectedIds

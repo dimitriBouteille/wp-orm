@@ -34,7 +34,6 @@ class DatabaseTransactionTest extends TestCase
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
-        define('SAVEQUERIES', true);
     }
 
     /**
