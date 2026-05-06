@@ -20,6 +20,7 @@ class MultisiteBootTest extends TestCase
 
     /**
      * @return void
+     * @coversNothing
      */
     public function testSuiteBootsInMultisite(): void
     {
@@ -30,6 +31,7 @@ class MultisiteBootTest extends TestCase
 
     /**
      * @return void
+     * @coversNothing
      */
     public function testInBlogRestoresCurrentBlogIdEvenOnException(): void
     {
