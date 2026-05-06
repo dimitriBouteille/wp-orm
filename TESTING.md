@@ -117,6 +117,41 @@ $this->assertCount(1, $results);
 $this->assertEquals($productId, $results->first()->getId());
 ```
 
+## Multisite
+
+Multisite is currently **not supported** at the ORM level (see README and
+the v6 milestone). The test suite still has scaffolding so that
+multisite-only tests can be written and so the package is exercised
+against a multisite WordPress install in CI.
+
+To run the suite in multisite mode locally:
+
+```bash
+WP_MULTISITE=1 ./run-wp-tests.sh
+```
+
+A test class that should run only in multisite mode adds the
+`RunsInMultisite` trait — single-site runs auto-skip:
+
+```php
+use Dbout\WpOrm\Tests\WordPress\Support\RunsInMultisite;
+use Dbout\WpOrm\Tests\WordPress\TestCase;
+
+class MyMultisiteTest extends TestCase
+{
+    use RunsInMultisite;
+
+    public function testInsideASubsite(): void
+    {
+        $value = $this->inBlog($subsiteId, fn () => get_option('blogname'));
+        $this->assertSame('subsite', $value);
+    }
+}
+```
+
+The dedicated `wp-test-multisite` CI job runs the full WP test suite on
+WordPress latest with `WP_MULTISITE=1`.
+
 ## Important Notes
 
 - WordPress tests require **PHPUnit 9** only (WordPress limitation)

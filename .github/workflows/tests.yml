@@ -103,10 +103,54 @@ jobs:
           allow-empty: false
           parallel: true
 
+  wp-test-multisite:
+    name: "WordPress tests (multisite, WP latest)"
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:9.4
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
+
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v4
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer:v2
+
+      - name: "Install composer dependencies"
+        run: composer install --prefer-dist --no-progress
+
+      - name: "Install PHPUnit v9 and WordPress latest"
+        run: |
+          composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0' 'yoast/phpunit-polyfills:^3.0'
+          composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:*' 'roots/wordpress:*'
+
+      - name: "Create test database"
+        run: mysql -uroot -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
+
+      - name: "Run WordPress tests in multisite mode"
+        env:
+          DB_HOST: "127.0.0.1:3306"
+          DB_USER: "root"
+          MYSQL_ROOT_PASSWORD: ""
+          MYSQL_DATABASE: "wordpress_test"
+          WP_MULTISITE: "1"
+        run: composer run test:wordPress
+
   finish:
     needs:
       - unit-test
       - wp-test
+      - wp-test-multisite
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
