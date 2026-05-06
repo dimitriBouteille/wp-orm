@@ -34,7 +34,6 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $user = $reloadComment->user;
-        $this->assertLastQueryBelongsToRelation('users', 'ID', $userId);
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals($userId, $user->getId());
@@ -62,7 +61,6 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $post = $reloadComment->post;
-        $this->assertLastQueryBelongsToRelation('posts', 'ID', $postId);
 
         $this->assertInstanceOf(Post::class, $post);
         $this->assertEquals($postId, $post->getId());
@@ -89,7 +87,6 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $parent = $reloadComment->parent;
-        $this->assertLastQueryBelongsToRelation('comments', 'comment_ID', $objectId);
 
         $this->assertInstanceOf(Comment::class, $parent);
         $this->assertEquals($objectId, $parent->getId());

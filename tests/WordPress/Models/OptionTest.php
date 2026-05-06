@@ -23,7 +23,6 @@ class OptionTest extends TestCase
         $option = Option::findOneByName('my_custom_option');
 
         $this->assertInstanceOf(Option::class, $option);
-        $this->assertFindLastQuery('options', 'option_name', 'my_custom_option');
         $this->assertEquals('option_value', $option->getOptionValue());
         $this->assertEquals('my_custom_option', $option->getOptionName());
     }

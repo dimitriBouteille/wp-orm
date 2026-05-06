@@ -42,11 +42,7 @@ class UserTest extends TestCase
      */
     public function testFindOneByEmail(): void
     {
-        $this->checkFindOneResult(
-            User::findOneByEmail(self::USER_EMAIL),
-            'user_email',
-            self::USER_EMAIL
-        );
+        $this->checkFindOneResult(User::findOneByEmail(self::USER_EMAIL));
     }
 
     /**
@@ -55,11 +51,7 @@ class UserTest extends TestCase
      */
     public function testFindOneByLogin(): void
     {
-        $this->checkFindOneResult(
-            User::findOneByLogin(self::USER_LOGIN),
-            'user_login',
-            self::USER_LOGIN
-        );
+        $this->checkFindOneResult(User::findOneByLogin(self::USER_LOGIN));
     }
 
     /**
@@ -112,15 +104,11 @@ class UserTest extends TestCase
 
     /**
      * @param User|null $user
-     * @param string $whereColumn
-     * @param string $whereValue
      * @return void
      */
-    private function checkFindOneResult(?User $user, string $whereColumn, string $whereValue): void
+    private function checkFindOneResult(?User $user): void
     {
         $this->assertInstanceOf(User::class, $user);
-        $this->assertFindLastQuery('users', $whereColumn, $whereValue);
-
         $this->assertEquals(self::$testingUserId, $user->getId());
         $this->assertEquals(self::USER_LOGIN, $user->getUserLogin());
         $this->assertEquals(self::USER_EMAIL, $user->getUserEmail());

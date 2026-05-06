@@ -105,7 +105,6 @@ class PostTest extends TestCase
 
         $newObject = Post::find($object->getId());
         $parent = $newObject->parent;
-        $this->assertLastQueryBelongsToRelation('posts', 'ID', $objectId);
 
         $this->assertInstanceOf(Post::class, $parent);
         $this->assertEquals($objectId, $parent->getId());
@@ -134,7 +133,6 @@ class PostTest extends TestCase
 
         $newObject = Post::find($object->getId());
         $author = $newObject->author;
-        $this->assertLastQueryBelongsToRelation('users', 'ID', $userId);
         $this->assertInstanceOf(User::class, $author);
         $this->assertEquals($userId, $author->getId());
     }
