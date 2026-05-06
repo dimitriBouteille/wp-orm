@@ -135,7 +135,7 @@ class PostBuilderTest extends TestCase
      */
     public function testJoinToMetaDoesNotDuplicate(): void
     {
-        $post = $this->aPostWithMetas(['color' => 'blue'], 'Duplicate join test');
+        $this->aPostWithMetas(['color' => 'blue'], 'Duplicate join test');
 
         $results = Post::query()
             ->addMetaToSelect('color')
