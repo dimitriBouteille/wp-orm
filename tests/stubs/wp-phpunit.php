@@ -3,7 +3,6 @@
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
  */
-
 /**
  * Stub for static analysis only — wp-phpunit is loaded at runtime via the
  * test bootstrap, not through Composer's autoloader, so PHPStan can't see
