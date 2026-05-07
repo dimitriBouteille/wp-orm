@@ -166,6 +166,73 @@ class DatabaseTransactionTest extends TestCase
     }
 
     /**
+     * Pin: nested transactions are not isolated by SAVEPOINTs.
+     *
+     * Database::beginTransaction() always emits `START TRANSACTION;` regardless
+     * of nesting depth, and rollBack() always emits `ROLLBACK;`. There is no
+     * SAVEPOINT logic, so:
+     *
+     *   - calling beginTransaction() while another transaction is open implicitly
+     *     commits the outer one (MySQL behavior on START TRANSACTION),
+     *   - calling rollBack() inside an "inner" transaction rolls back ALL the
+     *     outstanding work, not just the inner statements.
+     *
+     * The transactionLevel() counter increments correctly, which makes it look
+     * like nested transactions work — but the underlying isolation is fake.
+     *
+     * If real SAVEPOINT support is ever added, this test will fail and signal
+     * that nested rollback semantics have changed.
+     *
+     * @group regression-pin
+     * @throws \Throwable
+     * @return void
+     * @covers Database::beginTransaction
+     * @covers Database::rollBack
+     */
+    public function testNestedTransactionRollbackIsNotIsolatedBySavepoint(): void
+    {
+        $insert = sprintf('INSERT INTO %s (name, url) VALUES(?, ?);', $this->tableName);
+
+        // Outer transaction: insert "outer".
+        $this->db->beginTransaction();
+        $this->db->insert($insert, ['outer', 'outer-url']);
+        $this->assertSame(1, $this->db->transactionLevel());
+
+        // "Inner" transaction: emits another START TRANSACTION which implicitly
+        // commits the outer work in MySQL — no SAVEPOINT is created.
+        $this->db->beginTransaction();
+        $this->db->insert($insert, ['inner', 'inner-url']);
+        $this->assertSame(2, $this->db->transactionLevel());
+
+        // Roll back the inner level. With true SAVEPOINTs only "inner" would
+        // disappear; today this ROLLBACK targets whichever transaction MySQL
+        // currently has open, leaving "outer" already committed by the implicit
+        // commit above.
+        $this->db->rollBack();
+        $this->assertSame(1, $this->db->transactionLevel());
+
+        // Roll back the "outer" level — but "outer" was already committed by
+        // the implicit commit, so this ROLLBACK is a no-op for the row.
+        $this->db->rollBack();
+        $this->assertSame(0, $this->db->transactionLevel());
+
+        $names = $this->model::query()->pluck('name')->toArray();
+
+        $this->assertContains(
+            'outer',
+            $names,
+            'Pin: outer row persists because the inner beginTransaction() implicitly '
+            . 'committed it (no SAVEPOINT). If true nested transactions are added, '
+            . 'this row should have been rolled back.'
+        );
+        $this->assertNotContains(
+            'inner',
+            $names,
+            'Inner row was rolled back by the inner ROLLBACK, as expected.'
+        );
+    }
+
+    /**
      * @param string $mode
      * @return void
      */

@@ -95,7 +95,7 @@ abstract class TestCase extends \WP_UnitTestCase
      *
      * Use this only when the SQL shape is itself part of the contract
      * (custom grammar, security regression tests). For most tests, prefer
-     * asserting on the result rows — see TESTS_AUDIT.md point #1.
+     * asserting on the result rows.
      *
      * @param string $needle
      * @param string $message

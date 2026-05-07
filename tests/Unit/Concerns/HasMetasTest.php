@@ -7,14 +7,52 @@
 namespace Dbout\WpOrm\Tests\Unit\Concerns;
 
 use Dbout\WpOrm\Concerns\HasMetas;
+use Dbout\WpOrm\Models\Meta\AbstractMeta;
+use Dbout\WpOrm\Models\Meta\PostMeta;
+use Dbout\WpOrm\Models\Meta\UserMeta;
 use Dbout\WpOrm\Models\Post;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 
 #[CoversTrait(HasMetas::class)]
 class HasMetasTest extends TestCase
 {
+    /**
+     * Pin: meta classes do not use SoftDeletes, so HasMetas::deleteMeta()
+     * calling forceDelete() is currently equivalent to delete().
+     *
+     * The use of forceDelete() in deleteMeta() is misleading because none of
+     * the meta classes use SoftDeletes. The call happens to be harmless TODAY,
+     * but if SoftDeletes is ever added to AbstractMeta, forceDelete() would
+     * silently bypass the soft-delete mechanism. This pin forces a
+     * re-evaluation of deleteMeta() in that case (it should switch to delete()).
+     *
+     * @param class-string<AbstractMeta> $metaClass
+     * @return void
+     */
+    #[Group('regression-pin')]
+    #[TestWith([PostMeta::class])]
+    #[TestWith([UserMeta::class])]
+    public function testMetaClassDoesNotUseSoftDeletes(string $metaClass): void
+    {
+        $traits = class_uses_recursive($metaClass);
+
+        $this->assertNotContains(
+            SoftDeletes::class,
+            $traits,
+            sprintf(
+                'Pin: %s does not use SoftDeletes today, so HasMetas::deleteMeta() '
+                . 'using forceDelete() is harmless. If you add SoftDeletes here, '
+                . 'switch deleteMeta() to delete().',
+                $metaClass
+            )
+        );
+    }
+
     /**
      * @return void
      */

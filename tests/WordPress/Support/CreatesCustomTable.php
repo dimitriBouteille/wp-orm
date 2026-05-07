@@ -14,8 +14,7 @@ use Illuminate\Database\Schema\Blueprint;
  *
  * Tables registered via createCustomTable() are dropped automatically in
  * tearDownAfterClass(). This avoids the leak that occurs when tests call
- * dbDelta() or Schema::create() without ever cleaning up afterwards
- * (cf. TESTS_AUDIT.md point #3).
+ * dbDelta() or Schema::create() without ever cleaning up afterwards.
  *
  * Usage:
  *

@@ -11,8 +11,6 @@ use Dbout\WpOrm\Models\Post;
 /**
  * Test fixture helpers to reduce the new-Post-set-title-set-name-set-type-save
  * boilerplate that recurs across builder, meta and concern tests.
- *
- * @see TESTS_AUDIT.md point #5 (data providers + BuildsTestPost trait)
  */
 trait BuildsTestPost
 {

@@ -10,6 +10,7 @@ use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Orm\Database;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 
@@ -17,6 +18,8 @@ use PHPUnit\Framework\TestCase;
 #[CoversMethod(Database::class, 'getInstance')]
 #[CoversMethod(Database::class, 'isMaria')]
 #[CoversMethod(Database::class, 'getServerVersion')]
+#[CoversMethod(Database::class, 'pretend')]
+#[CoversMethod(Database::class, 'transaction')]
 class DatabaseTest extends TestCase
 {
     /**
@@ -107,6 +110,67 @@ class DatabaseTest extends TestCase
         $this->expectException(WpOrmException::class);
         $this->expectExceptionMessage('Unable to retrieve the server version.');
         $database->getServerVersion();
+    }
+
+    /**
+     * Pin: Database::pretend() always throws WpOrmException.
+     *
+     * The pretend() feature is not implemented in this connection. If support
+     * is ever added, this test will fail and signal that the contract changed.
+     *
+     * @return void
+     */
+    #[Group('regression-pin')]
+    public function testPretendAlwaysThrows(): void
+    {
+        $database = $this->createDatabaseWithMockedWpdb([]);
+
+        $this->expectException(WpOrmException::class);
+        $this->expectExceptionMessage('pretend feature not supported.');
+
+        $database->pretend(function (): void {
+            // never reached
+        });
+    }
+
+    /**
+     * Pin: Database::transaction() ignores the $attempts parameter.
+     *
+     * The $attempts parameter exists in the signature for compatibility with
+     * Connection::transaction() but no retry loop is implemented. If retry is
+     * ever added, this test will fail and signal that the contract changed.
+     *
+     * @return void
+     */
+    #[Group('regression-pin')]
+    public function testTransactionAttemptsParameterIsIgnored(): void
+    {
+        $database = $this->createDatabaseWithMockedWpdb([]);
+
+        $invocations = 0;
+        $exception = new \RuntimeException('boom');
+        $caught = null;
+
+        try {
+            $database->transaction(function () use (&$invocations, $exception): void {
+                $invocations++;
+                throw $exception;
+            }, 5);
+        } catch (\RuntimeException $e) {
+            $caught = $e;
+        }
+
+        $this->assertSame(
+            $exception,
+            $caught,
+            'transaction() must rethrow the inner exception.'
+        );
+        $this->assertSame(
+            1,
+            $invocations,
+            'transaction($attempts=5) currently invokes the callback exactly once; '
+            . 'update this pin if a retry loop is implemented.'
+        );
     }
 
     /**
