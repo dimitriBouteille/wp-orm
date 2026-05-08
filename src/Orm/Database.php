@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Orm;
@@ -23,16 +21,14 @@ use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
  */
 class Database extends Connection
 {
-    /**
-     * @var \wpdb
-     */
     protected \wpdb $db;
+    protected ?bool $isMariaDb = null;
 
     /**
      * Count of active transactions.
      * @var int
      */
-    public int $transactionCount = 0;
+    protected int $transactionCount = 0;
 
     /**
      * @var Database|null
@@ -78,24 +74,6 @@ class Database extends Connection
         );
 
         $this->db = $wpdb;
-        $this->addWordPressHooks();
-    }
-
-    protected function addWordPressHooks(): void
-    {
-        // Reset Database instance when switching between blogs in multisite to update prefix
-        add_action('switch_blog', function () {
-            self::$instance = null;
-        }, 1);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function table($table, $as = null): Builder
-    {
-        $table = $this->getTablePrefix() . $table;
-        return $this->query()->from($table, $as);
     }
 
     /**
@@ -144,7 +122,7 @@ class Database extends Connection
     }
 
     /**
-     * A hacky way to emulate bind parameters into SQL query.
+     * Bind parameters into SQL query using $wpdb->prepare().
      *
      * @param string|null $query
      * @param array $bindings
@@ -152,24 +130,38 @@ class Database extends Connection
      */
     private function bindParams(?string $query, array $bindings): string
     {
-        $query = \str_replace('"', '`', (string)$query);
+        $query = (string) $query;
         $bindings = $this->prepareBindings($bindings);
         if ($bindings === []) {
             return $query;
         }
 
-        $bindings = \array_map(function ($replace) {
-            if (\is_string($replace)) {
-                $replace = "'" . esc_sql($replace) . "'";
-            } elseif ($replace === null) {
-                $replace = "null";
+        $parts = \explode('?', \str_replace('%', '%%', $query));
+        $sql = $parts[0];
+        $prepareBindings = [];
+
+        foreach ($bindings as $index => $value) {
+            if ($value === null) {
+                $sql .= 'null';
+            } elseif (\is_int($value)) {
+                $sql .= '%d';
+                $prepareBindings[] = $value;
+            } elseif (\is_float($value)) {
+                $sql .= '%f';
+                $prepareBindings[] = $value;
+            } else {
+                $sql .= '%s';
+                $prepareBindings[] = $value;
             }
 
-            return $replace;
-        }, $bindings);
+            $sql .= $parts[$index + 1] ?? '';
+        }
 
-        $query = \str_replace(['%', '?'], ['%%', '%s'], $query);
-        return \vsprintf($query, $bindings);
+        if ($prepareBindings === []) {
+            return $sql;
+        }
+
+        return $this->db->prepare($sql, $prepareBindings);
     }
 
     /**
@@ -452,26 +444,11 @@ class Database extends Connection
     }
 
     /**
-     * Get the base table prefix for multisite installation.
-     * This prefix is shared across all sites in the network.
-     *
-     * @return string Base prefix for multisite shared tables
-     */
-    public function getBaseTablePrefix(): string
-    {
-        return $this->db->base_prefix;
-    }
-
-    /**
      * @inheritDoc
      */
     protected function getDefaultSchemaGrammar(): Grammar
     {
-        ($grammar = new SchemaGrammar())->setConnection($this);
-
-        /** @var Grammar $grammar */
-        $grammar = $this->withTablePrefix($grammar);
-        return $grammar;
+        return new SchemaGrammar($this);
     }
 
     /**
@@ -488,7 +465,7 @@ class Database extends Connection
     public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
     {
         // @phpstan-ignore-next-line
-        if (!$this->schemaGrammar instanceof Grammar) {
+        if (is_null($this->schemaGrammar)) {
             $this->useDefaultSchemaGrammar();
         }
 
@@ -500,8 +477,36 @@ class Database extends Connection
      */
     protected function getDefaultQueryGrammar(): WordPressGrammar
     {
-        ($grammar = new WordPressGrammar())->setConnection($this);
+        return new WordPressGrammar($this);
+    }
 
-        return $grammar;
+    /**
+     * Determine if the connected database is a MariaDB database.
+     *
+     * @return bool
+     */
+    public function isMaria(): bool
+    {
+        if (is_bool($this->isMariaDb)) {
+            return $this->isMariaDb;
+        }
+
+        $serverInfo = $this->db->db_server_info();
+        $this->isMariaDb = str_contains(strtolower($serverInfo), 'mariadb');
+        return $this->isMariaDb;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws WpOrmException
+     */
+    public function getServerVersion(): string
+    {
+        $version = $this->db->db_version();
+        if ($version === null || $version === '') {
+            throw new WpOrmException('Unable to retrieve the server version.');
+        }
+
+        return $version;
     }
 }

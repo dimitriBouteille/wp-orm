@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Models\Meta;
@@ -12,8 +10,8 @@ use Dbout\WpOrm\Orm\AbstractModel;
 
 abstract class AbstractMeta extends AbstractModel
 {
-    final public const META_KEY = 'meta_key';
-    final public const META_VALUE = 'meta_value';
+    final public const string META_KEY = 'meta_key';
+    final public const string META_VALUE = 'meta_value';
 
     /**
      * Disable created_at and updated_at
@@ -30,18 +28,43 @@ abstract class AbstractMeta extends AbstractModel
     ];
 
     /**
+     * @deprecated Use {@see self::getMetaKey()} instead. This method shadows
+     *             {@see \Illuminate\Database\Eloquent\Model::getKey()} which is expected
+     *             to return the primary key value. Will be removed in the next major version.
      * @return string
      */
     public function getKey(): string
+    {
+        return $this->getMetaKey();
+    }
+
+    /**
+     * @deprecated Use {@see self::setMetaKey()} instead. Will be removed in the next major version.
+     * @param string $key
+     * @return $this
+     */
+    public function setKey(string $key): self
+    {
+        return $this->setMetaKey($key);
+    }
+
+    /**
+     * Get the meta key.
+     *
+     * @return string
+     */
+    public function getMetaKey(): string
     {
         return $this->getAttribute(self::META_KEY);
     }
 
     /**
+     * Set the meta key.
+     *
      * @param string $key
      * @return $this
      */
-    public function setKey(string $key): self
+    public function setMetaKey(string $key): self
     {
         $this->setAttribute(self::META_KEY, $key);
         return $this;

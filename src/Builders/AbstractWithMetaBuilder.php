@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Builders;
@@ -13,11 +11,17 @@ use Dbout\WpOrm\Exceptions\MetaNotSupportedException;
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\MetaMappingConfig;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Dbout\WpOrm\Orm\Database;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\JoinClause;
 
 abstract class AbstractWithMetaBuilder extends AbstractBuilder
 {
+    /**
+     * Allowed pattern for any string used as a SQL identifier (table alias, column alias).
+     * Restricted to a conservative subset to prevent SQL injection through identifiers.
+     */
+    private const string IDENTIFIER_PATTERN = '/^[A-Za-z_]\w*$/';
+
     /**
      * @var array<string, string>
      */
@@ -61,7 +65,9 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
             $alias = sprintf('%s_value', $metaKey);
         }
 
-        $column = sprintf('%s.%s AS %s', $metaKey, $this->metaConfig?->columnValue, $alias);
+        $this->assertValidIdentifier($alias, 'meta select alias');
+
+        $column = sprintf('%s.%s AS %s', $metaKey, $this->metaConfig->columnValue, $alias);
         $this->addSelect($column);
         return $this;
     }
@@ -109,6 +115,8 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
      */
     public function joinToMeta(string $metaKey, string $joinType = 'inner'): self
     {
+        $this->assertValidIdentifier($metaKey, 'meta key');
+
         $model = $this->model;
         $joinTable = sprintf('%s AS %s', $this->metaTable, $metaKey);
 
@@ -121,20 +129,37 @@ abstract class AbstractWithMetaBuilder extends AbstractBuilder
             throw new WpOrmException('Invalid join type.');
         }
 
-        $this->$join($joinTable, function ($join) use ($metaKey, $model) {
-            /** @var \Illuminate\Database\Query\JoinClause $join */
-            $join->on(
-                sprintf('%s.%s', $metaKey, $this->metaConfig?->columnKey),
-                '=',
-                Database::getInstance()->raw(sprintf("'%s'", $metaKey))
-            )->on(
-                sprintf('%s.%s', $metaKey, $this->metaConfig?->foreignKey),
-                '=',
-                sprintf('%s.%s', $model->getTable(), $model->getKeyName()),
-            );
+        $this->$join($joinTable, function (JoinClause $join) use ($metaKey, $model): void {
+            $join
+                ->on(
+                    sprintf('%s.%s', $metaKey, $this->metaConfig->foreignKey),
+                    '=',
+                    sprintf('%s.%s', $model->getTable(), $model->getKeyName())
+                )
+                ->where(
+                    sprintf('%s.%s', $metaKey, $this->metaConfig->columnKey),
+                    '=',
+                    $metaKey
+                );
         });
 
         return $this;
+    }
+
+    /**
+     * Validate that a value is safe to be inlined as a SQL identifier.
+     *
+     * @throws WpOrmException
+     */
+    private function assertValidIdentifier(string $identifier, string $context): void
+    {
+        if (preg_match(self::IDENTIFIER_PATTERN, $identifier) !== 1) {
+            throw new WpOrmException(sprintf(
+                'Invalid %s "%s": only letters, digits and underscores are allowed (must start with a letter or underscore).',
+                $context,
+                $identifier
+            ));
+        }
     }
 
     /**

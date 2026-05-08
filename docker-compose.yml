@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:9.4
+    container_name: wp-orm-mysql-test
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress_test}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    networks:
+      - wp-orm-test
+
+volumes:
+  mysql_data:
+
+networks:
+  wp-orm-test:
+    driver: bridge

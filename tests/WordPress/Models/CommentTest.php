@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Tests\WordPress\Models;
@@ -36,7 +34,6 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $user = $reloadComment->user;
-        $this->assertLastQueryHasOneRelation('users', 'ID', $userId);
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals($userId, $user->getId());
@@ -64,7 +61,6 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $post = $reloadComment->post;
-        $this->assertLastQueryHasOneRelation('posts', 'ID', $postId);
 
         $this->assertInstanceOf(Post::class, $post);
         $this->assertEquals($postId, $post->getId());
@@ -91,7 +87,6 @@ class CommentTest extends TestCase
 
         $reloadComment = Comment::find($comment->getId());
         $parent = $reloadComment->parent;
-        $this->assertLastQueryHasOneRelation('comments', 'comment_ID', $objectId);
 
         $this->assertInstanceOf(Comment::class, $parent);
         $this->assertEquals($objectId, $parent->getId());

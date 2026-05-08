@@ -8,22 +8,32 @@ on:
 
 jobs:
   unit-test:
-    name: "Unit tests"
+    name: "PHPStan + unit tests"
     runs-on: ubuntu-latest
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
         with:
-          php-version: "8.2"
+          php-version: "8.3"
           tools: composer:v2
           coverage: xdebug
 
+      - name: "Cache Composer downloads"
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
+
+      - name: "Run PHPStan"
+        run: composer run phpstan
 
       - name: "Run unit tests with coverage"
         run: composer run test:unit:coverage
@@ -32,7 +42,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ github.token }}
         if: ${{ env.COVERALLS_REPO_TOKEN }}
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
           flag-name: "unit"
@@ -42,10 +52,11 @@ jobs:
   wp-test:
     name: "WordPress tests with WP ${{ matrix.wp_version }}"
     runs-on: ubuntu-latest
+    needs: unit-test
 
     strategy:
       matrix:
-        wp_version: ["6.3", "6.4", "6.5", "6.6", "6.7", "6.8", "latest"]
+        wp_version: ["6.5", "6.6", "6.7", "6.8", "6.9", "latest"]
 
     services:
       mysql:
@@ -57,56 +68,124 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
 
     steps:
-      - name: "Install subversion"
-        run: sudo apt-get install -y subversion
-
       - name: "Checkout repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
         with:
-          php-version: "8.2"
+          php-version: "8.3"
           tools: composer:v2
           coverage: xdebug
+
+      - name: "Cache Composer downloads"
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-wp${{ matrix.wp_version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-wp${{ matrix.wp_version }}-
+            ${{ runner.os }}-composer-
 
       - name: "Install composer dependencies"
         run: composer install --prefer-dist --no-progress
 
-      # WordPress tests works only with PHPUnit 9.x :(
+      # WordPress tests works only with PHPUnit 9.x
       # https://make.wordpress.org/core/handbook/references/phpunit-compatibility-and-wordpress-versions/
-      - name: "Install PHPUnit v9"
+      - name: "Install PHPUnit v9 and WordPress ${{ matrix.wp_version }}"
         run: |
-          composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0'
-          composer require --dev --update-with-all-dependencies 'yoast/phpunit-polyfills:^3.0'
+          composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0' 'yoast/phpunit-polyfills:^3.0'
+          if [ "${{ matrix.wp_version }}" = "latest" ]; then
+            composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:*' 'roots/wordpress:*'
+          else
+            composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:${{ matrix.wp_version }}.*' 'roots/wordpress:${{ matrix.wp_version }}.*'
+          fi
 
-      - name: "Install WP"
-        shell: bash
-        run: ./config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 ${{ matrix.wp_version }}
+      - name: "Create test database"
+        run: mysql -uroot -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
 
       - name: "Run WordPress tests with coverage"
+        env:
+          DB_HOST: "127.0.0.1:3306"
+          DB_USER: "root"
+          MYSQL_ROOT_PASSWORD: ""
+          MYSQL_DATABASE: "wordpress_test"
         run: composer run test:wordPress:coverage
 
       - name: "Send coverage to Coveralls"
         env:
           COVERALLS_REPO_TOKEN: ${{ github.token }}
         if: ${{ env.COVERALLS_REPO_TOKEN }}
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
           flag-name: wp-test-$
           allow-empty: false
           parallel: true
 
+  wp-test-multisite:
+    name: "WordPress tests (multisite, WP latest)"
+    runs-on: ubuntu-latest
+    needs: unit-test
+
+    services:
+      mysql:
+        image: mysql:9.4
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
+
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
+        with:
+          php-version: "8.3"
+          tools: composer:v2
+
+      - name: "Cache Composer downloads"
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-wplatest-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-wplatest-
+            ${{ runner.os }}-composer-
+
+      - name: "Install composer dependencies"
+        run: composer install --prefer-dist --no-progress
+
+      - name: "Install PHPUnit v9 and WordPress latest"
+        run: |
+          composer require --dev --update-with-all-dependencies 'phpunit/phpunit:^9.0' 'yoast/phpunit-polyfills:^3.0'
+          composer require --dev --update-with-all-dependencies 'wp-phpunit/wp-phpunit:*' 'roots/wordpress:*'
+
+      - name: "Create test database"
+        run: mysql -uroot -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
+
+      - name: "Run WordPress tests in multisite mode"
+        env:
+          DB_HOST: "127.0.0.1:3306"
+          DB_USER: "root"
+          MYSQL_ROOT_PASSWORD: ""
+          MYSQL_DATABASE: "wordpress_test"
+          WP_MULTISITE: "1"
+        run: composer run test:wordPress
+
   finish:
     needs:
       - unit-test
       - wp-test
+      - wp-test-multisite
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Close parallel build
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           parallel-finished: true
           carryforward: "wp-test-1,wp-test-2,wp-test-3,wp-test-4,wp-test-5,wp-test-6,unit"

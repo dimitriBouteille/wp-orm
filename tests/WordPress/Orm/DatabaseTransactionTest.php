@@ -2,19 +2,21 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Orm\AbstractModel;
 use Dbout\WpOrm\Orm\Database;
+use Dbout\WpOrm\Tests\WordPress\Support\CreatesCustomTable;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Blueprint;
 
 class DatabaseTransactionTest extends TestCase
 {
+    use CreatesCustomTable;
+
     private string $tableName = '';
     private AbstractModel $model;
     private Database $db;
@@ -24,19 +26,13 @@ class DatabaseTransactionTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        global $wpdb;
+        parent::setUpBeforeClass();
 
-        $tableName = $wpdb->prefix . 'document';
-        $sql = "CREATE TABLE $tableName (
-            id INT NOT NULL AUTO_INCREMENT,
-            name varchar(100) NOT NULL,
-            url varchar(55) DEFAULT '' NOT NULL,
-            PRIMARY KEY  (id)
-        );";
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta($sql);
-        define('SAVEQUERIES', true);
+        self::createCustomTable('document', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->string('url', 55)->default('');
+        });
     }
 
     /**
@@ -135,8 +131,12 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testBeginTransaction(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
-        $this->assertLastQueryEquals('START TRANSACTION;');
+        $this->assertSame($startLevel + 1, $this->db->transactionLevel());
+
+        // Clean up so the next test does not inherit an open transaction.
+        $this->db->rollBack();
     }
 
     /**
@@ -146,9 +146,10 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testRollback(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
         $this->db->rollBack();
-        $this->assertLastQueryEquals('ROLLBACK;');
+        $this->assertSame($startLevel, $this->db->transactionLevel());
     }
 
     /**
@@ -158,9 +159,77 @@ class DatabaseTransactionTest extends TestCase
      */
     public function testCommit(): void
     {
+        $startLevel = $this->db->transactionLevel();
         $this->db->beginTransaction();
         $this->db->commit();
-        $this->assertLastQueryEquals('COMMIT;');
+        $this->assertSame($startLevel, $this->db->transactionLevel());
+    }
+
+    /**
+     * Pin: nested transactions are not isolated by SAVEPOINTs.
+     *
+     * Database::beginTransaction() always emits `START TRANSACTION;` regardless
+     * of nesting depth, and rollBack() always emits `ROLLBACK;`. There is no
+     * SAVEPOINT logic, so:
+     *
+     *   - calling beginTransaction() while another transaction is open implicitly
+     *     commits the outer one (MySQL behavior on START TRANSACTION),
+     *   - calling rollBack() inside an "inner" transaction rolls back ALL the
+     *     outstanding work, not just the inner statements.
+     *
+     * The transactionLevel() counter increments correctly, which makes it look
+     * like nested transactions work — but the underlying isolation is fake.
+     *
+     * If real SAVEPOINT support is ever added, this test will fail and signal
+     * that nested rollback semantics have changed.
+     *
+     * @group regression-pin
+     * @throws \Throwable
+     * @return void
+     * @covers Database::beginTransaction
+     * @covers Database::rollBack
+     */
+    public function testNestedTransactionRollbackIsNotIsolatedBySavepoint(): void
+    {
+        $insert = sprintf('INSERT INTO %s (name, url) VALUES(?, ?);', $this->tableName);
+
+        // Outer transaction: insert "outer".
+        $this->db->beginTransaction();
+        $this->db->insert($insert, ['outer', 'outer-url']);
+        $this->assertSame(1, $this->db->transactionLevel());
+
+        // "Inner" transaction: emits another START TRANSACTION which implicitly
+        // commits the outer work in MySQL — no SAVEPOINT is created.
+        $this->db->beginTransaction();
+        $this->db->insert($insert, ['inner', 'inner-url']);
+        $this->assertSame(2, $this->db->transactionLevel());
+
+        // Roll back the inner level. With true SAVEPOINTs only "inner" would
+        // disappear; today this ROLLBACK targets whichever transaction MySQL
+        // currently has open, leaving "outer" already committed by the implicit
+        // commit above.
+        $this->db->rollBack();
+        $this->assertSame(1, $this->db->transactionLevel());
+
+        // Roll back the "outer" level — but "outer" was already committed by
+        // the implicit commit, so this ROLLBACK is a no-op for the row.
+        $this->db->rollBack();
+        $this->assertSame(0, $this->db->transactionLevel());
+
+        $names = $this->model::query()->pluck('name')->toArray();
+
+        $this->assertContains(
+            'outer',
+            $names,
+            'Pin: outer row persists because the inner beginTransaction() implicitly '
+            . 'committed it (no SAVEPOINT). If true nested transactions are added, '
+            . 'this row should have been rolled back.'
+        );
+        $this->assertNotContains(
+            'inner',
+            $names,
+            'Inner row was rolled back by the inner ROLLBACK, as expected.'
+        );
     }
 
     /**
@@ -175,7 +244,7 @@ class DatabaseTransactionTest extends TestCase
         $firstQuery = reset($query)[0] ?? '';
         $lastQuery = end($query)[0] ?? '';
         $this->assertEquals('START TRANSACTION;', $firstQuery);
-        $this->assertEquals(0, $this->db->transactionCount);
+        $this->assertEquals(0, $this->db->transactionLevel());
 
         if ($mode === 'commit') {
             $this->assertEquals('COMMIT;', $lastQuery);

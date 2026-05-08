@@ -9,6 +9,7 @@
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictConstructorRector;
+use Rector\TypeDeclaration\Rector\StmtsAwareInterface\SafeDeclareStrictTypesRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -23,4 +24,7 @@ return RectorConfig::configure()
     )
     ->withSets([
         SetList::PHP_82,
+    ])
+    ->withSkip([
+        SafeDeclareStrictTypesRector::class,
     ]);

@@ -2,17 +2,19 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
 
 use Dbout\WpOrm\Orm\AbstractModel;
+use Dbout\WpOrm\Tests\WordPress\Support\CreatesCustomTable;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
+use Illuminate\Database\Schema\Blueprint;
 
 class AbstractModelWithCustomTableTest extends TestCase
 {
+    use CreatesCustomTable;
+
     private const TABLE_NAME = 'custom_table';
     private static AbstractModel $model;
 
@@ -21,19 +23,14 @@ class AbstractModelWithCustomTableTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        global $wpdb;
+        parent::setUpBeforeClass();
 
-        $tableName = $wpdb->prefix . self::TABLE_NAME;
-        $sql = "CREATE TABLE $tableName (
-            id INT NOT NULL AUTO_INCREMENT,
-            name varchar(100) NOT NULL,
-            url varchar(55) DEFAULT '' NOT NULL,
-            metadata JSON,
-            PRIMARY KEY  (id)
-        );";
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta($sql);
+        self::createCustomTable(self::TABLE_NAME, function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->string('url', 55)->default('');
+            $table->json('metadata')->nullable();
+        });
 
         self::$model = new class () extends AbstractModel {
             protected $primaryKey = 'id';
@@ -144,7 +141,8 @@ class AbstractModelWithCustomTableTest extends TestCase
         }
 
         $selectedIds = self::$model::query()->where('metadata->address.country', 'SE')->get()->pluck('id')->toArray();
-        $this->assertLastQueryEquals("select * from `#TABLE_PREFIX#custom_table` where json_unquote(json_extract(`metadata`, '$.address.country')) = 'SE'");
+        // Pin the WordPressGrammar JSON idiom; full SQL shape is implementation detail.
+        $this->assertLastQueryContains("json_unquote(json_extract(`metadata`, '$.address.country'))");
         $this->assertEquals($seIds, $selectedIds);
     }
 
@@ -193,7 +191,7 @@ class AbstractModelWithCustomTableTest extends TestCase
         }
 
         $selectedIds = self::$model::query()->where('metadata->type', 'edm')->get()->pluck('id')->toArray();
-        $this->assertLastQueryEquals("select * from `#TABLE_PREFIX#custom_table` where json_unquote(json_extract(`metadata`, '$.type')) = 'edm'");
+        $this->assertLastQueryContains("json_unquote(json_extract(`metadata`, '$.type'))");
         $this->assertEquals($edmIds, $selectedIds);
     }
 

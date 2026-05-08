@@ -2,14 +2,12 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Models\Meta;
 
 use Dbout\WpOrm\Models\User;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read User|null $user
@@ -30,15 +28,10 @@ class UserMeta extends AbstractMeta
     protected $table = 'usermeta';
 
     /**
-     * @inheritdoc
+     * @return BelongsTo
      */
-    protected bool $useBasePrefix = true;
-
-    /**
-     * @return HasOne
-     */
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, User::USER_ID, self::USER_ID);
+        return $this->belongsTo(User::class, self::USER_ID, User::USER_ID);
     }
 }

@@ -2,24 +2,29 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Tests\WordPress\Concerns;
 
 use Carbon\Carbon;
 use Dbout\WpOrm\Orm\AbstractModel;
-use Dbout\WpOrm\Orm\Database;
+use Dbout\WpOrm\Tests\WordPress\Support\CreatesCustomTable;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Schema\Blueprint;
 
 class PrunableTest extends TestCase
 {
+    use CreatesCustomTable;
+
+    /**
+     * @inheritDoc
+     */
     public static function setUpBeforeClass(): void
     {
-        Database::getInstance()->getSchemaBuilder()->create('sales_payment', function (Blueprint $table) {
+        parent::setUpBeforeClass();
+
+        self::createCustomTable('sales_payment', function (Blueprint $table) {
             $table->id();
             $table->date('created_at');
             $table->string('method');
@@ -90,5 +95,8 @@ class PrunableTest extends TestCase
 
         $result = $model::query()->whereDate('created_at', '<', Carbon::create(2025, 1, 1))->count();
         $this->assertEquals(0, $result, 'It should no longer have value since all the rows were deleted before.');
+
+        $result = $model::query()->whereDate('created_at', '>=', Carbon::create(2025, 1, 1))->count();
+        $this->assertEquals(3, $result, '3 lines must still be present in the database because the creation date is greater than 2025.');
     }
 }

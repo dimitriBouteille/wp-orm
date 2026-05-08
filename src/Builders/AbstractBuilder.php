@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Builders;
@@ -34,7 +32,7 @@ abstract class AbstractBuilder extends Builder
         $first = reset($value);
         if (is_array($first)) {
             $this->whereIn($columns, $first);
-        } elseif (count($value) == 1) {
+        } elseif (count($value) === 1) {
             $this->where($columns, reset($value));
         } else {
             $this->whereIn($columns, $value);

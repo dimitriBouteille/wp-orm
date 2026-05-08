@@ -10,6 +10,7 @@
          displayDetailsOnTestsThatTriggerErrors="true"
          displayDetailsOnTestsThatTriggerNotices="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnPhpunitNotices="true"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"

@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Tests\WordPress\Orm;
@@ -17,7 +15,7 @@ class DatabaseTest extends TestCase
     private Database $database;
 
     /**
-     * @return void
+     * @inheritDoc
      */
     public function setUp(): void
     {
@@ -55,35 +53,33 @@ class DatabaseTest extends TestCase
     }
 
     /**
-     * @param string $table
-     * @param string|null $alias
-     * @param string $expectedQuery
-     * @return void
      * @covers Database::table
-     * @dataProvider providerTestTable
+     * @return void
      */
-    public function testTable(string $table, ?string $alias, string $expectedQuery): void
+    public function testGetTableWithoutAlias(): void
     {
-        $builder = $this->database->table($table, $alias);
-        $this->assertEquals($expectedQuery, $builder->toSql());
+        $builder = $this->database->table('options');
+        $this->assertEquals(
+            sprintf('select * from `%s`', $this->getTable('options')),
+            $builder->toSql()
+        );
     }
 
     /**
-     * @return \Generator
+     * @covers Database::table
+     * @return void
      */
-    protected function providerTestTable(): \Generator
+    public function testGetTableWithAlias(): void
     {
-        yield 'Without alias' => [
-            'options',
-            null,
-            sprintf('select * from `%s`', $this->getTable('options')),
-        ];
-
-        yield 'With alias' => [
-            'options',
-            'opts',
-            sprintf('select * from `%s` as `opts`', $this->getTable('options')),
-        ];
+        $builder = $this->database->table('options', 'opts');
+        $this->assertEquals(
+            sprintf(
+                'select * from `%s` as `%s`',
+                $this->getTable('options'),
+                $this->getTable('opts')
+            ),
+            $builder->toSql()
+        );
     }
 
     /**

@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Concerns;
@@ -37,11 +35,16 @@ trait HasMetas
         'bool',
         'boolean',
         'collection',
+        'custom_datetime',
         'date',
         'datetime',
+        'decimal',
         'double',
         'float',
+        'real',
+        'immutable_custom_datetime',
         'immutable_date',
+        'immutable_datetime',
         'int',
         'integer',
         'json',
@@ -51,7 +54,7 @@ trait HasMetas
     ];
 
     /**
-     * The cache of the converted meta cast types.
+     * The cache of the converted meta-cast types.
      *
      * @var array
      */
@@ -234,10 +237,11 @@ trait HasMetas
             case 'int':
             case 'integer':
                 return (int)$value;
-            case 'real':
             case 'float':
             case 'double':
                 return (float)$value;
+            case 'decimal':
+                return $this->asDecimal($value, (int)(explode(':', (string)$this->getMetaCasts()[$key], 2)[1] ?? 0));
             case 'string':
                 return (string)$value;
             case 'bool':
@@ -253,9 +257,13 @@ trait HasMetas
             case 'date':
                 return $this->asDate($value);
             case 'datetime':
+            case 'custom_datetime':
                 return $this->asDateTime($value);
             case 'immutable_date':
                 return $this->asDate($value)->toImmutable();
+            case 'immutable_datetime':
+            case 'immutable_custom_datetime':
+                return $this->asDateTime($value)->toImmutable();
             case 'timestamp':
                 return $this->asTimestamp($value);
         }
@@ -320,7 +328,7 @@ trait HasMetas
      * @param string|null $types
      * @return bool
      */
-    public function metaHasCast(string $key, string $types = null): bool
+    public function metaHasCast(string $key, ?string $types = null): bool
     {
         if (array_key_exists($key, $this->getMetaCasts())) {
             return !$types || in_array($this->getMetaCastType($key), (array)$types, true);

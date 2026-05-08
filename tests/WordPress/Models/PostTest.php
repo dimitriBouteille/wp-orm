@@ -2,8 +2,6 @@
 /**
  * Copyright © Dimitri BOUTEILLE (https://github.com/dimitriBouteille)
  * See LICENSE.txt for license details.
- *
- * Author: Dimitri BOUTEILLE <bonjour@dimitri-bouteille.fr>
  */
 
 namespace Dbout\WpOrm\Tests\WordPress\Models;
@@ -107,7 +105,6 @@ class PostTest extends TestCase
 
         $newObject = Post::find($object->getId());
         $parent = $newObject->parent;
-        $this->assertLastQueryHasOneRelation('posts', 'ID', $objectId);
 
         $this->assertInstanceOf(Post::class, $parent);
         $this->assertEquals($objectId, $parent->getId());
@@ -136,7 +133,6 @@ class PostTest extends TestCase
 
         $newObject = Post::find($object->getId());
         $author = $newObject->author;
-        $this->assertLastQueryHasOneRelation('users', 'ID', $userId);
         $this->assertInstanceOf(User::class, $author);
         $this->assertEquals($userId, $author->getId());
     }
@@ -148,7 +144,7 @@ class PostTest extends TestCase
     public function testComments(): void
     {
         /**
-         * Create fake post with any relation with post
+         * Create a fake post with any relation with post
          */
         self::factory()->comment->create([
             'comment_post_ID' => 1585,

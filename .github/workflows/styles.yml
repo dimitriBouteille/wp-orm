@@ -13,12 +13,12 @@ jobs:
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: "Configure PHP"
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
         with:
-          php-version: 8.2
+          php-version: 8.3
           tools: composer:v2
 
       - name: "Install dependencies"
