@@ -1,5 +1,8 @@
 changelog:
   categories:
+    - title: Security 🛡️
+      labels:
+        - Security
     - title: Breaking Changes 🛠
       labels:
         - Breaking change
