@@ -21,8 +21,8 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.3",
-    "illuminate/database": "^12.0",
-    "illuminate/events": "^12.0"
+    "illuminate/database": "^13.0",
+    "illuminate/events": "^13.0"
   },
   "autoload": {
     "files": [

@@ -102,7 +102,7 @@ class Database extends Connection
     /**
      * @inheritDoc
      */
-    public function select($query, $bindings = [], $useReadPdo = true): array
+    public function select($query, $bindings = [], $useReadPdo = true, array $fetchUsing = []): array
     {
         return $this->run($query, $bindings, function (string $query, array $bindings) {
             $query = $this->bindParams($query, $bindings);
@@ -113,7 +113,7 @@ class Database extends Connection
     /**
      * @inheritDoc
      */
-    public function cursor($query, $bindings = [], $useReadPdo = true): \Generator
+    public function cursor($query, $bindings = [], $useReadPdo = true, array $fetchUsing = []): \Generator
     {
         $results = $this->select($query, $bindings, $useReadPdo);
         foreach ($results as $result) {
