@@ -60,7 +60,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:9.4
+        image: mysql:9.6
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
         ports:
@@ -130,7 +130,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:9.4
+        image: mysql:9.6
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
         ports:
