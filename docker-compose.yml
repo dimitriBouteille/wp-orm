@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mysql:9.4
+    image: mysql:9.6
     container_name: wp-orm-mysql-test
     ports:
       - "3307:3306"
