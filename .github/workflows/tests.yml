@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: "Install PHP"
         uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
@@ -23,7 +23,7 @@ jobs:
           coverage: xdebug
 
       - name: "Cache Composer downloads"
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -56,11 +56,11 @@ jobs:
 
     strategy:
       matrix:
-        wp_version: ["6.5", "6.6", "6.7", "6.8", "6.9", "7.0", "latest"]
+        wp_version: ["6.5", "6.6", "6.7", "6.8", "6.9", "7.0", "7.1", "latest"]
 
     services:
       mysql:
-        image: mysql:9.6
+        image: mysql:9.7
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
         ports:
@@ -69,7 +69,7 @@ jobs:
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: "Install PHP"
         uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
@@ -79,7 +79,7 @@ jobs:
           coverage: xdebug
 
       - name: "Cache Composer downloads"
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-wp${{ matrix.wp_version }}-${{ hashFiles('**/composer.lock') }}
@@ -130,7 +130,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:9.6
+        image: mysql:9.7
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
         ports:
@@ -139,7 +139,7 @@ jobs:
 
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: "Install PHP"
         uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
@@ -148,7 +148,7 @@ jobs:
           tools: composer:v2
 
       - name: "Cache Composer downloads"
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-wplatest-${{ hashFiles('**/composer.lock') }}
