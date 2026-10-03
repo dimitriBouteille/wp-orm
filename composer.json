@@ -42,7 +42,7 @@
     "rector/rector": "2.4.1",
     "phpstan/extension-installer": "1.4.3",
     "szepeviktor/phpstan-wordpress": "2.0.3",
-    "friendsofphp/php-cs-fixer": "3.94.2",
+    "friendsofphp/php-cs-fixer": "3.95.24",
     "phpstan/phpstan": "2.1.46",
     "roots/wordpress": "6.9.4",
     "wp-phpunit/wp-phpunit": "^6.8"
