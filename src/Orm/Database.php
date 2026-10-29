@@ -68,6 +68,7 @@ class Database extends Connection
             [
                 'name' => 'wp-eloquent-mysql2',
                 'charset' => $wpdb->charset,
+                'collation' => $wpdb->collate,
                 'collate' => $wpdb->collate,
                 'version' => $wpdb->db_version(),
             ]
