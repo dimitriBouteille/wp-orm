@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: "8.3"
           tools: composer:v2
@@ -42,7 +42,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ github.token }}
         if: ${{ env.COVERALLS_REPO_TOKEN }}
-        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
           flag-name: "unit"
@@ -72,7 +72,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: "8.3"
           tools: composer:v2
@@ -116,7 +116,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ github.token }}
         if: ${{ env.COVERALLS_REPO_TOKEN }}
-        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
           github-token: ${{ env.COVERALLS_REPO_TOKEN }}
           flag-name: wp-test-$
@@ -142,7 +142,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: "8.3"
           tools: composer:v2
@@ -185,7 +185,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close parallel build
-        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2
         with:
           parallel-finished: true
           carryforward: "wp-test-1,wp-test-2,wp-test-3,wp-test-4,wp-test-5,wp-test-6,unit"
