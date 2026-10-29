@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Database::class)]
 #[CoversMethod(Database::class, 'getInstance')]
+#[CoversMethod(Database::class, '__construct')]
 #[CoversMethod(Database::class, 'isMaria')]
 #[CoversMethod(Database::class, 'getServerVersion')]
 #[CoversMethod(Database::class, 'pretend')]
@@ -79,6 +80,22 @@ class DatabaseTest extends TestCase
         $this->assertTrue($database->isMaria());
 
         $this->assertTrue($database->isMaria());
+    }
+
+    /**
+     * The schema grammar reads the `charset` and `collation` keys, they must
+     * mirror the $wpdb configuration.
+     *
+     * @return void
+     */
+    public function testConfigUsesWpdbCharsetAndCollation(): void
+    {
+        $database = $this->createDatabaseWithMockedWpdb([
+            'db_version' => '8.0.0',
+        ]);
+
+        $this->assertSame('utf8mb4', $database->getConfig('charset'));
+        $this->assertSame('utf8mb4_unicode_ci', $database->getConfig('collation'));
     }
 
     /**

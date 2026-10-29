@@ -8,9 +8,9 @@ namespace Dbout\WpOrm\Orm\Query\Processors;
 
 use Dbout\WpOrm\Orm\Database;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Query\Processors\Processor;
+use Illuminate\Database\Query\Processors\MySqlProcessor;
 
-class WordPressProcessor extends Processor
+class WordPressProcessor extends MySqlProcessor
 {
     /**
      * @inheritDoc
