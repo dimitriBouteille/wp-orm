@@ -38,6 +38,7 @@
     }
   },
   "require-dev": {
+    "illuminate/filesystem": "^13.0",
     "phpunit/phpunit": "^12.5",
     "rector/rector": "2.4.1",
     "phpstan/extension-installer": "1.4.3",
@@ -46,6 +47,9 @@
     "phpstan/phpstan": "2.1.46",
     "roots/wordpress": "6.9.9",
     "wp-phpunit/wp-phpunit": "^6.8"
+  },
+  "suggest": {
+    "illuminate/filesystem": "Required to use the migration system (^13.0)."
   },
   "config": {
     "allow-plugins": {
