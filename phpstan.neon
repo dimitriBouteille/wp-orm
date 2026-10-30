@@ -8,3 +8,4 @@ parameters:
         - tests/stubs
     scanFiles:
         - tests/stubs/wp-phpunit.php
+        - vendor/wp-cli/wp-cli/php/utils.php

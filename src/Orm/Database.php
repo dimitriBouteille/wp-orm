@@ -463,7 +463,7 @@ class Database extends Connection
     /**
      * @inheritDoc
      */
-    public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
+    public function getSchemaBuilder(): WordPressBuilder
     {
         if (is_null($this->schemaGrammar)) {
             $this->useDefaultSchemaGrammar();
