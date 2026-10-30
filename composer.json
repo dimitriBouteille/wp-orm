@@ -50,7 +50,8 @@
     "wp-cli/wp-cli": "^2.12"
   },
   "suggest": {
-    "illuminate/filesystem": "Required to use the migration system (^13.0)."
+    "illuminate/filesystem": "Required to use the migration system (^13.0).",
+    "wp-cli/wp-cli-bundle": "Required to run the migration commands, a global WP-CLI install (https://wp-cli.org) works too."
   },
   "config": {
     "allow-plugins": {
