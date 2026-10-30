@@ -7,8 +7,14 @@
 namespace Dbout\WpOrm\Migrations;
 
 use Dbout\WpOrm\Exceptions\MigrationException;
+use Dbout\WpOrm\Migrations\Commands\MigrateCommand;
+use Dbout\WpOrm\Migrations\Commands\ResetCommand;
+use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
+use Dbout\WpOrm\Migrations\Commands\StatusCommand;
 use Dbout\WpOrm\Orm\Resolver;
+use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\Migrations\Migrator;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 
 /**
@@ -16,17 +22,28 @@ use Illuminate\Filesystem\Filesystem;
  *
  *     Migrations::enable([
  *         'paths' => [__DIR__ . '/database/migrations'],
- *         'table' => 'migrations',
+ *         'table' => 'orm_migrations',
  *     ]);
  */
 class Migrations
 {
+    /**
+     * WP-CLI commands registered when the migration system is enabled.
+     */
+    public const array COMMANDS = [
+        'orm migrate' => MigrateCommand::class,
+        'orm migrate:rollback' => RollbackCommand::class,
+        'orm migrate:status' => StatusCommand::class,
+        'orm migrate:reset' => ResetCommand::class,
+    ];
+
     protected static ?MigrationConfig $config = null;
     protected static ?Migrator $migrator = null;
+    protected static ?DispatcherContract $events = null;
 
     /**
-     * Enable the migration system. Only the configuration is checked here, enable()
-     * is meant to be called on every request so it must stay cheap.
+     * Enable the migration system and register the WP-CLI commands. Only the configuration
+     * is checked here, enable() is meant to be called on every request so it must stay cheap.
      *
      * @param array<string, mixed> $config
      * @throws MigrationException
@@ -39,6 +56,12 @@ class Migrations
         }
 
         self::$config = MigrationConfig::fromArray($config);
+
+        if (defined('WP_CLI') && WP_CLI && class_exists(\WP_CLI::class)) {
+            foreach (self::COMMANDS as $name => $command) {
+                \WP_CLI::add_command($name, $command);
+            }
+        }
     }
 
     /**
@@ -89,10 +112,21 @@ class Migrations
         self::$migrator = new Migrator(
             new MigrationRepository($resolver, $config->table),
             $resolver,
-            new Filesystem()
+            new Filesystem(),
+            self::getEventDispatcher()
         );
 
         return self::$migrator;
+    }
+
+    /**
+     * Events dispatched by the migrator (MigrationStarted, MigrationEnded...).
+     *
+     * @return DispatcherContract
+     */
+    public static function getEventDispatcher(): DispatcherContract
+    {
+        return self::$events ??= new Dispatcher();
     }
 
     /**
@@ -105,5 +139,6 @@ class Migrations
     {
         self::$config = null;
         self::$migrator = null;
+        self::$events = null;
     }
 }

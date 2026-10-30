@@ -10,7 +10,7 @@ use Dbout\WpOrm\Exceptions\MigrationException;
 
 class MigrationConfig
 {
-    public const string DEFAULT_TABLE = 'migrations';
+    public const string DEFAULT_TABLE = 'orm_migrations';
 
     /**
      * @param array<string> $paths Directories containing the migration files

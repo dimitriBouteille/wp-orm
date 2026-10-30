@@ -7,8 +7,13 @@
 namespace Dbout\WpOrm\Tests\Unit\Migrations;
 
 use Dbout\WpOrm\Exceptions\MigrationException;
+use Dbout\WpOrm\Migrations\Commands\MigrateCommand;
+use Dbout\WpOrm\Migrations\Commands\ResetCommand;
+use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
+use Dbout\WpOrm\Migrations\Commands\StatusCommand;
 use Dbout\WpOrm\Migrations\MigrationRepository;
 use Dbout\WpOrm\Migrations\Migrations;
+use Illuminate\Database\Events\NoPendingMigrations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
@@ -143,5 +148,63 @@ class MigrationsTest extends TestCase
 
         Migrations::enable(['paths' => [__DIR__]]);
         $this->assertNotSame($migrator, Migrations::getMigrator());
+    }
+
+    /**
+     * @return void
+     */
+    public function testCommands(): void
+    {
+        $this->assertSame([
+            'orm migrate' => MigrateCommand::class,
+            'orm migrate:rollback' => RollbackCommand::class,
+            'orm migrate:status' => StatusCommand::class,
+            'orm migrate:reset' => ResetCommand::class,
+        ], Migrations::COMMANDS);
+    }
+
+    /**
+     * WP-CLI is not loaded in the unit tests: enable() must not try to register the commands.
+     *
+     * @return void
+     */
+    public function testEnableOutsideWpCli(): void
+    {
+        $this->assertFalse(defined('WP_CLI'));
+
+        Migrations::enable(['paths' => [__DIR__]]);
+
+        $this->assertTrue(Migrations::isEnabled());
+    }
+
+    /**
+     * @return void
+     */
+    public function testEventDispatcher(): void
+    {
+        $events = Migrations::getEventDispatcher();
+        $this->assertSame($events, Migrations::getEventDispatcher());
+
+        Migrations::reset();
+        $this->assertNotSame($events, Migrations::getEventDispatcher());
+    }
+
+    /**
+     * @return void
+     */
+    public function testMigratorDispatchesEvents(): void
+    {
+        Migrations::enable(['paths' => [__DIR__]]);
+        $dispatched = [];
+        Migrations::getEventDispatcher()->listen(
+            NoPendingMigrations::class,
+            function (NoPendingMigrations $event) use (&$dispatched): void {
+                $dispatched[] = $event->method;
+            }
+        );
+
+        Migrations::getMigrator()->fireMigrationEvent(new NoPendingMigrations('up'));
+
+        $this->assertSame(['up'], $dispatched);
     }
 }

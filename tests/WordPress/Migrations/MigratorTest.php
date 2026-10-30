@@ -22,7 +22,7 @@ use Illuminate\Database\Migrations\Migrator;
 class MigratorTest extends TestCase
 {
     private const string FIXTURES = __DIR__ . '/Fixtures';
-    private const array TABLES = ['mig_orders', 'mig_customers', 'mig_partial', 'test_migrations', 'migrations'];
+    private const array TABLES = ['mig_orders', 'mig_customers', 'mig_partial', 'test_migrations', 'orm_migrations'];
 
     private WordPressBuilder $schema;
 
@@ -75,7 +75,7 @@ class MigratorTest extends TestCase
         Migrations::enable(['paths' => [self::FIXTURES . '/basic']]);
         $this->repository(Migrations::getMigrator())->createRepository();
 
-        $this->assertTrue($this->schema->hasTable('migrations'));
+        $this->assertTrue($this->schema->hasTable('orm_migrations'));
     }
 
     /**
