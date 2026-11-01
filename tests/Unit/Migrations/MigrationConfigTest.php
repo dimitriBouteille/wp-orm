@@ -76,7 +76,7 @@ class MigrationConfigTest extends TestCase
             $table
         ));
 
-        new MigrationConfig(['/app/migrations'], $table);
+        MigrationConfig::fromArray(['paths' => ['/app/migrations'], 'table' => $table]);
     }
 
     /**

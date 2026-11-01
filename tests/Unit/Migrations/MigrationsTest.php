@@ -78,7 +78,9 @@ class MigrationsTest extends TestCase
     {
         try {
             Migrations::enable(['paths' => []]);
-        } catch (MigrationException) {
+            $this->fail('An invalid configuration must throw an exception.');
+        } catch (MigrationException $exception) {
+            $this->assertSame('The "paths" option must be a non-empty list of directories.', $exception->getMessage());
         }
 
         $this->assertFalse(Migrations::isEnabled());

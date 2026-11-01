@@ -4,6 +4,7 @@
  * See LICENSE.txt for license details.
  */
 use Dbout\WpOrm\Migrations\Migration;
+use Dbout\WpOrm\Tests\WordPress\Migrations\FailingMigrationException;
 use Illuminate\Database\Schema\Blueprint;
 
 return new class () extends Migration {
@@ -13,7 +14,7 @@ return new class () extends Migration {
             $table->id();
         });
 
-        throw new \RuntimeException('Migration failed.');
+        throw new FailingMigrationException('Migration failed.');
     }
 
     public function down(): void

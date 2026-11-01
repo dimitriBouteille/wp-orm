@@ -285,7 +285,7 @@ class MigratorTest extends TestCase
         try {
             $migrator->run($this->paths(['failing']));
             $this->fail('The failing migration should throw an exception.');
-        } catch (\RuntimeException $exception) {
+        } catch (FailingMigrationException $exception) {
             $this->assertSame('Migration failed.', $exception->getMessage());
         }
 
