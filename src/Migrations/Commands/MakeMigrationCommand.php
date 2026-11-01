@@ -30,14 +30,14 @@ class MakeMigrationCommand extends AbstractCommand
      * [--table=<table>]
      * : The table to update, without the WordPress prefix.
      *
-     * [--path=<path>]
+     * [--dir=<directory>]
      * : The directory of the migration, it must be one of the configured paths. Defaults to the first one.
      *
      * ## EXAMPLES
      *
      *     wp orm make:migration create_orders_table
      *     wp orm make:migration add_status_to_orders_table
-     *     wp orm make:migration create_orders_table --create=shop_orders --path=wp-content/plugins/shop/migrations
+     *     wp orm make:migration create_orders_table --create=shop_orders --dir=wp-content/plugins/shop/migrations
      *
      * @param array<string> $args
      * @param array<string, mixed> $assocArgs
@@ -55,7 +55,7 @@ class MakeMigrationCommand extends AbstractCommand
             }
 
             [$table, $create] = $this->getTable($name, $assocArgs);
-            $path = $this->getPath($assocArgs);
+            $path = $this->getDirectory($assocArgs);
             $this->ensureMigrationDoesntExist($name);
 
             $file = Migrations::getMigrationCreator()->create($name, $path, $table, $create);
@@ -115,19 +115,20 @@ class MakeMigrationCommand extends AbstractCommand
 
     /**
      * The migration must be created in a configured path, otherwise it would never run.
+     * The option is not named --path, it is a global WP-CLI option (path of the WordPress install).
      *
      * @param array<string, mixed> $assocArgs
      * @throws MigrationException
      * @return string
      */
-    protected function getPath(array $assocArgs): string
+    protected function getDirectory(array $assocArgs): string
     {
         $paths = $this->paths();
-        if (!isset($assocArgs['path'])) {
+        if (!isset($assocArgs['dir'])) {
             return $paths[0];
         }
 
-        $path = is_string($assocArgs['path']) ? $assocArgs['path'] : '';
+        $path = is_string($assocArgs['dir']) ? $assocArgs['dir'] : '';
         $realPath = realpath($path);
         foreach ($paths as $configuredPath) {
             if (rtrim($configuredPath, '/') === rtrim($path, '/')
@@ -137,7 +138,7 @@ class MakeMigrationCommand extends AbstractCommand
         }
 
         throw new MigrationException(sprintf(
-            'The path "%s" is not a configured migration path, available paths: %s',
+            'The directory "%s" is not a configured migration path, available paths: %s',
             $path,
             implode(', ', $paths)
         ));

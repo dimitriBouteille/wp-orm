@@ -167,6 +167,25 @@ class MigrationsTest extends TestCase
     }
 
     /**
+     * WP-CLI handles its global options itself (--path, --url, --user...), they never reach the command.
+     *
+     * @return void
+     */
+    public function testCommandsDoNotUseWpCliGlobalOptions(): void
+    {
+        $spec = require dirname(__DIR__, 3) . '/vendor/wp-cli/wp-cli/php/config-spec.php';
+        $globalOptions = array_keys(array_filter($spec, static fn (array $option): bool => ($option['runtime'] ?? false) !== false));
+        $this->assertContains('path', $globalOptions);
+
+        foreach (Migrations::COMMANDS as $name => $command) {
+            $docComment = (string) (new \ReflectionMethod($command, '__invoke'))->getDocComment();
+            preg_match_all('/^\s*\* \[?--([\w-]+)/m', $docComment, $matches);
+
+            $this->assertSame([], array_intersect($matches[1], $globalOptions), $name);
+        }
+    }
+
+    /**
      * @return void
      */
     public function testGetMigrationCreatorWhenDisabled(): void
