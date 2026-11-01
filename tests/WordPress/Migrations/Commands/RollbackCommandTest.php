@@ -127,6 +127,26 @@ class RollbackCommandTest extends CommandTestCase
 
     /**
      * @return void
+     * @covers RollbackCommand::withProgress
+     */
+    public function testRollbackWithMissingFile(): void
+    {
+        $this->enable(['basic', 'extra']);
+        $this->migrate(['basic', 'extra']);
+        Migrations::reset();
+        $this->enable(['basic']);
+
+        $this->assertSame(0, $this->runCommand(new RollbackCommand(), ['yes' => true]));
+
+        $this->assertErrorOutputContains(
+            'Warning: Migration file not found, 2026_01_01_500000_create_mig_customers_table cannot be rolled back.'
+        );
+        $this->assertOutputContains('Success: 2 migration(s) rolled back.');
+        $this->assertSame(['2026_01_01_500000_create_mig_customers_table'], $this->getRan());
+    }
+
+    /**
+     * @return void
      * @covers RollbackCommand::confirm
      */
     public function testDeclinedConfirmation(): void

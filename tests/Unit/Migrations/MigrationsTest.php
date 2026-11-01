@@ -14,6 +14,7 @@ use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
 use Dbout\WpOrm\Migrations\Commands\StatusCommand;
 use Dbout\WpOrm\Migrations\MigrationRepository;
 use Dbout\WpOrm\Migrations\Migrations;
+use Dbout\WpOrm\Migrations\Migrator;
 use Illuminate\Database\Events\NoPendingMigrations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
@@ -133,6 +134,7 @@ class MigrationsTest extends TestCase
         Migrations::enable(['paths' => [__DIR__]]);
         $migrator = Migrations::getMigrator();
 
+        $this->assertInstanceOf(Migrator::class, $migrator);
         $this->assertInstanceOf(MigrationRepository::class, $migrator->getRepository());
         $this->assertSame($migrator, Migrations::getMigrator());
     }

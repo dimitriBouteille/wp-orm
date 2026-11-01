@@ -6,12 +6,13 @@
 
 namespace Dbout\WpOrm\Tests\WordPress\Migrations;
 
+use Dbout\WpOrm\Migrations\Events\MigrationNotFound;
 use Dbout\WpOrm\Migrations\MigrationRepository;
 use Dbout\WpOrm\Migrations\Migrations;
+use Dbout\WpOrm\Migrations\Migrator;
 use Dbout\WpOrm\Orm\Database;
 use Dbout\WpOrm\Orm\Schemas\WordPressBuilder;
 use Dbout\WpOrm\Tests\WordPress\TestCase;
-use Illuminate\Database\Migrations\Migrator;
 
 /**
  * Runs Illuminate's migrator on top of the wpdb connection.
@@ -214,6 +215,63 @@ class MigratorTest extends TestCase
     }
 
     /**
+     * The file of a migration that ran was deleted: it is skipped, an event is dispatched and its row is kept.
+     *
+     * @return void
+     * @covers Migrator::rollbackMigrations
+     */
+    public function testRollbackWithMissingFile(): void
+    {
+        $migrator = $this->createMigrator(['basic', 'extra']);
+        $migrator->run($this->paths(['basic', 'extra']));
+        $notFound = $this->listenMigrationNotFound();
+
+        $rolledBack = $migrator->rollback($this->paths(['basic']));
+
+        $this->assertSame(['2026_01_01_500000_create_mig_customers_table'], $notFound->getArrayCopy());
+        $this->assertCount(2, $rolledBack);
+        $this->assertSame(['2026_01_01_500000_create_mig_customers_table'], $this->repository($migrator)->getRan());
+        $this->assertTrue($this->schema->hasTable('mig_customers'));
+        $this->assertFalse($this->schema->hasTable('mig_orders'));
+    }
+
+    /**
+     * @return void
+     * @covers Migrator::rollbackMigrations
+     */
+    public function testResetWithMissingFile(): void
+    {
+        $migrator = $this->createMigrator(['basic', 'extra']);
+        $migrator->run($this->paths(['basic']));
+        $migrator->run($this->paths(['basic', 'extra']));
+        $notFound = $this->listenMigrationNotFound();
+
+        $migrator->reset($this->paths(['extra']));
+
+        $this->assertSame([
+            '2026_01_02_000000_add_status_to_mig_orders_table',
+            '2026_01_01_000000_create_mig_orders_table',
+        ], $notFound->getArrayCopy());
+        $this->assertCount(2, $this->repository($migrator)->getRan());
+        $this->assertFalse($this->schema->hasTable('mig_customers'));
+    }
+
+    /**
+     * @return void
+     * @covers Migrator::rollbackMigrations
+     */
+    public function testRollbackWithoutMissingFile(): void
+    {
+        $migrator = $this->createMigrator(['basic']);
+        $migrator->run($this->paths(['basic']));
+        $notFound = $this->listenMigrationNotFound();
+
+        $migrator->reset($this->paths(['basic']));
+
+        $this->assertSame([], $notFound->getArrayCopy());
+    }
+
+    /**
      * MySQL does not support transactional DDL: the statements executed before the
      * failure are kept, but the failed migration is not logged and can be run again.
      *
@@ -273,6 +331,23 @@ class MigratorTest extends TestCase
         $this->repository($migrator)->createRepository();
 
         return $migrator;
+    }
+
+    /**
+     * @return \ArrayObject<int, string> Names of the migrations not found
+     */
+    private function listenMigrationNotFound(): \ArrayObject
+    {
+        /** @var \ArrayObject<int, string> $notFound */
+        $notFound = new \ArrayObject();
+        Migrations::getEventDispatcher()->listen(
+            MigrationNotFound::class,
+            static function (MigrationNotFound $event) use ($notFound): void {
+                $notFound[] = $event->migration;
+            }
+        );
+
+        return $notFound;
     }
 
     /**

@@ -6,11 +6,12 @@
 
 namespace Dbout\WpOrm\Migrations\Commands;
 
+use Dbout\WpOrm\Migrations\Events\MigrationNotFound;
 use Dbout\WpOrm\Migrations\Migrations;
+use Dbout\WpOrm\Migrations\Migrator;
 use Illuminate\Database\Events\MigrationEnded;
 use Illuminate\Database\Events\MigrationSkipped;
 use Illuminate\Database\Events\MigrationStarted;
-use Illuminate\Database\Migrations\Migrator;
 use WP_CLI\ExitException;
 
 abstract class AbstractCommand
@@ -66,12 +67,17 @@ abstract class AbstractCommand
             \WP_CLI::log(sprintf('Skipped: %s', $event->migrationName));
         });
 
+        $events->listen(MigrationNotFound::class, function (MigrationNotFound $event): void {
+            \WP_CLI::warning(sprintf('Migration file not found, %s cannot be rolled back.', $event->migration));
+        });
+
         try {
             $callback();
         } finally {
             $events->forget(MigrationStarted::class);
             $events->forget(MigrationEnded::class);
             $events->forget(MigrationSkipped::class);
+            $events->forget(MigrationNotFound::class);
         }
     }
 

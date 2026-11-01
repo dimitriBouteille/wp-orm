@@ -14,7 +14,6 @@ use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
 use Dbout\WpOrm\Migrations\Commands\StatusCommand;
 use Dbout\WpOrm\Orm\Resolver;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
-use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 

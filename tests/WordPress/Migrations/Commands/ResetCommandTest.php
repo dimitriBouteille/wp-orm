@@ -8,6 +8,7 @@ namespace Dbout\WpOrm\Tests\WordPress\Migrations\Commands;
 
 use Dbout\WpOrm\Migrations\Commands\MigrateCommand;
 use Dbout\WpOrm\Migrations\Commands\ResetCommand;
+use Dbout\WpOrm\Migrations\Migrations;
 use WP_CLI\ExitException;
 
 class ResetCommandTest extends CommandTestCase
@@ -60,6 +61,29 @@ class ResetCommandTest extends CommandTestCase
         $this->assertSame(0, $this->runCommand(new ResetCommand(), ['yes' => true]));
 
         $this->assertOutputContains('Success: Nothing to roll back.');
+    }
+
+    /**
+     * @return void
+     * @covers ResetCommand::withProgress
+     */
+    public function testResetWithMissingFile(): void
+    {
+        $this->enable(['basic', 'extra']);
+        $this->runCommand(new MigrateCommand());
+        Migrations::reset();
+        $this->enable(['extra']);
+
+        $this->assertSame(0, $this->runCommand(new ResetCommand(), ['yes' => true]));
+
+        $this->assertErrorOutputContains(
+            'Warning: Migration file not found, 2026_01_02_000000_add_status_to_mig_orders_table cannot be rolled back.'
+        );
+        $this->assertErrorOutputContains(
+            'Warning: Migration file not found, 2026_01_01_000000_create_mig_orders_table cannot be rolled back.'
+        );
+        $this->assertOutputContains('Success: 1 migration(s) rolled back.');
+        $this->assertCount(2, $this->getRan());
     }
 
     /**
