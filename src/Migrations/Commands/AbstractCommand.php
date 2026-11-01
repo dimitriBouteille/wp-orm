@@ -9,6 +9,7 @@ namespace Dbout\WpOrm\Migrations\Commands;
 use Dbout\WpOrm\Migrations\Events\MigrationNotFound;
 use Dbout\WpOrm\Migrations\Migrations;
 use Dbout\WpOrm\Migrations\Migrator;
+use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\Events\MigrationEnded;
 use Illuminate\Database\Events\MigrationSkipped;
 use Illuminate\Database\Events\MigrationStarted;
@@ -35,6 +36,19 @@ abstract class AbstractCommand
     }
 
     /**
+     * Whether a command is running, the progress listeners print nothing otherwise.
+     */
+    private static bool $showProgress = false;
+    private static float $startedAt = 0.0;
+
+    /**
+     * Event dispatchers on which the progress listeners are registered.
+     *
+     * @var \WeakMap<DispatcherContract, true>|null
+     */
+    private static ?\WeakMap $listening = null;
+
+    /**
      * Print each migration while it runs, so the progress is visible even if a later migration fails.
      *
      * @param \Closure(): void $callback
@@ -42,11 +56,39 @@ abstract class AbstractCommand
      */
     protected function withProgress(\Closure $callback): void
     {
-        $events = Migrations::getEventDispatcher();
-        $startedAt = 0.0;
+        $this->listenProgress(Migrations::getEventDispatcher());
+        self::$showProgress = true;
 
-        $events->listen(MigrationStarted::class, function (MigrationStarted $event) use (&$startedAt): void {
-            $startedAt = microtime(true);
+        try {
+            $callback();
+        } finally {
+            self::$showProgress = false;
+        }
+    }
+
+    /**
+     * The listeners are registered once and never removed: the dispatcher is public
+     * (Migrations::getEventDispatcher()) and the Illuminate dispatcher can only forget
+     * all the listeners of an event, including the ones of the users.
+     *
+     * @param DispatcherContract $events
+     * @return void
+     */
+    private function listenProgress(DispatcherContract $events): void
+    {
+        self::$listening ??= new \WeakMap();
+        if (isset(self::$listening[$events])) {
+            return;
+        }
+
+        self::$listening[$events] = true;
+
+        $events->listen(MigrationStarted::class, static function (MigrationStarted $event): void {
+            if (!self::$showProgress) {
+                return;
+            }
+
+            self::$startedAt = microtime(true);
             \WP_CLI::log(sprintf(
                 '%s: %s',
                 $event->method === 'down' ? 'Rolling back' : 'Migrating',
@@ -54,31 +96,30 @@ abstract class AbstractCommand
             ));
         });
 
-        $events->listen(MigrationEnded::class, function (MigrationEnded $event) use (&$startedAt): void {
+        $events->listen(MigrationEnded::class, static function (MigrationEnded $event): void {
+            if (!self::$showProgress) {
+                return;
+            }
+
             \WP_CLI::log(sprintf(
                 '%s: %s (%.2fms)',
                 $event->method === 'down' ? 'Rolled back' : 'Migrated',
                 $event->name ?? get_class($event->migration),
-                (microtime(true) - $startedAt) * 1000
+                (microtime(true) - self::$startedAt) * 1000
             ));
         });
 
-        $events->listen(MigrationSkipped::class, function (MigrationSkipped $event): void {
-            \WP_CLI::log(sprintf('Skipped: %s', $event->migrationName));
+        $events->listen(MigrationSkipped::class, static function (MigrationSkipped $event): void {
+            if (self::$showProgress) {
+                \WP_CLI::log(sprintf('Skipped: %s', $event->migrationName));
+            }
         });
 
-        $events->listen(MigrationNotFound::class, function (MigrationNotFound $event): void {
-            \WP_CLI::warning(sprintf('Migration file not found, %s cannot be rolled back.', $event->migration));
+        $events->listen(MigrationNotFound::class, static function (MigrationNotFound $event): void {
+            if (self::$showProgress) {
+                \WP_CLI::warning(sprintf('Migration file not found, %s cannot be rolled back.', $event->migration));
+            }
         });
-
-        try {
-            $callback();
-        } finally {
-            $events->forget(MigrationStarted::class);
-            $events->forget(MigrationEnded::class);
-            $events->forget(MigrationSkipped::class);
-            $events->forget(MigrationNotFound::class);
-        }
     }
 
     /**

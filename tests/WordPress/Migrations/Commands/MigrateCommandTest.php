@@ -7,7 +7,9 @@
 namespace Dbout\WpOrm\Tests\WordPress\Migrations\Commands;
 
 use Dbout\WpOrm\Migrations\Commands\MigrateCommand;
+use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
 use Dbout\WpOrm\Migrations\Migrations;
+use Illuminate\Database\Events\MigrationEnded;
 
 class MigrateCommandTest extends CommandTestCase
 {
@@ -123,5 +125,65 @@ class MigrateCommandTest extends CommandTestCase
         $this->runCommand(new MigrateCommand());
 
         $this->assertSame(1, substr_count($this->logger->stdout, 'Migrating: 2026_01_01_000000_create_mig_orders_table'));
+    }
+
+    /**
+     * The listeners registered on the public dispatcher must not be removed by the commands.
+     *
+     * @return void
+     * @covers MigrateCommand::withProgress
+     */
+    public function testUserListenersAreKept(): void
+    {
+        $this->enable();
+        $events = [];
+        Migrations::getEventDispatcher()->listen(
+            MigrationEnded::class,
+            function (MigrationEnded $event) use (&$events): void {
+                $events[] = $event->method . ' ' . $event->name;
+            }
+        );
+
+        $this->runCommand(new MigrateCommand());
+        $this->runCommand(new RollbackCommand(), ['yes' => true]);
+
+        $this->assertSame([
+            'up 2026_01_01_000000_create_mig_orders_table',
+            'up 2026_01_02_000000_add_status_to_mig_orders_table',
+            'down 2026_01_02_000000_add_status_to_mig_orders_table',
+            'down 2026_01_01_000000_create_mig_orders_table',
+        ], $events);
+    }
+
+    /**
+     * @return void
+     * @covers MigrateCommand::withProgress
+     */
+    public function testProgressIsPrintedOncePerMigration(): void
+    {
+        $this->enable();
+
+        $this->runCommand(new MigrateCommand());
+        $this->runCommand(new RollbackCommand(), ['yes' => true]);
+        $this->runCommand(new MigrateCommand());
+
+        $this->assertSame(2, substr_count($this->logger->stdout, 'Migrated: 2026_01_01_000000_create_mig_orders_table ('));
+        $this->assertSame(1, substr_count($this->logger->stdout, 'Rolled back: 2026_01_01_000000_create_mig_orders_table ('));
+    }
+
+    /**
+     * @return void
+     * @covers MigrateCommand::withProgress
+     */
+    public function testNoProgressOutsideCommands(): void
+    {
+        $this->enable();
+        $this->runCommand(new MigrateCommand());
+        $this->logger->stdout = '';
+
+        Migrations::getMigrator()->rollback([self::FIXTURES . '/basic']);
+
+        $this->assertSame([], $this->getRan());
+        $this->assertSame('', $this->logger->stdout);
     }
 }
