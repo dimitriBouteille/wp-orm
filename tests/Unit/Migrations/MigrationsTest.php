@@ -7,6 +7,7 @@
 namespace Dbout\WpOrm\Tests\Unit\Migrations;
 
 use Dbout\WpOrm\Exceptions\MigrationException;
+use Dbout\WpOrm\Migrations\Commands\MakeMigrationCommand;
 use Dbout\WpOrm\Migrations\Commands\MigrateCommand;
 use Dbout\WpOrm\Migrations\Commands\ResetCommand;
 use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
@@ -15,6 +16,7 @@ use Dbout\WpOrm\Migrations\MigrationRepository;
 use Dbout\WpOrm\Migrations\Migrations;
 use Illuminate\Database\Events\NoPendingMigrations;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Migrations::class)]
@@ -160,7 +162,37 @@ class MigrationsTest extends TestCase
             'orm migrate:rollback' => RollbackCommand::class,
             'orm migrate:status' => StatusCommand::class,
             'orm migrate:reset' => ResetCommand::class,
+            'orm make:migration' => MakeMigrationCommand::class,
         ], Migrations::COMMANDS);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetMigrationCreatorWhenDisabled(): void
+    {
+        $this->expectException(MigrationException::class);
+        $this->expectExceptionMessage('The migration system is not enabled, call Migrations::enable() first.');
+        Migrations::getMigrationCreator();
+    }
+
+    /**
+     * The package stubs must be used, not the Illuminate ones (Schema facade, not available in WordPress).
+     *
+     * @param string $stub
+     * @return void
+     */
+    #[TestWith(['migration.stub'])]
+    #[TestWith(['migration.create.stub'])]
+    #[TestWith(['migration.update.stub'])]
+    public function testStubs(string $stub): void
+    {
+        Migrations::enable(['paths' => [__DIR__]]);
+        Migrations::getMigrationCreator();
+
+        $content = (string) file_get_contents(Migrations::STUBS_PATH . '/' . $stub);
+        $this->assertStringContainsString('use Dbout\WpOrm\Migrations\Migration;', $content);
+        $this->assertStringNotContainsString('Schema::', $content);
     }
 
     /**

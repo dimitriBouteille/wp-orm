@@ -98,12 +98,13 @@ abstract class CommandTestCase extends TestCase
     /**
      * @param AbstractCommand $command
      * @param array<string, mixed> $assocArgs
+     * @param array<string> $args
      * @return int Exit code
      */
-    protected function runCommand(AbstractCommand $command, array $assocArgs = []): int
+    protected function runCommand(AbstractCommand $command, array $assocArgs = [], array $args = []): int
     {
         try {
-            $command([], $assocArgs);
+            $command($args, $assocArgs);
         } catch (ExitException $exception) {
             return $exception->getCode();
         }

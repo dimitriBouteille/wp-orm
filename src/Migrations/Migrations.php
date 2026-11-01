@@ -7,12 +7,14 @@
 namespace Dbout\WpOrm\Migrations;
 
 use Dbout\WpOrm\Exceptions\MigrationException;
+use Dbout\WpOrm\Migrations\Commands\MakeMigrationCommand;
 use Dbout\WpOrm\Migrations\Commands\MigrateCommand;
 use Dbout\WpOrm\Migrations\Commands\ResetCommand;
 use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
 use Dbout\WpOrm\Migrations\Commands\StatusCommand;
 use Dbout\WpOrm\Orm\Resolver;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
@@ -35,7 +37,13 @@ class Migrations
         'orm migrate:rollback' => RollbackCommand::class,
         'orm migrate:status' => StatusCommand::class,
         'orm migrate:reset' => ResetCommand::class,
+        'orm make:migration' => MakeMigrationCommand::class,
     ];
+
+    /**
+     * Stubs used to generate the migration files.
+     */
+    public const string STUBS_PATH = __DIR__ . '/stubs';
 
     protected static ?MigrationConfig $config = null;
     protected static ?Migrator $migrator = null;
@@ -96,11 +104,7 @@ class Migrations
         }
 
         $config = self::getConfig();
-        if (!class_exists(Filesystem::class)) {
-            throw new MigrationException(
-                'The migration system requires the "illuminate/filesystem" package, run: composer require illuminate/filesystem'
-            );
-        }
+        self::checkFilesystem();
 
         foreach ($config->paths as $path) {
             if (!is_dir($path)) {
@@ -120,6 +124,18 @@ class Migrations
     }
 
     /**
+     * @throws MigrationException
+     * @return MigrationCreator
+     */
+    public static function getMigrationCreator(): MigrationCreator
+    {
+        self::getConfig();
+        self::checkFilesystem();
+
+        return new MigrationCreator(new Filesystem(), self::STUBS_PATH);
+    }
+
+    /**
      * Events dispatched by the migrator (MigrationStarted, MigrationEnded...).
      *
      * @return DispatcherContract
@@ -127,6 +143,19 @@ class Migrations
     public static function getEventDispatcher(): DispatcherContract
     {
         return self::$events ??= new Dispatcher();
+    }
+
+    /**
+     * @throws MigrationException
+     * @return void
+     */
+    private static function checkFilesystem(): void
+    {
+        if (!class_exists(Filesystem::class)) {
+            throw new MigrationException(
+                'The migration system requires the "illuminate/filesystem" package, run: composer require illuminate/filesystem'
+            );
+        }
     }
 
     /**
