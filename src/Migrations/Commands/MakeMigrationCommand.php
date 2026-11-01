@@ -56,7 +56,6 @@ class MakeMigrationCommand extends AbstractCommand
 
             [$table, $create] = $this->getTable($name, $assocArgs);
             $path = $this->getDirectory($assocArgs);
-            $this->ensureMigrationDoesntExist($name);
 
             $file = Migrations::getMigrationCreator()->create($name, $path, $table, $create);
             \WP_CLI::success(sprintf('Migration created: %s', $file));
@@ -142,23 +141,5 @@ class MakeMigrationCommand extends AbstractCommand
             $path,
             implode(', ', $paths)
         ));
-    }
-
-    /**
-     * Two migrations with the same name would be hard to tell apart in "wp orm migrate:status".
-     *
-     * @param string $name
-     * @throws MigrationException
-     * @return void
-     */
-    protected function ensureMigrationDoesntExist(string $name): void
-    {
-        foreach ($this->paths() as $path) {
-            foreach (glob($path . '/*.php') ?: [] as $file) {
-                if (preg_match('/^\d{4}_\d{2}_\d{2}_\d{6}_' . $name . '\.php\z/', basename($file)) === 1) {
-                    throw new MigrationException(sprintf('A migration named "%s" already exists: %s', $name, $file));
-                }
-            }
-        }
     }
 }

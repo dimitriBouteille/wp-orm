@@ -14,7 +14,6 @@ use Dbout\WpOrm\Migrations\Commands\RollbackCommand;
 use Dbout\WpOrm\Migrations\Commands\StatusCommand;
 use Dbout\WpOrm\Orm\Resolver;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
-use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
@@ -129,10 +128,10 @@ class Migrations
      */
     public static function getMigrationCreator(): MigrationCreator
     {
-        self::getConfig();
+        $config = self::getConfig();
         self::checkFilesystem();
 
-        return new MigrationCreator(new Filesystem(), self::STUBS_PATH);
+        return new MigrationCreator(new Filesystem(), self::STUBS_PATH, $config->paths);
     }
 
     /**
