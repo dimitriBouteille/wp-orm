@@ -19,7 +19,7 @@ class SchemaCollationTest extends TestCase
 {
     use CreatesCustomTable;
 
-    private const TABLE_NAME = 'collation_check';
+    private const string TABLE_NAME = 'collation_check';
 
     /**
      * @return void
