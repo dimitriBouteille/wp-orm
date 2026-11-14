@@ -19,20 +19,22 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 - ✅ Based on core WordPress database connection (`wpdb` class), no configuration required
 - ✅ Custom functions to filter models with meta
 - ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/eloquent-mutators#attribute-casting))
+- ✅ [Database migrations](docs/migrations.md) with WP-CLI (`wp orm migrate`)
 - ❤️ Easy integration of a custom post and comment type
 - ❤️ Easy model creation for projects with custom tables
 - ❤️ All the features available in Eloquent are usable with this library
 
 **Not yet developed but planned in a future version:**
 
-- 🗓️ [Create migration tool with Eloquent](https://github.com/dimitriBouteille/wp-orm/issues/28)
 - 🗓️ Multisite support (network-shared tables and `switch_blog()` handling)
 
 ## Documentation
 
 This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/eloquent).
 
-You can find all the documentation in [the wiki](https://github.com/dimitriBouteille/wp-orm/wiki).
+You can find all the documentation in [the wiki](https://github.com/dimitriBouteille/wp-orm/wiki), the documentation is being moved to the [docs](docs) directory:
+
+- [Migrations](docs/migrations.md)
 
 ## Installation
 
@@ -131,6 +133,24 @@ $parent = $post->parent;        // BelongsTo Post (self)
 ```
 
 For everything else (eager loading, scopes, transactions, casts…), see [the Eloquent documentation](https://laravel.com/docs/eloquent) — every Eloquent feature works out of the box.
+
+**Manage your tables with migrations**
+
+```php
+// wp-content/mu-plugins/migrations.php
+use Dbout\WpOrm\Migrations\Migrations;
+
+Migrations::enable([
+    'paths' => [__DIR__ . '/database/migrations'],
+]);
+```
+
+```bash
+wp orm make:migration create_orders_table
+wp orm migrate
+```
+
+The migration system is optional and requires `illuminate/filesystem` and [WP-CLI](https://wp-cli.org), see [the documentation](docs/migrations.md).
 
 ## Security notes
 

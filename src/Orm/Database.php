@@ -461,7 +461,10 @@ class Database extends Connection
     }
 
     /**
-     * @inheritDoc
+     * The native return type is kept as Builder, so the classes extending Database
+     * and overriding this method stay compatible.
+     *
+     * @return WordPressBuilder
      */
     public function getSchemaBuilder(): \Illuminate\Database\Schema\Builder
     {

@@ -8,6 +8,7 @@ namespace Dbout\WpOrm\Tests\Unit\Orm;
 
 use Dbout\WpOrm\Exceptions\WpOrmException;
 use Dbout\WpOrm\Orm\Database;
+use Illuminate\Database\Schema\Builder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
@@ -21,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversMethod(Database::class, 'getServerVersion')]
 #[CoversMethod(Database::class, 'pretend')]
 #[CoversMethod(Database::class, 'transaction')]
+#[CoversMethod(Database::class, 'getSchemaBuilder')]
 class DatabaseTest extends TestCase
 {
     /**
@@ -235,5 +237,18 @@ class DatabaseTest extends TestCase
         $wpdb = $originalWpdb;
 
         return $database;
+    }
+
+    /**
+     * Narrowing the native return type would break the classes extending Database and overriding the method.
+     *
+     * @return void
+     */
+    public function testGetSchemaBuilderReturnType(): void
+    {
+        $returnType = (new \ReflectionMethod(Database::class, 'getSchemaBuilder'))->getReturnType();
+
+        $this->assertInstanceOf(\ReflectionNamedType::class, $returnType);
+        $this->assertSame(Builder::class, $returnType->getName());
     }
 }

@@ -21,7 +21,7 @@ class WordPressProcessorTest extends TestCase
 {
     use CreatesCustomTable;
 
-    private const TABLE_NAME = 'processor_orders';
+    private const string TABLE_NAME = 'processor_orders';
 
     private Builder $schema;
 
