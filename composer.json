@@ -39,7 +39,7 @@
   },
   "require-dev": {
     "illuminate/filesystem": "^13.0",
-    "phpunit/phpunit": "^12.5",
+    "phpunit/phpunit": "^13.0",
     "rector/rector": "2.4.1",
     "phpstan/extension-installer": "1.4.3",
     "szepeviktor/phpstan-wordpress": "2.0.3",
