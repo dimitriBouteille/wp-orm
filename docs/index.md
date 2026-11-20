@@ -1,7 +1,7 @@
 ---
 layout: home
 markdownStyles: false
-title: WP ORM
+title: wp-orm
 titleTemplate: The Eloquent ORM, inside WordPress
 ---
 

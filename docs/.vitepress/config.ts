@@ -1,10 +1,11 @@
 import { defineConfig } from 'vitepress'
+import { siteDescription, siteUrl, transformPageData } from './seo'
 
 const repository = 'https://github.com/dimitriBouteille/wp-orm'
 
 export default defineConfig({
-  title: 'WP ORM',
-  description: 'The Eloquent ORM, inside WordPress: models for every WordPress table, meta filters and casting, custom post types and migrations.',
+  title: 'wp-orm',
+  description: siteDescription,
   base: '/wp-orm/',
   cleanUrls: true,
   lastUpdated: true,
@@ -15,7 +16,15 @@ export default defineConfig({
   // README.md is the table of contents for GitHub, the site uses index.md and the sidebar.
   srcExclude: ['README.md'],
 
+  sitemap: {
+    hostname: siteUrl,
+  },
+
+  // Description, canonical URL and social preview tags of each page, see seo.ts.
+  transformPageData,
+
   head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/wp-orm/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#0c0d0f' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
