@@ -9,6 +9,8 @@
 WordPress ORM with Eloquent is a small library that adds a basic ORM into WordPress, which is easily extendable and includes models for core WordPress models such as posts, post metas, users, comments and more.
 The ORM is based on [Eloquent ORM](https://laravel.com/docs/13.x/eloquent) and uses the WordPress connection (`wpdb` class).
 
+📖 **Documentation: [dimitribouteille.github.io/wp-orm](https://dimitribouteille.github.io/wp-orm/)**
+
 > [!TIP]
 > To simplify the integration of this library, we recommend using WordPress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
 
@@ -60,7 +62,7 @@ No configuration is needed: the library uses the WordPress database connection.
 - ✅ Based on core WordPress database connection (`wpdb` class), no configuration required
 - ✅ Custom functions to filter models with meta
 - ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/13.x/eloquent-mutators#attribute-casting))
-- ✅ [Database migrations](docs/database/migrations.md) with WP-CLI (`wp orm migrate`)
+- ✅ [Database migrations](https://dimitribouteille.github.io/wp-orm/database/migrations) with WP-CLI (`wp orm migrate`)
 - ❤️ Easy integration of a custom post and comment type
 - ❤️ Easy model creation for projects with custom tables
 - ❤️ All the features available in Eloquent are usable with this library
@@ -77,19 +79,19 @@ Requires PHP >= 8.3 and WordPress >= 6.3.
 composer require dbout/wp-orm
 ```
 
-Make sure the Composer autoloader is loaded (e.g. in your `wp-config.php`), and you are ready to go. See [Installation](docs/getting-started/installation.md) for the details.
+Make sure the Composer autoloader is loaded (e.g. in your `wp-config.php`), and you are ready to go. See [Installation](https://dimitribouteille.github.io/wp-orm/getting-started/installation) for the details.
 
 ## Documentation
 
-The documentation only covers the specific points of this library, everything else works like Eloquent: see [the documentation of Eloquent](https://laravel.com/docs/13.x/eloquent).
+The full documentation is available on **[dimitribouteille.github.io/wp-orm](https://dimitribouteille.github.io/wp-orm/)**. It only covers the specific points of this library, everything else works like Eloquent: see [the documentation of Eloquent](https://laravel.com/docs/13.x/eloquent).
 
-- **Getting started:** [Installation](docs/getting-started/installation.md), [Quick start](docs/getting-started/quick-start.md)
-- **Models:** [Built-in models](docs/models/builtin-models.md), [Querying models](docs/models/querying.md), [Metas](docs/models/metas.md), [Custom models](docs/models/custom-models.md), [Events](docs/models/events.md)
-- **Database:** [Database connection](docs/database/connection.md), [Migrations](docs/database/migrations.md)
-- **Advanced:** [Security](docs/advanced/security.md), [Limitations](docs/advanced/limitations.md)
+- **Getting started:** [Installation](https://dimitribouteille.github.io/wp-orm/getting-started/installation), [Quick start](https://dimitribouteille.github.io/wp-orm/getting-started/quick-start)
+- **Models:** [Built-in models](https://dimitribouteille.github.io/wp-orm/models/builtin-models), [Querying models](https://dimitribouteille.github.io/wp-orm/models/querying), [Metas](https://dimitribouteille.github.io/wp-orm/models/metas), [Custom models](https://dimitribouteille.github.io/wp-orm/models/custom-models), [Events](https://dimitribouteille.github.io/wp-orm/models/events)
+- **Database:** [Database connection](https://dimitribouteille.github.io/wp-orm/database/connection), [Migrations](https://dimitribouteille.github.io/wp-orm/database/migrations)
+- **Advanced:** [Security](https://dimitribouteille.github.io/wp-orm/advanced/security), [Limitations](https://dimitribouteille.github.io/wp-orm/advanced/limitations)
 
 > [!WARNING]
-> Every model is mass-assignable by default (`$guarded = []`) and the models bypass the WordPress hooks and object cache. Read [Security](docs/advanced/security.md) and [Limitations](docs/advanced/limitations.md) before using the library with user input.
+> Every model is mass-assignable by default (`$guarded = []`) and the models bypass the WordPress hooks and object cache. Read [Security](https://dimitribouteille.github.io/wp-orm/advanced/security) and [Limitations](https://dimitribouteille.github.io/wp-orm/advanced/limitations) before using the library with user input.
 
 ## Testing
 
