@@ -26,6 +26,8 @@ export default defineConfig({
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/wp-orm/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#0c0d0f' }],
+    // Google Search Console ownership verification, keep it or the property is lost.
+    ['meta', { name: 'google-site-verification', content: 'hQbkXaVuz6yR1co6-SLH63eEVK62hf6rj5U7uG2xbZY' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap' }],
