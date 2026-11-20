@@ -1,0 +1,76 @@
+/**
+ * wp-orm theme: dark only, magenta brand color, Geist fonts.
+ * The site is forced in dark mode (appearance: 'force-dark'), so the variables are set on .dark.
+ */
+
+:root {
+  --vp-font-family-base: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --vp-font-family-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.dark {
+  /* Brand: #e5006d for the surfaces (buttons, active tab), a lighter tint for the text on the dark background. */
+  --vp-c-brand-1: #ff4d97;
+  --vp-c-brand-2: #ff2e88;
+  --vp-c-brand-3: #e5006d;
+  --vp-c-brand-soft: rgba(229, 0, 109, 0.16);
+
+  --vp-c-bg: #0c0d0f;
+  --vp-c-bg-alt: #111215;
+  --vp-c-bg-elv: #141518;
+  --vp-c-bg-soft: #141518;
+
+  --vp-c-border: #2a2c30;
+  --vp-c-divider: #1c1d20;
+  --vp-c-divider-strong: #222428;
+  --vp-c-gutter: #000000;
+
+  --vp-c-text-1: #e8e8e6;
+  --vp-c-text-2: #a1a2a6;
+  --vp-c-text-3: #8b8c91;
+
+  /* Inline code in the text color: the magenta is kept for the links and the active items. */
+  --vp-code-color: var(--vp-c-text-1);
+  --vp-code-bg: #1a1b1f;
+  --vp-code-block-bg: #111215;
+  --vp-code-tab-bg: #111215;
+  --vp-code-copy-code-bg: #141518;
+
+  --vp-nav-bg-color: #0c0d0f;
+  --vp-sidebar-bg-color: #0c0d0f;
+
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-active-text: #ffffff;
+
+  --vp-home-hero-name-color: var(--vp-c-text-1);
+}
+
+/* Site title: "~/wp-orm", in the mono font. */
+.VPNavBarTitle .title {
+  font-family: var(--vp-font-family-mono);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.VPNavBarTitle .title::before {
+  content: '~/';
+  color: var(--vp-c-brand-1);
+}
+
+/* Headings a little tighter, like the homepage. */
+.vp-doc h1,
+.vp-doc h2 {
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+/* No gradient divider under the nav on the homepage. */
+.VPNavBar.home.top .divider-line {
+  background-color: transparent;
+}
+
+/* The homepage ends with its own footer, without the default bottom margin. */
+.VPHome {
+  margin-bottom: 0 !important;
+}

@@ -8,3 +8,5 @@ web
 /package-lock.json
 build/
 .env
+docs/.vitepress/dist/
+docs/.vitepress/cache/
