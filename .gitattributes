@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Keep the documentation out of the Composer package
+/docs export-ignore
