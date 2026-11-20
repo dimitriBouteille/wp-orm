@@ -7,7 +7,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/dimitriBouteille/wp-orm/badge.svg?branch=main)](https://coveralls.io/github/dimitriBouteille/wp-orm)
 
 WordPress ORM with Eloquent is a small library that adds a basic ORM into WordPress, which is easily extendable and includes models for core WordPress models such as posts, post metas, users, comments and more.
-The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses the WordPress connection (`wpdb` class).
+The ORM is based on [Eloquent ORM](https://laravel.com/docs/13.x/eloquent) and uses the WordPress connection (`wpdb` class).
 
 > [!TIP]
 > To simplify the integration of this library, we recommend using WordPress with one of the following tools: [Bedrock](https://roots.io/bedrock/), [Themosis](https://framework.themosis.com/) or [Wordplate](https://github.com/wordplate/wordplate#readme).
@@ -18,8 +18,8 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 - ✅ Support core WordPress post types: `Article`, `Attachment` and `Page`
 - ✅ Based on core WordPress database connection (`wpdb` class), no configuration required
 - ✅ Custom functions to filter models with meta
-- ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/eloquent-mutators#attribute-casting))
-- ✅ [Database migrations](docs/migrations.md) with WP-CLI (`wp orm migrate`)
+- ✅ Meta casting (e.g. [Attribute Casting](https://laravel.com/docs/13.x/eloquent-mutators#attribute-casting))
+- ✅ [Database migrations](docs/database/migrations.md) with WP-CLI (`wp orm migrate`)
 - ❤️ Easy integration of a custom post and comment type
 - ❤️ Easy model creation for projects with custom tables
 - ❤️ All the features available in Eloquent are usable with this library
@@ -30,11 +30,14 @@ The ORM is based on [Eloquent ORM](https://laravel.com/docs/eloquent) and uses t
 
 ## Documentation
 
-This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/eloquent).
+This documentation only covers the specific points of this library, if you want to know more about Eloquent, the easiest is to look at [the documentation of Eloquent](https://laravel.com/docs/13.x/eloquent).
 
-You can find all the documentation in [the wiki](https://github.com/dimitriBouteille/wp-orm/wiki), the documentation is being moved to the [docs](docs) directory:
+You can find all the documentation in the [docs](docs/README.md) directory:
 
-- [Migrations](docs/migrations.md)
+- **Getting started:** [Installation](docs/getting-started/installation.md), [Quick start](docs/getting-started/quick-start.md)
+- **Models:** [Built-in models](docs/models/builtin-models.md), [Querying models](docs/models/querying.md), [Metas](docs/models/metas.md), [Custom models](docs/models/custom-models.md), [Events](docs/models/events.md)
+- **Database:** [Database connection](docs/database/connection.md), [Migrations](docs/database/migrations.md)
+- **Advanced:** [Security](docs/advanced/security.md), [Limitations](docs/advanced/limitations.md)
 
 ## Installation
 
@@ -132,7 +135,7 @@ $comments = $post->comments;    // HasMany Comment
 $parent = $post->parent;        // BelongsTo Post (self)
 ```
 
-For everything else (eager loading, scopes, transactions, casts…), see [the Eloquent documentation](https://laravel.com/docs/eloquent) — every Eloquent feature works out of the box.
+For everything else (eager loading, scopes, transactions, casts…), see [the Eloquent documentation](https://laravel.com/docs/13.x/eloquent) — every Eloquent feature works out of the box.
 
 **Manage your tables with migrations**
 
@@ -150,7 +153,7 @@ wp orm make:migration create_orders_table
 wp orm migrate
 ```
 
-The migration system is optional and requires `illuminate/filesystem` and [WP-CLI](https://wp-cli.org), see [the documentation](docs/migrations.md).
+The migration system is optional and requires `illuminate/filesystem` and [WP-CLI](https://wp-cli.org), see [the documentation](docs/database/migrations.md).
 
 ## Security notes
 
