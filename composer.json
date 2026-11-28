@@ -40,7 +40,7 @@
   "require-dev": {
     "illuminate/filesystem": "^13.0",
     "phpunit/phpunit": "^12.5",
-    "rector/rector": "2.4.1",
+    "rector/rector": "2.8.3",
     "phpstan/extension-installer": "1.4.3",
     "szepeviktor/phpstan-wordpress": "2.0.3",
     "friendsofphp/php-cs-fixer": "3.94.2",
